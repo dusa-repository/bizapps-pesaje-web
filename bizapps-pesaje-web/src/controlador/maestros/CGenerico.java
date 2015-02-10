@@ -41,9 +41,12 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Tab;
 
+import servicio.maestros.SAlmacen;
 import servicio.maestros.SBalanza;
 import servicio.maestros.SF0004;
 import servicio.maestros.SF0005;
+import servicio.maestros.SFlete;
+import servicio.maestros.STransporte;
 import servicio.seguridad.SArbol;
 import servicio.seguridad.SGrupo;
 import servicio.seguridad.SUsuario;
@@ -64,12 +67,12 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	protected SF0004 servicioF0004;
 	@WireVariable("SF0005")
 	protected SF0005 servicioF0005;
-//	@WireVariable("SAlmacen")
-//	protected SAlmacen servicioAlmacen;
-//	@WireVariable("STransportista")
-//	protected STransportista servicioTransportista;
-//	@WireVariable("SFlete")
-//	protected SFlete servicioFlete;
+	@WireVariable("SAlmacen")
+	protected SAlmacen servicioAlmacen;
+	@WireVariable("STransporte")
+	protected STransporte servicioTransporte;
+	@WireVariable("SFlete")
+	protected SFlete servicioFlete;
 	@WireVariable("SBalanza")
 	protected SBalanza servicioBalanza;
 	
