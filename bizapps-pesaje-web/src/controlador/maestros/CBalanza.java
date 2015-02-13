@@ -96,6 +96,7 @@ public class CBalanza extends CGenerico {
 				if (validar()) {
 						String descripcion = txtDescripcion.getValue();
 						Balanza balanza = new Balanza();
+						balanza.setCodigo(id);
 						balanza.setDescripcion(descripcion);
 						servicioBalanza.guardar(balanza);
 						msj.mensajeInformacion(Mensaje.guardado);
@@ -308,7 +309,7 @@ public class CBalanza extends CGenerico {
 
 				for (Balanza tipo : listaGeneral) {
 					if (tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())) {
+									.contains(valores.get(0).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -317,7 +318,7 @@ public class CBalanza extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Balanza tipo) {
-				String[] registros = new String[3];
+				String[] registros = new String[1];
 				registros[0] = tipo.getDescripcion();
 				return registros;
 			}

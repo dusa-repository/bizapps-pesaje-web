@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="transporte")
-@NamedQuery(name="Balanza.findAll", query="SELECT t FROM Transporte t")
+@NamedQuery(name="Transporte.findAll", query="SELECT t FROM Transporte t")
 public class Transporte implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,24 +26,35 @@ public class Transporte implements Serializable {
 	private int id;
 
 	private String descripcion;
+	
+	private String codigo;
 
 	public Transporte() {
 	}
 
-	public int getCodigo() {
-		return this.id;
+	public int getId() {
+		return id;
 	}
 
-	public void setCodigo(int codigo) {
-		this.id = codigo;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
 
 }

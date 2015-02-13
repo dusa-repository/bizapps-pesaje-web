@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="flete")
-@NamedQuery(name="Balanza.findAll", query="SELECT t FROM Flete t")
+@NamedQuery(name="Flete.findAll", query="SELECT t FROM Flete t")
 public class Flete implements Serializable {
 	private static final long serialVersionUID = 1L;
 

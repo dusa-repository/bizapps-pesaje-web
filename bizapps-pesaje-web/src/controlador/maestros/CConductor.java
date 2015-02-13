@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import modelo.maestros.Transporte;
+import modelo.maestros.Conductor;
+import modelo.maestros.Producto;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -21,28 +22,30 @@ import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
 
-public class CTransporte extends CGenerico {
+public class CConductor extends CGenerico {
 
 	private static final long serialVersionUID = -6868106910332150746L;
 	@Wire
-	private Textbox txtDescripcion;
+	private Textbox txtNombres;
 	@Wire
-	private Textbox txtCodigo;
+	private Textbox txtApellidos;
 	@Wire
-	private Div divTransporte;
+	private Textbox txtCedula;
 	@Wire
-	private Div botoneraTransporte;
+	private Div divConductor;
 	@Wire
-	private Div divCatalogoTransporte;
+	private Div botoneraConductor;
+	@Wire
+	private Div divCatalogoConductor;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
 
 	Botonera botonera;
-	Catalogo<Transporte> catalogo;
-	int id = 0;
-	private List<Transporte> listaGeneral = new ArrayList<Transporte>();
+	Catalogo<Conductor> catalogo;
+	String id = "";
+	private List<Conductor> listaGeneral = new ArrayList<Conductor>();
 
 	@Override
 	public void inicializar() throws IOException {
@@ -56,7 +59,7 @@ public class CTransporte extends CGenerico {
 				map = null;
 			}
 		}
-		txtDescripcion.setFocus(true);
+		txtNombres.setFocus(true);
 		mostrarCatalogo();
 
 		botonera = new Botonera() {
@@ -67,11 +70,13 @@ public class CTransporte extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Transporte tipo = catalogo
+						Conductor tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getId();
-						txtDescripcion.setValue(tipo.getDescripcion());
-						txtCodigo.setValue(tipo.getCodigo());
+						id = tipo.getCedula();
+						txtApellidos.setValue(tipo.getApellidos());
+						txtNombres.setValue(tipo.getNombres());
+						txtCedula.setValue(tipo.getCedula());
+						txtCedula.setDisabled(true);
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -79,7 +84,7 @@ public class CTransporte extends CGenerico {
 
 			@Override
 			public void salir() {
-				cerrarVentana(divTransporte, cerrar, tabs);
+				cerrarVentana(divConductor, cerrar, tabs);
 
 			}
 
@@ -91,24 +96,29 @@ public class CTransporte extends CGenerico {
 			public void limpiar() {
 				mostrarBotones(false);
 				limpiarCampos();
-				id = 0;
+				id = "";
 			}
 
 			@Override
 			public void guardar() {
 				if (validar()) {
-					String descripcion = txtDescripcion.getValue();
-					String codigo = txtCodigo.getValue();
-					Transporte transporte = new Transporte();
-					transporte.setDescripcion(descripcion);
-					transporte.setCodigo(codigo);
-					transporte.setId(id);
-					servicioTransporte.guardar(transporte);
-					msj.mensajeInformacion(Mensaje.guardado);
-					limpiar();
-					listaGeneral = servicioTransporte.buscarTodos();
-					catalogo.actualizarLista(listaGeneral, true);
-					abrirCatalogo();
+					if (id.equals("") && !idLibre())
+						msj.mensajeError(Mensaje.cedulaUsada);
+					else {
+						String nombres = txtNombres.getValue();
+						String apellidos = txtApellidos.getValue();
+						id = txtCedula.getValue();
+						Conductor conductor = new Conductor();
+						conductor.setApellidos(apellidos);
+						conductor.setNombres(nombres);
+						conductor.setCedula(id);
+						servicioConductor.guardar(conductor);
+						msj.mensajeInformacion(Mensaje.guardado);
+						limpiar();
+						listaGeneral = servicioConductor.buscarTodos();
+						catalogo.actualizarLista(listaGeneral, true);
+						abrirCatalogo();
+					}
 				}
 			}
 
@@ -209,7 +219,7 @@ public class CTransporte extends CGenerico {
 		botonera.getChildren().get(1).setVisible(false);
 		botonera.getChildren().get(3).setVisible(false);
 		botonera.getChildren().get(5).setVisible(false);
-		botoneraTransporte.appendChild(botonera);
+		botoneraConductor.appendChild(botonera);
 
 	}
 
@@ -224,13 +234,15 @@ public class CTransporte extends CGenerico {
 	}
 
 	public void limpiarCampos() {
-		id = 0;
-		txtDescripcion.setValue("");
-		txtCodigo.setValue("");
+		id = "";
+		txtNombres.setValue("");
+		txtApellidos.setValue("");
+		txtCedula.setValue("");
+		txtCedula.setDisabled(false);
 	}
 
 	public boolean validarSeleccion() {
-		List<Transporte> seleccionados = catalogo.obtenerSeleccionados();
+		List<Conductor> seleccionados = catalogo.obtenerSeleccionados();
 		if (seleccionados == null) {
 			msj.mensajeAlerta(Mensaje.noHayRegistros);
 			return false;
@@ -253,16 +265,18 @@ public class CTransporte extends CGenerico {
 	}
 
 	public boolean camposLLenos() {
-		if (txtDescripcion.getText().compareTo("") == 0
-				|| txtCodigo.getText().compareTo("") == 0) {
+		if (txtApellidos.getText().compareTo("") == 0
+				||txtNombres.getText().compareTo("") == 0
+				|| txtCedula.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
 	}
 
 	public boolean camposEditando() {
-		if (txtDescripcion.getText().compareTo("") != 0
-				|| txtCodigo.getText().compareTo("") != 0) {
+		if (txtApellidos.getText().compareTo("") != 0
+				||txtNombres.getText().compareTo("") != 0
+				|| txtCedula.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -305,21 +319,23 @@ public class CTransporte extends CGenerico {
 	}
 
 	public void mostrarCatalogo() {
-		listaGeneral = servicioTransporte.buscarTodos();
-		catalogo = new Catalogo<Transporte>(divCatalogoTransporte,
-				"Catalogo de Transportes", listaGeneral, false, false, false,
-				"Codigo", "Descripcion") {
+		listaGeneral = servicioConductor.buscarTodos();
+		catalogo = new Catalogo<Conductor>(divCatalogoConductor,
+				"Catalogo de Conductores", listaGeneral, false, false, false,
+				"Cedula", "Nombres","Apellidos") {
 
 			@Override
-			protected List<Transporte> buscar(List<String> valores) {
+			protected List<Conductor> buscar(List<String> valores) {
 
-				List<Transporte> lista = new ArrayList<Transporte>();
+				List<Conductor> lista = new ArrayList<Conductor>();
 
-				for (Transporte tipo : listaGeneral) {
-					if (tipo.getCodigo().toLowerCase()
+				for (Conductor tipo : listaGeneral) {
+					if (tipo.getCedula().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
-							&& tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())) {
+							&& tipo.getNombres().toLowerCase()
+									.contains(valores.get(1).toLowerCase())
+									&& tipo.getApellidos().toLowerCase()
+									.contains(valores.get(2).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -327,14 +343,23 @@ public class CTransporte extends CGenerico {
 			}
 
 			@Override
-			protected String[] crearRegistros(Transporte tipo) {
-				String[] registros = new String[2];
-				registros[0] = tipo.getCodigo();
-				registros[1] = tipo.getDescripcion();
+			protected String[] crearRegistros(Conductor tipo) {
+				String[] registros = new String[3];
+				registros[0] = tipo.getCedula();
+				registros[1] = tipo.getNombres();
+				registros[2] = tipo.getApellidos();
 				return registros;
 			}
 		};
-		catalogo.setParent(divCatalogoTransporte);
+		catalogo.setParent(divCatalogoConductor);
+	}
+
+	public boolean idLibre() {
+		if (servicioConductor.buscar(txtCedula.getValue()) != null)
+			return false;
+		else
+			return true;
+
 	}
 
 }

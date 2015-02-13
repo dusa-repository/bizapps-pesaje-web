@@ -98,6 +98,7 @@ public class CFlete extends CGenerico {
 						String descripcion = txtDescripcion.getValue();
 						Flete flete = new Flete();
 						flete.setDescripcion(descripcion);
+						flete.setCodigo(id);
 						servicioFlete.guardar(flete);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -309,7 +310,7 @@ public class CFlete extends CGenerico {
 
 				for (Flete tipo : listaGeneral) {
 					if (tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())) {
+									.contains(valores.get(0).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -318,7 +319,7 @@ public class CFlete extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Flete tipo) {
-				String[] registros = new String[3];
+				String[] registros = new String[1];
 				registros[0] = tipo.getDescripcion();
 				return registros;
 			}

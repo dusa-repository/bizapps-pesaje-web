@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import modelo.maestros.Almacen;
-
+import modelo.maestros.Proveedor;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -22,26 +21,28 @@ import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
 
-public class CAlmacen extends CGenerico {
+public class CProveedor extends CGenerico {
 
 	private static final long serialVersionUID = -6868106910332150746L;
 	@Wire
 	private Textbox txtDescripcion;
 	@Wire
-	private Div divAlmacen;
+	private Textbox txtCodigo;
 	@Wire
-	private Div botoneraAlmacen;
+	private Div divProveedor;
 	@Wire
-	private Div divCatalogoAlmacen;
+	private Div botoneraProveedor;
+	@Wire
+	private Div divCatalogoProveedor;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
 
 	Botonera botonera;
-	Catalogo<Almacen> catalogo;
-	int id = 0;
-	private List<Almacen> listaGeneral = new ArrayList<Almacen>();
+	Catalogo<Proveedor> catalogo;
+	String id = "";
+	private List<Proveedor> listaGeneral = new ArrayList<Proveedor>();
 
 	@Override
 	public void inicializar() throws IOException {
@@ -66,10 +67,12 @@ public class CAlmacen extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Almacen tipo = catalogo
+						Proveedor tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getCodigo();				
+						id = tipo.getId();
 						txtDescripcion.setValue(tipo.getDescripcion());
+						txtCodigo.setValue(tipo.getId());
+						txtCodigo.setDisabled(true);
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -77,7 +80,7 @@ public class CAlmacen extends CGenerico {
 
 			@Override
 			public void salir() {
-				cerrarVentana(divAlmacen, cerrar, tabs);
+				cerrarVentana(divProveedor, cerrar, tabs);
 
 			}
 
@@ -89,98 +92,103 @@ public class CAlmacen extends CGenerico {
 			public void limpiar() {
 				mostrarBotones(false);
 				limpiarCampos();
-				id = 0;
+				id = "";
 			}
 
 			@Override
 			public void guardar() {
 				if (validar()) {
+					if (id.equals("") && !idLibre())
+						msj.mensajeError(Mensaje.codigoUsado);
+					else {
 						String descripcion = txtDescripcion.getValue();
-						Almacen almacen = new Almacen();
-						almacen.setCodigo(id);
-						almacen.setDescripcion(descripcion);
-						servicioAlmacen.guardar(almacen);
+						id = txtCodigo.getValue();
+						Proveedor proveedor = new Proveedor();
+						proveedor.setDescripcion(descripcion);
+						proveedor.setId(id);
+						servicioProveedor.guardar(proveedor);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
-						listaGeneral = servicioAlmacen.buscarTodos();
+						listaGeneral = servicioProveedor.buscarTodos();
 						catalogo.actualizarLista(listaGeneral, true);
 						abrirCatalogo();
 					}
+				}
 			}
 
 			@Override
 			public void eliminar() {
-//				if (gpxDatos.isOpen()) {
-//					/* Elimina Varios Registros */
-//					if (validarSeleccion()) {
-//						final List<Balanza> eliminarLista = catalogo
-//								.obtenerSeleccionados();
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorIds(eliminarLista);
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show("¿Desea Eliminar los "
-//											+ eliminarLista.size()
-//											+ " Registros?",
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//														servicioBalanza
-//																.eliminarVarios(eliminarLista);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					}
-//				} else {
-//					/* Elimina un solo registro */
-//					if (id != 0) {
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorBalanza(id);
-//				
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show(Mensaje.deseaEliminar,
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//
-//														servicioBalanza
-//																.eliminarUno(id);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														limpiar();
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					} else
-//						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-//				}
+				// if (gpxDatos.isOpen()) {
+				// /* Elimina Varios Registros */
+				// if (validarSeleccion()) {
+				// final List<Balanza> eliminarLista = catalogo
+				// .obtenerSeleccionados();
+				// List<Pesaje> pesajes = servicioBalanza
+				// .buscarPorIds(eliminarLista);
+				// if (pesajes.isEmpty()) {
+				// Messagebox
+				// .show("¿Desea Eliminar los "
+				// + eliminarLista.size()
+				// + " Registros?",
+				// "Alerta",
+				// Messagebox.OK | Messagebox.CANCEL,
+				// Messagebox.QUESTION,
+				// new org.zkoss.zk.ui.event.EventListener<Event>() {
+				// public void onEvent(Event evt)
+				// throws InterruptedException {
+				// if (evt.getName().equals(
+				// "onOK")) {
+				// servicioBalanza
+				// .eliminarVarios(eliminarLista);
+				// msj.mensajeInformacion(Mensaje.eliminado);
+				// listaGeneral = servicioBalanza
+				// .buscarTodos();
+				// catalogo.actualizarLista(
+				// listaGeneral,
+				// true);
+				// }
+				// }
+				// });
+				//
+				// } else
+				// msj.mensajeError(Mensaje.noEliminar);
+				// }
+				// } else {
+				// /* Elimina un solo registro */
+				// if (id != 0) {
+				// List<Pesaje> pesajes = servicioBalanza
+				// .buscarPorBalanza(id);
+				//
+				// if (pesajes.isEmpty()) {
+				// Messagebox
+				// .show(Mensaje.deseaEliminar,
+				// "Alerta",
+				// Messagebox.OK | Messagebox.CANCEL,
+				// Messagebox.QUESTION,
+				// new org.zkoss.zk.ui.event.EventListener<Event>() {
+				// public void onEvent(Event evt)
+				// throws InterruptedException {
+				// if (evt.getName().equals(
+				// "onOK")) {
+				//
+				// servicioBalanza
+				// .eliminarUno(id);
+				// msj.mensajeInformacion(Mensaje.eliminado);
+				// limpiar();
+				// listaGeneral = servicioBalanza
+				// .buscarTodos();
+				// catalogo.actualizarLista(
+				// listaGeneral,
+				// true);
+				// }
+				// }
+				// });
+				//
+				// } else
+				// msj.mensajeError(Mensaje.noEliminar);
+				// } else
+				// msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				// }
 
 			}
 
@@ -205,7 +213,7 @@ public class CAlmacen extends CGenerico {
 		botonera.getChildren().get(1).setVisible(false);
 		botonera.getChildren().get(3).setVisible(false);
 		botonera.getChildren().get(5).setVisible(false);
-		botoneraAlmacen.appendChild(botonera);
+		botoneraProveedor.appendChild(botonera);
 
 	}
 
@@ -220,12 +228,14 @@ public class CAlmacen extends CGenerico {
 	}
 
 	public void limpiarCampos() {
-		id = 0;
+		id = "";
 		txtDescripcion.setValue("");
+		txtCodigo.setValue("");
+		txtCodigo.setDisabled(false);
 	}
 
 	public boolean validarSeleccion() {
-		List<Almacen> seleccionados = catalogo.obtenerSeleccionados();
+		List<Proveedor> seleccionados = catalogo.obtenerSeleccionados();
 		if (seleccionados == null) {
 			msj.mensajeAlerta(Mensaje.noHayRegistros);
 			return false;
@@ -248,14 +258,16 @@ public class CAlmacen extends CGenerico {
 	}
 
 	public boolean camposLLenos() {
-		if (txtDescripcion.getText().compareTo("") == 0) {
+		if (txtDescripcion.getText().compareTo("") == 0
+				|| txtCodigo.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
 	}
 
 	public boolean camposEditando() {
-		if (txtDescripcion.getText().compareTo("") != 0) {
+		if (txtDescripcion.getText().compareTo("") != 0
+				|| txtCodigo.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -298,19 +310,21 @@ public class CAlmacen extends CGenerico {
 	}
 
 	public void mostrarCatalogo() {
-		listaGeneral = servicioAlmacen.buscarTodos();
-		catalogo = new Catalogo<Almacen>(divCatalogoAlmacen,
-				"Catalogo de Almacenes", listaGeneral, false, false, false,
-				"Descripcion") {
+		listaGeneral = servicioProveedor.buscarTodos();
+		catalogo = new Catalogo<Proveedor>(divCatalogoProveedor,
+				"Catalogo de Proveedores", listaGeneral, false, false, false,
+				"Codigo", "Descripcion") {
 
 			@Override
-			protected List<Almacen> buscar(List<String> valores) {
+			protected List<Proveedor> buscar(List<String> valores) {
 
-				List<Almacen> lista = new ArrayList<Almacen>();
+				List<Proveedor> lista = new ArrayList<Proveedor>();
 
-				for (Almacen tipo : listaGeneral) {
-					if (tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(0).toLowerCase())) {
+				for (Proveedor tipo : listaGeneral) {
+					if (tipo.getId().toLowerCase()
+							.contains(valores.get(0).toLowerCase())
+							&& tipo.getDescripcion().toLowerCase()
+									.contains(valores.get(1).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -318,13 +332,22 @@ public class CAlmacen extends CGenerico {
 			}
 
 			@Override
-			protected String[] crearRegistros(Almacen tipo) {
-				String[] registros = new String[1];
-				registros[0] = tipo.getDescripcion();
+			protected String[] crearRegistros(Proveedor tipo) {
+				String[] registros = new String[2];
+				registros[0] = tipo.getId();
+				registros[1] = tipo.getDescripcion();
 				return registros;
 			}
 		};
-		catalogo.setParent(divCatalogoAlmacen);
+		catalogo.setParent(divCatalogoProveedor);
+	}
+
+	public boolean idLibre() {
+		if (servicioProducto.buscar(txtCodigo.getValue()) != null)
+			return false;
+		else
+			return true;
+
 	}
 
 }

@@ -16,34 +16,34 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="almacen")
-@NamedQuery(name="Almacen.findAll", query="SELECT t FROM Almacen t")
-public class Almacen implements Serializable {
+@Table(name="cliente")
+@NamedQuery(name="Cliente.findAll", query="SELECT t FROM Cliente t")
+public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private String id;
 
 	private String descripcion;
 
-	public Almacen() {
+	public Cliente() {
 	}
 
-	public int getCodigo() {
-		return this.id;
+	public String getId() {
+		return id;
 	}
 
-	public void setCodigo(int codigo) {
-		this.id = codigo;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
 
 }
