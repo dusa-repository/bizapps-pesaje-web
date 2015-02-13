@@ -1,12 +1,12 @@
 <zk>
 	<style src="../public/Estilo.css" />
-	<div id="divTransportista" apply="controlador.maestros.CTransportista">
-		<groupbox width="auto" mold="3d" title="Balanza (VTransportista)">
-			<div id="botoneraTransportista" />
+	<div id="divCliente" apply="controlador.maestros.CCliente">
+		<groupbox width="auto" mold="3d" title="Cliente (VCliente)">
+			<div id="botoneraCliente" />
 			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
 				open="false">
 				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
-					tooltiptext="Presione para Registrar un nuevo Transportista" />
+					tooltiptext="Presione para Registrar un nuevo Cliente" />
 				<separator />
 				<grid width="100%">
 					<columns visible="false">
@@ -16,7 +16,19 @@
 						<column label="" width="45%" />
 					</columns>
 					<rows>
-				
+							<row>
+							<hbox>
+								<label class="etiqueta" value="Codigo" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtCodigo" hflex="1" maxlength="100"
+									tooltiptext="Ingrese el Codigo" width="100%" />
+							</cell>
+							<hbox />
+						</row>
 						<row>
 							<hbox>
 								<label class="etiqueta" value="Descripcion:" />
@@ -37,8 +49,8 @@
 			<separator />
 			<groupbox id="gpxDatos" class="azul" width="auto">
 				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
-					tooltiptext="Presione para Visualizar lOs Transportistas Registrados" />
-				<div id="divCatalogoTransportista" tooltiptext="Seleccione EL Transportista para Realizar una Accion" />
+					tooltiptext="Presione para Visualizar los Clientes Registrados" />
+				<div id="divCatalogoCliente" tooltiptext="Seleccione el Cliente para Realizar una Accion" />
 			</groupbox>
 			<separator />
 			<separator />

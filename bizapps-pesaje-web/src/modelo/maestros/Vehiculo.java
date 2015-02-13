@@ -3,8 +3,6 @@ package modelo.maestros;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
@@ -16,34 +14,46 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="almacen")
-@NamedQuery(name="Almacen.findAll", query="SELECT t FROM Almacen t")
-public class Almacen implements Serializable {
+@Table(name="vehiculo")
+@NamedQuery(name="Vehiculo.findAll", query="SELECT t FROM Vehiculo t")
+public class Vehiculo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private String placa;
 
 	private String descripcion;
+	
+	private Double peso;
 
-	public Almacen() {
+	public Vehiculo() {
 	}
 
-	public int getCodigo() {
-		return this.id;
+	public String getPlaca() {
+		return placa;
 	}
 
-	public void setCodigo(int codigo) {
-		this.id = codigo;
+	public void setPlaca(String placa) {
+		this.placa = placa;
 	}
 
 	public String getDescripcion() {
-		return this.descripcion;
+		return descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
+	public Double getPeso() {
+		return peso;
+	}
+
+	public void setPeso(Double peso) {
+		this.peso = peso;
+	}
+
+
+
 
 }

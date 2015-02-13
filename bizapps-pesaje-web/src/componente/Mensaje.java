@@ -14,6 +14,7 @@ public class Mensaje {
 	public static String claveSYNoEsta = "El Codigo de Producto no Existe.";
 	public static String claveRTNoEsta = "El Codigo Definido por el Usuario no Existe.";
 	public static String guardado = "Registro Guardado Exitosamente.";
+	public static String codigoUsado = "El Codigo ha sido Usado por Otro Registro.";	
 	public static String claveUsada = "La Clave ha sido Usada por Otro Registro.";
 	public static String camposVacios = "Debe Llenar Todos los Campos Requeridos.";
 	public static String noSeleccionoItem = "No ha seleccionado ningun Item";
@@ -58,6 +59,8 @@ public class Mensaje {
 	public static String movil = "Especificar que el Usuario sera Movil, hara que el mismo no pueda Ingresar a este Sistema Administrativo";
 	public static String seleccionarItem= "Debe Seleccionar un Item";
 	public static String seleccionarEstado= "Debe Seleccionar un Estado";
+	public static String cedulaUsada="La Cedula esta siendo usada por otro Registro";
+	public static String placaUsada="La Placa esta siendo usada por otro Registro";
 	
 	public void mensajeInformacion(String msj) {
 	      Messagebox.show(msj, "Informacion",

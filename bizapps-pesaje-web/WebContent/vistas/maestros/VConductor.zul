@@ -1,0 +1,71 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divConductor" apply="controlador.maestros.CConductor">
+		<groupbox width="auto" mold="3d" title="Conductor (VConductor)">
+			<div id="botoneraConductor" />
+			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
+				open="false">
+				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
+					tooltiptext="Presione para Registrar un nuevo Conductor" />
+				<separator />
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="20%" />
+						<column label="" width="10%" />
+						<column label="" width="25%" />
+						<column label="" width="45%" />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Cedula" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtCedula" hflex="1" maxlength="100"
+									tooltiptext="Ingrese la Cedula" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Nombres:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtNombres" hflex="1" maxlength="100"
+									tooltiptext="Ingrese los Nombres del Conductor" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Apellidos:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtApellidos" hflex="1" maxlength="100"
+									tooltiptext="Ingrese los Apellidos del Conductor" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<separator />
+			<groupbox id="gpxDatos" class="azul" width="auto">
+				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
+					tooltiptext="Presione para Visualizar los Conductores Registrados" />
+				<div id="divCatalogoConductor" tooltiptext="Seleccione el Conductor para Realizar una Accion" />
+			</groupbox>
+			<separator />
+			<separator />
+		</groupbox>
+	</div>
+</zk>
