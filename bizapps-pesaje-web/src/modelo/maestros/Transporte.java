@@ -2,6 +2,7 @@ package modelo.maestros;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,8 @@ public class Transporte implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	@Column(name = "id_transporte")
+	private long idTransporte;
 
 	private String descripcion;
 	
@@ -32,12 +34,12 @@ public class Transporte implements Serializable {
 	public Transporte() {
 	}
 
-	public int getId() {
-		return id;
+	public long getIdTransporte() {
+		return idTransporte;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdTransporte(long idTransporte) {
+		this.idTransporte = idTransporte;
 	}
 
 	public String getDescripcion() {
@@ -55,6 +57,7 @@ public class Transporte implements Serializable {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
 
 
 }

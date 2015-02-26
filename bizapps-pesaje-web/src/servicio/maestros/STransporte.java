@@ -26,7 +26,7 @@ public class STransporte {
 		return transporteDAO.findAll();
 	}
 
-	public void eliminarUno(int id) {
+	public void eliminarUno(Long id) {
 		transporteDAO.delete(id);
 	}
 

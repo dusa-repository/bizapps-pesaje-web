@@ -23,7 +23,7 @@ public class SFlete {
 		return fleteDAO.findAll();
 	}
 
-	public void eliminarUno(int id) {
+	public void eliminarUno(Long id) {
 		fleteDAO.delete(id);
 	}
 

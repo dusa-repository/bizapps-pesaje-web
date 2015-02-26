@@ -5,6 +5,6 @@ import modelo.maestros.Balanza;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IAlmacenDAO extends JpaRepository<Almacen, Integer> {
+public interface IAlmacenDAO extends JpaRepository<Almacen, Long> {
 
 }

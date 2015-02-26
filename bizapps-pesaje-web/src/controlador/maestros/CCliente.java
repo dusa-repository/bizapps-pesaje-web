@@ -70,9 +70,9 @@ public class CCliente extends CGenerico {
 						abrirRegistro();
 						Cliente tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getId();
+						id = tipo.getIdCliente();
 						txtDescripcion.setValue(tipo.getDescripcion());
-						txtCodigo.setValue(tipo.getId());
+						txtCodigo.setValue(tipo.getIdCliente());
 						txtCodigo.setDisabled(true);
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -106,7 +106,7 @@ public class CCliente extends CGenerico {
 						id = txtCodigo.getValue();
 						Cliente cliente = new Cliente();
 						cliente.setDescripcion(descripcion);
-						cliente.setId(id);
+						cliente.setIdCliente(id);
 						servicioCliente.guardar(cliente);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -322,7 +322,7 @@ public class CCliente extends CGenerico {
 				List<Cliente> lista = new ArrayList<Cliente>();
 
 				for (Cliente tipo : listaGeneral) {
-					if (tipo.getId().toLowerCase()
+					if (tipo.getIdCliente().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
@@ -335,7 +335,7 @@ public class CCliente extends CGenerico {
 			@Override
 			protected String[] crearRegistros(Cliente tipo) {
 				String[] registros = new String[2];
-				registros[0] = tipo.getId();
+				registros[0] = tipo.getIdCliente();
 				registros[1] = tipo.getDescripcion();
 				return registros;
 			}

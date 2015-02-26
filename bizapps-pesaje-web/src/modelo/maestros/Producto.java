@@ -2,6 +2,7 @@ package modelo.maestros;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
@@ -18,19 +19,20 @@ public class Producto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id;
+	@Column(name = "id_producto")
+	private String idProducto;
 
 	private String descripcion;
 
 	public Producto() {
 	}
 
-	public String getId() {
-		return id;
+	public String getIdProducto() {
+		return idProducto;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIdProducto(String idProducto) {
+		this.idProducto = idProducto;
 	}
 
 	public String getDescripcion() {
@@ -40,6 +42,7 @@ public class Producto implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
 
 
 }

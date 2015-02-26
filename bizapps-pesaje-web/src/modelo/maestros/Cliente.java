@@ -2,6 +2,7 @@ package modelo.maestros;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,19 +23,20 @@ public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id;
+	@Column(name = "id_cliente")
+	private String idCliente;
 
 	private String descripcion;
 
 	public Cliente() {
 	}
 
-	public String getId() {
-		return id;
+	public String getIdCliente() {
+		return idCliente;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIdCliente(String idCliente) {
+		this.idCliente = idCliente;
 	}
 
 	public String getDescripcion() {
@@ -44,6 +46,7 @@ public class Cliente implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
 
 
 }

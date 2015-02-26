@@ -69,9 +69,9 @@ public class CProveedor extends CGenerico {
 						abrirRegistro();
 						Proveedor tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getId();
+						id = tipo.getIdProveedor();
 						txtDescripcion.setValue(tipo.getDescripcion());
-						txtCodigo.setValue(tipo.getId());
+						txtCodigo.setValue(tipo.getIdProveedor());
 						txtCodigo.setDisabled(true);
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -105,7 +105,7 @@ public class CProveedor extends CGenerico {
 						id = txtCodigo.getValue();
 						Proveedor proveedor = new Proveedor();
 						proveedor.setDescripcion(descripcion);
-						proveedor.setId(id);
+						proveedor.setIdProveedor(id);
 						servicioProveedor.guardar(proveedor);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -321,7 +321,7 @@ public class CProveedor extends CGenerico {
 				List<Proveedor> lista = new ArrayList<Proveedor>();
 
 				for (Proveedor tipo : listaGeneral) {
-					if (tipo.getId().toLowerCase()
+					if (tipo.getIdProveedor().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
@@ -334,7 +334,7 @@ public class CProveedor extends CGenerico {
 			@Override
 			protected String[] crearRegistros(Proveedor tipo) {
 				String[] registros = new String[2];
-				registros[0] = tipo.getId();
+				registros[0] = tipo.getIdProveedor();
 				registros[1] = tipo.getDescripcion();
 				return registros;
 			}
