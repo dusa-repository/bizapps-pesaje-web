@@ -27,7 +27,7 @@
 	<window title="" border="0" height="100%" width="100%"
 		apply="controlador.portal.CIndex">
 		<borderlayout height="100%"
-			style="background-image: url('public/imagenes/generales/estadistica.jpg'); background-repeat:no-repeat;height=100%; width=100% ; background-color:white">
+			style="background-image: url('public/imagenes/generales/pesaje.png'); background-repeat:no-repeat;height=100%; width=100% ; background-color:white">
 			<north height="2%" class="banner">
 			</north>
 			<east width="75%" border="none">

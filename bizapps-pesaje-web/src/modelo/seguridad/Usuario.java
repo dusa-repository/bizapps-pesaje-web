@@ -56,11 +56,13 @@ public class Usuario implements Serializable {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean estado;
 
-	// @Column(name = "fecha_auditoria")
-	// private Timestamp fechaAuditoria;
-	//
-	// @Column(name = "hora_auditoria", length = 10)
-	// private Timestamp horaAuditoria;
+	@Column(name = "solo_ver_pesaje")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean soloVer;
+	
+	@Column(name = "ver_editar_pesaje")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean verPesajeYEditar;
 
 	@Column(name = "usuario_auditoria", length = 50)
 	private String usuarioAuditoria;
@@ -263,6 +265,22 @@ public class Usuario implements Serializable {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+
+	public boolean isSoloVer() {
+		return soloVer;
+	}
+
+	public void setSoloVer(boolean soloVer) {
+		this.soloVer = soloVer;
+	}
+
+	public boolean isVerPesajeYEditar() {
+		return verPesajeYEditar;
+	}
+
+	public void setVerPesajeYEditar(boolean verPesajeYEditar) {
+		this.verPesajeYEditar = verPesajeYEditar;
 	}
 
 }

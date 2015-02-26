@@ -110,6 +110,15 @@ public class CUsuario extends CGenerico {
 	@Wire
 	private Groupbox gpxRegistro;
 	long id = 0;
+	@Wire
+	private Radiogroup rdbPesaje;
+	@Wire
+	private Radio rdoNoPermisos;
+	@Wire
+	private Radio rdoVerVista;
+	@Wire
+	private Radio rdoVerEditar;
+
 	Catalogo<Usuario> catalogo;
 	List<Grupo> gruposDisponibles = new ArrayList<Grupo>();
 	List<Grupo> gruposOcupados = new ArrayList<Grupo>();
@@ -135,6 +144,7 @@ public class CUsuario extends CGenerico {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		rdoNoPermisos.setChecked(true);
 		mostrarCatalogo();
 		gpxRegistro.setOpen(false);
 		botonera = new Botonera() {
@@ -165,6 +175,15 @@ public class CUsuario extends CGenerico {
 							rdoSexoFUsuario.setChecked(true);
 						else
 							rdoSexoMUsuario.setChecked(true);
+						if (usuario.isSoloVer())
+							rdoVerVista.setChecked(true);
+						else {
+							if (usuario.isVerPesajeYEditar())
+								rdoVerEditar.setChecked(true);
+							else
+								rdoNoPermisos.setChecked(true);
+						}
+
 						BufferedImage imag;
 						if (usuario.getImagen() != null) {
 							try {
@@ -178,7 +197,7 @@ public class CUsuario extends CGenerico {
 						txtCedulaUsuario.setDisabled(true);
 						id = usuario.getIdUsuario();
 						llenarListas(usuario);
-						
+
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -222,6 +241,7 @@ public class CUsuario extends CGenerico {
 							sexo = "F";
 						else
 							sexo = "M";
+
 						byte[] imagenUsuario = null;
 						if (media instanceof org.zkoss.image.Image) {
 							imagenUsuario = imagen.getContent().getByteData();
@@ -240,6 +260,20 @@ public class CUsuario extends CGenerico {
 								gruposUsuario, nombre, apellido, nombre2,
 								apellido2, sexo, telefono, direccion);
 
+						if (rdoNoPermisos.isChecked()) {
+							usuario.setVerPesajeYEditar(false);
+							usuario.setSoloVer(false);
+						} else {
+							if (rdoVerEditar.isChecked()) {
+								usuario.setVerPesajeYEditar(true);
+								usuario.setSoloVer(false);
+							} else {
+								if (rdoVerVista.isChecked())
+									usuario.setVerPesajeYEditar(false);
+								usuario.setSoloVer(true);
+							}
+
+						}
 						servicioUsuario.guardar(usuario);
 						limpiar();
 						msj.mensajeInformacion(Mensaje.guardado);
@@ -389,6 +423,9 @@ public class CUsuario extends CGenerico {
 		txtTelefonoUsuario.setValue("");
 		rdoSexoFUsuario.setChecked(false);
 		rdoSexoMUsuario.setChecked(false);
+		rdoNoPermisos.setChecked(true);
+		rdoVerEditar.setChecked(false);
+		rdoVerVista.setChecked(false);
 		txtAliado.setValue("");
 		try {
 			imagen.setContent(new AImage(url));

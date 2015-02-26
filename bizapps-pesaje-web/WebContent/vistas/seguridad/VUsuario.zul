@@ -168,6 +168,27 @@
 										<textbox id="txtPassword2Usuario" hflex="1" maxlength="256"
 											tooltiptext="Reescriba el Login del Usuario" type="password" />
 									</row>
+									<row>
+										<hbox>
+											<label class="etiqueta" value="Permisos de Vista Pesaje:" />
+											<space />
+											<label value="*" style="font-weight:bold;color:red">
+											</label>
+										</hbox>
+										<cell colspan="3">
+											<radiogroup id="rdbPesaje">
+												<radio id="rdoNoPermisos" label="No Tiene Permisos para Ver Vista Pesaje"
+													style="font-weight:bold;color:red" />
+												<separator />
+												<radio id="rdoVerVista" label="Puede Ver Vista Pesaje"
+													style="font-weight:bold;color:red" />
+												<separator />
+												<radio id="rdoVerEditar"
+													label="Puede Ver Vista Pesaje y Realizar Pesaje Manual"
+													style="font-weight:bold;color:red" />
+											</radiogroup>
+										</cell>
+									</row>
 								</rows>
 							</grid>
 							<separator />
