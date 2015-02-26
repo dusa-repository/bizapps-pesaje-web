@@ -41,7 +41,7 @@ public class CTransporte extends CGenerico {
 
 	Botonera botonera;
 	Catalogo<Transporte> catalogo;
-	int id = 0;
+	long id = 0;
 	private List<Transporte> listaGeneral = new ArrayList<Transporte>();
 
 	@Override
@@ -69,7 +69,7 @@ public class CTransporte extends CGenerico {
 						abrirRegistro();
 						Transporte tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getId();
+						id = tipo.getIdTransporte();
 						txtDescripcion.setValue(tipo.getDescripcion());
 						txtCodigo.setValue(tipo.getCodigo());
 					} else
@@ -102,7 +102,7 @@ public class CTransporte extends CGenerico {
 					Transporte transporte = new Transporte();
 					transporte.setDescripcion(descripcion);
 					transporte.setCodigo(codigo);
-					transporte.setId(id);
+					transporte.setIdTransporte(id);
 					servicioTransporte.guardar(transporte);
 					msj.mensajeInformacion(Mensaje.guardado);
 					limpiar();

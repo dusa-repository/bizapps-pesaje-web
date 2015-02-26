@@ -69,9 +69,9 @@ public class CProducto extends CGenerico {
 						abrirRegistro();
 						Producto tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getId();
+						id = tipo.getIdProducto();
 						txtDescripcion.setValue(tipo.getDescripcion());
-						txtCodigo.setValue(tipo.getId());
+						txtCodigo.setValue(tipo.getIdProducto());
 						txtCodigo.setDisabled(true);
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -105,7 +105,7 @@ public class CProducto extends CGenerico {
 						id = txtCodigo.getValue();
 						Producto producto = new Producto();
 						producto.setDescripcion(descripcion);
-						producto.setId(id);
+						producto.setIdProducto(id);
 						servicioProducto.guardar(producto);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -321,7 +321,7 @@ public class CProducto extends CGenerico {
 				List<Producto> lista = new ArrayList<Producto>();
 
 				for (Producto tipo : listaGeneral) {
-					if (tipo.getId().toLowerCase()
+					if (tipo.getIdProducto().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
@@ -334,7 +334,7 @@ public class CProducto extends CGenerico {
 			@Override
 			protected String[] crearRegistros(Producto tipo) {
 				String[] registros = new String[2];
-				registros[0] = tipo.getId();
+				registros[0] = tipo.getIdProducto();
 				registros[1] = tipo.getDescripcion();
 				return registros;
 			}

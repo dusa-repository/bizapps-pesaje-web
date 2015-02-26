@@ -27,7 +27,7 @@ public class SAlmacen {
 		return almacenDAO.findAll();
 	}
 
-	public void eliminarUno(int id) {
+	public void eliminarUno(Long id) {
 		almacenDAO.delete(id);
 	}
 

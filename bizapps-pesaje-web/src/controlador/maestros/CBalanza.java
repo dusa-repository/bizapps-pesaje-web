@@ -39,7 +39,7 @@ public class CBalanza extends CGenerico {
 
 	Botonera botonera;
 	Catalogo<Balanza> catalogo;
-	int id = 0;
+	long id = 0;
 	private List<Balanza> listaGeneral = new ArrayList<Balanza>();
 
 	@Override
@@ -67,7 +67,7 @@ public class CBalanza extends CGenerico {
 						abrirRegistro();
 						Balanza tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getCodigo();				
+						id = tipo.getIdBalanza();				
 						txtDescripcion.setValue(tipo.getDescripcion());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -96,7 +96,7 @@ public class CBalanza extends CGenerico {
 				if (validar()) {
 						String descripcion = txtDescripcion.getValue();
 						Balanza balanza = new Balanza();
-						balanza.setCodigo(id);
+						balanza.setIdBalanza(id);
 						balanza.setDescripcion(descripcion);
 						servicioBalanza.guardar(balanza);
 						msj.mensajeInformacion(Mensaje.guardado);

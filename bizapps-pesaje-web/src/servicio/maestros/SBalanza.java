@@ -25,7 +25,7 @@ public class SBalanza {
 		return balanzaDAO.findAll();
 	}
 
-	public void eliminarUno(int id) {
+	public void eliminarUno(Long id) {
 		balanzaDAO.delete(id);
 	}
 

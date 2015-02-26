@@ -40,7 +40,7 @@ public class CFlete extends CGenerico {
 
 	Botonera botonera;
 	Catalogo<Flete> catalogo;
-	int id = 0;
+	long id = 0;
 	private List<Flete> listaGeneral = new ArrayList<Flete>();
 
 	@Override
@@ -68,7 +68,7 @@ public class CFlete extends CGenerico {
 						abrirRegistro();
 						Flete tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getCodigo();				
+						id = tipo.getIdFlete();				
 						txtDescripcion.setValue(tipo.getDescripcion());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -98,7 +98,7 @@ public class CFlete extends CGenerico {
 						String descripcion = txtDescripcion.getValue();
 						Flete flete = new Flete();
 						flete.setDescripcion(descripcion);
-						flete.setCodigo(id);
+						flete.setIdFlete(id);
 						servicioFlete.guardar(flete);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();

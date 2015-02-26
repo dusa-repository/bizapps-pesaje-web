@@ -40,7 +40,7 @@ public class CAlmacen extends CGenerico {
 
 	Botonera botonera;
 	Catalogo<Almacen> catalogo;
-	int id = 0;
+	long id = 0;
 	private List<Almacen> listaGeneral = new ArrayList<Almacen>();
 
 	@Override
@@ -68,7 +68,7 @@ public class CAlmacen extends CGenerico {
 						abrirRegistro();
 						Almacen tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getCodigo();				
+						id = tipo.getIdAlmacen();				
 						txtDescripcion.setValue(tipo.getDescripcion());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
@@ -97,7 +97,7 @@ public class CAlmacen extends CGenerico {
 				if (validar()) {
 						String descripcion = txtDescripcion.getValue();
 						Almacen almacen = new Almacen();
-						almacen.setCodigo(id);
+						almacen.setIdAlmacen(id);
 						almacen.setDescripcion(descripcion);
 						servicioAlmacen.guardar(almacen);
 						msj.mensajeInformacion(Mensaje.guardado);
@@ -110,77 +110,6 @@ public class CAlmacen extends CGenerico {
 
 			@Override
 			public void eliminar() {
-//				if (gpxDatos.isOpen()) {
-//					/* Elimina Varios Registros */
-//					if (validarSeleccion()) {
-//						final List<Balanza> eliminarLista = catalogo
-//								.obtenerSeleccionados();
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorIds(eliminarLista);
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show("¿Desea Eliminar los "
-//											+ eliminarLista.size()
-//											+ " Registros?",
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//														servicioBalanza
-//																.eliminarVarios(eliminarLista);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					}
-//				} else {
-//					/* Elimina un solo registro */
-//					if (id != 0) {
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorBalanza(id);
-//				
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show(Mensaje.deseaEliminar,
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//
-//														servicioBalanza
-//																.eliminarUno(id);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														limpiar();
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					} else
-//						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-//				}
 
 			}
 
