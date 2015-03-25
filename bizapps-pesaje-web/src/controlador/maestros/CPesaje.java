@@ -1,8 +1,12 @@
 package controlador.maestros;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -922,14 +926,14 @@ public class CPesaje extends CGenerico {
 			dbxPesoPTEntrada.setValue(0);
 			dbxPesoPTSalida.setReadonly(true);
 			dtbFechaEntrada.setValue(fechaHora);
-			Double peso = obtenerPeso();
+			Double peso = obtenerPeso("172.23.22.12",1600);
 			dbxVehiculoEntrada.setValue(peso);
 			dbxTotalEntrada.setValue(peso);
 			dbxTotal.setValue(peso);
 		} else {
 			if (dbxPesoPTSalida.getValue() != null) {
 				dtbFechaSalida.setValue(fechaHora);
-				Double peso = obtenerPeso();
+				Double peso = obtenerPeso("172.23.22.12",1600);
 				dbxVehiculoSalida.setValue(peso);
 				dbxTotalSalida.setValue(peso);
 				Double total = (double) 0;
@@ -1012,13 +1016,80 @@ public class CPesaje extends CGenerico {
 
 	}
 
-	public Double obtenerPeso() {
-		double start = 1;
-		double end = 10000;
-		double random = new Random().nextDouble();
-		double result = start + (random * (end - start));
-		double resultado = Math.round(result * 100) / 100;
-		return resultado;
+	private Double obtenerPeso(String ip, int port) {
+
+		 	Socket client = null;
+	        PrintWriter output = null;
+	        BufferedReader in = null;
+	        byte[] bytes = new byte[1];
+	        String strx = new String();
+	        Double numero=0.0;
+	        
+	        
+	        try {
+	               //client = new Socket("172.23.22.12", 1600);
+	        	   client = new Socket(ip, port);
+	               output = new PrintWriter(client.getOutputStream(), false);
+	               in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+	              
+	              int contadorA=0;
+	              while (true)
+	              {
+	                int caracter=in.read();
+	                System.out.println(caracter);
+	                
+	                if (caracter>=48 && caracter<=57)
+	                {
+	                    bytes[0]= (byte)caracter;
+	                    String numero_aux=new String(bytes, "UTF-8");
+	                    strx+=numero_aux;
+	                }
+	                
+	                if (caracter==65)
+	                {
+	                 contadorA++;   
+	                }
+	                
+	                if (contadorA>=2)
+	                    break;
+	                
+	              }
+	              
+	              //String numero=new String(bytes, "UTF-8");
+	             
+	              try
+	              {
+	                   numero = Double.parseDouble(strx);
+	              }
+	              catch (Exception ex)
+	              {
+	                  numero=0.0;
+	              }
+	              System.out.println(numero);
+	             // System.out.println(Float.parseFloat(numero));
+	              
+	           
+	        }
+	        catch (IOException e) {
+	            System.out.println(e);
+	        }
+	        output.close();
+	        try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        try {
+				client.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	   
+		
+		
+		return numero;
 	}
 
 	public void editable(boolean a) {
