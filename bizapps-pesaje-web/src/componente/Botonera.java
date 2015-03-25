@@ -28,9 +28,10 @@ public abstract class Botonera extends Hbox {
 		this.appendChild(btnGuardar);
 		this.appendChild(btnEliminar);
 		this.appendChild(btnLimpiar);
-		this.appendChild(btnReporte);
-		this.appendChild(btnSalir);
 		this.appendChild(btnAyuda);
+		this.appendChild(btnSalir);
+		this.appendChild(btnReporte);
+
 
 		btnSeleccionar.setImage("/public/imagenes/botones/seleccionar.png");
 		btnBuscar.setImage("/public/imagenes/botones/volver.png");
@@ -40,7 +41,7 @@ public abstract class Botonera extends Hbox {
 		btnLimpiar.setImage("/public/imagenes/botones/limpiar.png");
 		btnReporte.setImage("/public/imagenes/botones/reporte.png");
 		btnSalir.setImage("/public/imagenes/botones/salir.png");
-		btnAyuda.setImage("/public/imagenes/botones/ayuda.png");
+		btnAyuda.setImage("/public/imagenes/botones/buscar.png");
 		
 		
 		btnAyuda.setSclass("btn");
@@ -53,6 +54,7 @@ public abstract class Botonera extends Hbox {
 		btnReporte.setSclass("btn");
 		btnSeleccionar.setSclass("btn");
 		btnSeleccionar.setWidth("115px");
+		btnAyuda.setWidth("150px");
 		
 		btnSeleccionar.setLabel("Seleccionar");
 		btnBuscar.setLabel("Volver");
@@ -62,7 +64,7 @@ public abstract class Botonera extends Hbox {
 		btnLimpiar.setLabel("Limpiar");
 		btnReporte.setLabel("Reporte");
 		btnSalir.setLabel("Salir");
-		btnAyuda.setLabel("Ayuda");
+		btnAyuda.setLabel("Pesajes Cerrados");
 
 		btnSeleccionar.setTooltiptext("Seleccionar");
 		btnBuscar.setTooltiptext("Volver");
@@ -72,7 +74,7 @@ public abstract class Botonera extends Hbox {
 		btnLimpiar.setTooltiptext("Limpiar");
 		btnReporte.setTooltiptext("Reporte");
 		btnSalir.setTooltiptext("Salir");
-		btnAyuda.setTooltiptext("Ayuda");
+		btnAyuda.setTooltiptext("Pesajes Cerrados");
 
 
 		btnSeleccionar.addEventListener(Events.ON_CLICK,

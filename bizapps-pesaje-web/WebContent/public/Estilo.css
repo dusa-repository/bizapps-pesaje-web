@@ -67,6 +67,18 @@
 	text-shadow: 0 0 0;
 	font-family: sans-serif;
 }
+.btnOtro {
+	font-size: 16px;
+	color: black;
+	cursor: pointer;
+	height: 29px;
+	-webkit-border-radius: 0.7em;
+	-moz-border-radius: 0.7em;
+	border-radius: 0.7em;
+	white-space: pre-line;
+	text-shadow: 0 0 0;
+	font-family: sans-serif;
+}
 
 .multilinea {
 	height: 35px;

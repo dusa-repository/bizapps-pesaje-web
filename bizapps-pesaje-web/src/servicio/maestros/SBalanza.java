@@ -33,4 +33,9 @@ public class SBalanza {
 		balanzaDAO.delete(eliminarLista);
 	}
 
+	public Balanza buscar(long idBalanza) {
+		// TODO Auto-generated method stub
+		return balanzaDAO.findOne(idBalanza);
+	}
+
 }

@@ -55,6 +55,7 @@ import servicio.maestros.SVehiculo;
 import servicio.seguridad.SArbol;
 import servicio.seguridad.SGrupo;
 import servicio.seguridad.SUsuario;
+import servicio.transacciones.SPesaje;
 import componente.Mensaje;
 
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
@@ -90,6 +91,8 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	protected SVehiculo servicioVehiculo;
 	@WireVariable("SConductor")
 	protected SConductor servicioConductor;
+	@WireVariable("SPesaje")
+	protected SPesaje servicioPesaje;
 	
 	
 	private static ApplicationContext app = new ClassPathXmlApplicationContext(
@@ -116,7 +119,26 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	private static ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 			"/META-INF/PropiedadesBaseDatos.xml");
 
+	public Timestamp metodoFecha() {
+		fecha = new Date();
+		return fechaHora = new Timestamp(fecha.getTime());
+	}
 
+	public String metodoHora() {
+		fecha = new Date();
+		calendario.setTime(fecha);
+		return String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)) + ":"
+				+ String.valueOf(calendario.get(Calendar.MINUTE)) + ":"
+				+ String.valueOf(calendario.get(Calendar.SECOND));
+	}
+
+	public Usuario usuarioSesion(String valor) {
+		return servicioUsuario.buscarUsuarioPorNombre(valor);
+	}
+	public static SPesaje getServicioPesaje() {
+		return app.getBean(SPesaje.class);
+	}
+	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -238,7 +260,7 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	public boolean enviarEmailNotificacion(String correo, String mensajes) {
 		try {
 
-			String cc = "NOTIFICACION DEL SISTEMA SEVADU";
+			String cc = "NOTIFICACION DEL SISTEMA DE PESAJE";
 			Properties props = new Properties();
 			props.setProperty("mail.smtp.host", "172.23.20.66");
 			props.setProperty("mail.smtp.starttls.enable", "true");
@@ -312,210 +334,6 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 		}
 	}
 
-	public String diaSemanaString(Calendar calendar) {
-		int dia = calendar.get(Calendar.DAY_OF_WEEK);
-		String diaSemana = "";
-		switch (dia) {
-		case 2:
-			diaSemana = "Lunes";
-			break;
-		case 3:
-			diaSemana = "Martes";
-			break;
-
-		case 4:
-			diaSemana = "Miercoles";
-			break;
-		case 5:
-			diaSemana = "Jueves";
-			break;
-		case 6:
-			diaSemana = "Viernes";
-			break;
-		case 7:
-			diaSemana = "Sabado";
-			break;
-		case 1:
-			diaSemana = "Domingo";
-			break;
-		}
-		return diaSemana;
-	}
-
-	public String mesString(Calendar calendar) {
-		int dia = calendar.get(Calendar.MONTH);
-		String diaSemana = "";
-		switch (dia) {
-		case 0:
-			diaSemana = "Enero";
-			break;
-		case 1:
-			diaSemana = "Febrero";
-			break;
-		case 2:
-			diaSemana = "Marzo";
-			break;
-		case 3:
-			diaSemana = "Abril";
-			break;
-		case 4:
-			diaSemana = "Mayo";
-			break;
-		case 5:
-			diaSemana = "Junio";
-			break;
-		case 6:
-			diaSemana = "Julio";
-			break;
-		case 7:
-			diaSemana = "Agosto";
-			break;
-		case 8:
-			diaSemana = "Septiembre";
-			break;
-		case 9:
-			diaSemana = "Octubre";
-			break;
-		case 10:
-			diaSemana = "Noviembre";
-			break;
-		case 11:
-			diaSemana = "Diciembre";
-			break;
-		}
-		return diaSemana;
-	}
-
-	public int obtenerIntDadoString(String value) {
-		int valor = 0;
-		switch (value) {
-		case "Enero":
-			valor = 1;
-			break;
-		case "Febrero":
-			valor = 2;
-			break;
-		case "Marzo":
-			valor = 3;
-			break;
-		case "Abril":
-			valor = 4;
-			break;
-		case "Mayo":
-			valor = 5;
-			break;
-		case "Junio":
-			valor = 6;
-			break;
-		case "Julio":
-			valor = 7;
-			break;
-		case "Agosto":
-			valor = 8;
-			break;
-		case "Septiembre":
-			valor = 9;
-			break;
-		case "Octubre":
-			valor = 10;
-			break;
-		case "Noviembre":
-			valor = 11;
-			break;
-		case "Diciembre":
-			valor = 12;
-			break;
-		}
-		return valor;
-	}
-
-	protected int obtenerMes(int tiempo) {
-		switch (tiempo) {
-		case 0:
-			tiempo = 12;
-			break;
-		case -1:
-			tiempo = 11;
-			break;
-		case -2:
-			tiempo = 10;
-			break;
-		case -3:
-			tiempo = 9;
-			break;
-		case -4:
-			tiempo = 8;
-			break;
-		case -5:
-			tiempo = 7;
-			break;
-		case -6:
-			tiempo = 6;
-			break;
-		case -7:
-			tiempo = 5;
-			break;
-		case -8:
-			tiempo = 4;
-			break;
-		case -9:
-			tiempo = 3;
-			break;
-		case -10:
-			tiempo = 2;
-			break;
-		case -11:
-			tiempo = 1;
-			break;
-		default:
-			break;
-		}
-		return tiempo;
-	}
-
-	public String mounthStringGivenIntegerValue(int mes) {
-		String mounth = "";
-		switch (mes) {
-		case 1:
-			mounth = "Enero";
-			break;
-		case 2:
-			mounth = "Febrero";
-			break;
-		case 3:
-			mounth = "Marzo";
-			break;
-		case 4:
-			mounth = "Abril";
-			break;
-		case 5:
-			mounth = "Mayo";
-			break;
-		case 6:
-			mounth = "Junio";
-			break;
-		case 7:
-			mounth = "Julio";
-			break;
-		case 8:
-			mounth = "Agosto";
-			break;
-		case 9:
-			mounth = "Septiembre";
-			break;
-		case 10:
-			mounth = "Octubre";
-			break;
-		case 11:
-			mounth = "Noviembre";
-			break;
-		case 12:
-			mounth = "Diciembre";
-			break;
-		}
-		return mounth;
-	}
-
 	public int obtenerDiasHabiles(Date fecha, Date fecha2) {
 		Calendar calendario = Calendar.getInstance();
 		calendario.setTimeZone(TimeZone.getTimeZone("GMT-4:00"));
@@ -553,29 +371,6 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 			bd = bd.setScale(places, RoundingMode.HALF_UP);
 		}
 		return bd.doubleValue();
-	}
-
-	public String lastDay(Date fechaHoy) {
-		DateFormat formatoNuevo = new SimpleDateFormat("MM");
-		String month = formatoNuevo.format(fechaHoy);
-		String last = "30";
-		switch (month) {
-		case "01":
-		case "03":
-		case "05":
-		case "07":
-		case "08":
-		case "10":
-		case "12":
-			last = "31-";
-			break;
-		case "02":
-			last = "28-";
-			break;
-		default:
-			break;
-		}
-		return last;
 	}
 
 }
