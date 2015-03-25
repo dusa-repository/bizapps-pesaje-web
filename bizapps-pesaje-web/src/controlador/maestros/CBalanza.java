@@ -14,6 +14,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Radio;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
 
@@ -36,6 +37,26 @@ public class CBalanza extends CGenerico {
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
+	@Wire
+	private Textbox txtIp;
+	@Wire
+	private Textbox txtModelo;
+	@Wire
+	private Textbox txtEquipo;
+	@Wire
+	private Textbox txtPuerto;
+	@Wire
+	private Textbox txtBaudRate;
+	@Wire
+	private Textbox txtDataBits;
+	@Wire
+	private Textbox txtStopBits;
+	@Wire
+	private Textbox txtParityNone;
+	@Wire
+	private Radio rdoIP;
+	@Wire
+	private Radio rdoRS;
 
 	Botonera botonera;
 	Catalogo<Balanza> catalogo;
@@ -65,10 +86,28 @@ public class CBalanza extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Balanza tipo = catalogo
-								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getIdBalanza();				
+						Balanza tipo = catalogo.objetoSeleccionadoDelCatalogo();
+						id = tipo.getIdBalanza();
 						txtDescripcion.setValue(tipo.getDescripcion());
+						txtIp.setValue(tipo.getIp());
+						txtPuerto.setValue(tipo.getPuerto());
+						txtEquipo.setValue(tipo.getEquipo());
+						txtModelo.setValue(tipo.getModelo());
+						txtBaudRate.setValue(tipo.getBaudrate());
+						txtDataBits.setValue(tipo.getDatabits());
+						txtStopBits.setValue(tipo.getStopbits());
+						txtParityNone.setValue(tipo.getParitynone());
+						if (tipo.getClasificacion() != null) {
+							if (!tipo.getClasificacion().equals("")) {
+								if (tipo.getClasificacion().equals("IP"))
+									rdoIP.setChecked(true);
+								else {
+									if (tipo.getClasificacion()
+											.equals("RS-232"))
+										rdoRS.setChecked(true);
+								}
+							}
+						}
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -94,93 +133,36 @@ public class CBalanza extends CGenerico {
 			@Override
 			public void guardar() {
 				if (validar()) {
-						String descripcion = txtDescripcion.getValue();
-						Balanza balanza = new Balanza();
-						balanza.setIdBalanza(id);
-						balanza.setDescripcion(descripcion);
-						servicioBalanza.guardar(balanza);
-						msj.mensajeInformacion(Mensaje.guardado);
-						limpiar();
-						listaGeneral = servicioBalanza.buscarTodos();
-						catalogo.actualizarLista(listaGeneral, true);
-						abrirCatalogo();
-					}
+					String descripcion = txtDescripcion.getValue();
+					Balanza balanza = new Balanza();
+					balanza.setIdBalanza(id);
+					balanza.setDescripcion(descripcion);
+					balanza.setBaudrate(txtBaudRate.getValue());
+					balanza.setDatabits(txtDataBits.getValue());
+					balanza.setEquipo(txtEquipo.getValue());
+					balanza.setIp(txtIp.getValue());
+					balanza.setModelo(txtModelo.getValue());
+					balanza.setParitynone(txtParityNone.getValue());
+					balanza.setPuerto(txtPuerto.getValue());
+					balanza.setStopbits(txtStopBits.getValue());
+
+					if (rdoIP.isChecked())
+						balanza.setClasificacion("IP");
+					else if (rdoRS.isChecked())
+						balanza.setClasificacion("RS-232");
+					else
+						balanza.setClasificacion("");
+					servicioBalanza.guardar(balanza);
+					msj.mensajeInformacion(Mensaje.guardado);
+					limpiar();
+					listaGeneral = servicioBalanza.buscarTodos();
+					catalogo.actualizarLista(listaGeneral, true);
+					abrirCatalogo();
+				}
 			}
 
 			@Override
 			public void eliminar() {
-//				if (gpxDatos.isOpen()) {
-//					/* Elimina Varios Registros */
-//					if (validarSeleccion()) {
-//						final List<Balanza> eliminarLista = catalogo
-//								.obtenerSeleccionados();
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorIds(eliminarLista);
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show("¿Desea Eliminar los "
-//											+ eliminarLista.size()
-//											+ " Registros?",
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//														servicioBalanza
-//																.eliminarVarios(eliminarLista);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					}
-//				} else {
-//					/* Elimina un solo registro */
-//					if (id != 0) {
-//						List<Pesaje> pesajes = servicioBalanza
-//								.buscarPorBalanza(id);
-//				
-//						if (pesajes.isEmpty()) {
-//							Messagebox
-//									.show(Mensaje.deseaEliminar,
-//											"Alerta",
-//											Messagebox.OK | Messagebox.CANCEL,
-//											Messagebox.QUESTION,
-//											new org.zkoss.zk.ui.event.EventListener<Event>() {
-//												public void onEvent(Event evt)
-//														throws InterruptedException {
-//													if (evt.getName().equals(
-//															"onOK")) {
-//
-//														servicioBalanza
-//																.eliminarUno(id);
-//														msj.mensajeInformacion(Mensaje.eliminado);
-//														limpiar();
-//														listaGeneral = servicioBalanza
-//																.buscarTodos();
-//														catalogo.actualizarLista(
-//																listaGeneral,
-//																true);
-//													}
-//												}
-//											});
-//
-//						} else
-//							msj.mensajeError(Mensaje.noEliminar);
-//					} else
-//						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-//				}
-
 			}
 
 			@Override
@@ -221,6 +203,16 @@ public class CBalanza extends CGenerico {
 	public void limpiarCampos() {
 		id = 0;
 		txtDescripcion.setValue("");
+		txtIp.setValue("");
+		txtPuerto.setValue("");
+		txtEquipo.setValue("");
+		txtModelo.setValue("");
+		txtBaudRate.setValue("");
+		txtDataBits.setValue("");
+		txtStopBits.setValue("");
+		txtParityNone.setValue("");
+		rdoIP.setChecked(false);
+		rdoRS.setChecked(false);
 	}
 
 	public boolean validarSeleccion() {
@@ -300,7 +292,7 @@ public class CBalanza extends CGenerico {
 		listaGeneral = servicioBalanza.buscarTodos();
 		catalogo = new Catalogo<Balanza>(divCatalogoBalanza,
 				"Catalogo de Balanzas", listaGeneral, false, false, false,
-				"Descripcion") {
+				"Descripcion", "Ip", "Puerto") {
 
 			@Override
 			protected List<Balanza> buscar(List<String> valores) {
@@ -309,6 +301,10 @@ public class CBalanza extends CGenerico {
 
 				for (Balanza tipo : listaGeneral) {
 					if (tipo.getDescripcion().toLowerCase()
+							.contains(valores.get(0).toLowerCase())
+							&& tipo.getIp().toLowerCase()
+									.contains(valores.get(0).toLowerCase())
+							&& tipo.getPuerto().toLowerCase()
 									.contains(valores.get(0).toLowerCase())) {
 						lista.add(tipo);
 					}
@@ -318,8 +314,10 @@ public class CBalanza extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Balanza tipo) {
-				String[] registros = new String[1];
+				String[] registros = new String[3];
 				registros[0] = tipo.getDescripcion();
+				registros[1] = tipo.getIp();
+				registros[2] = tipo.getPuerto();
 				return registros;
 			}
 		};

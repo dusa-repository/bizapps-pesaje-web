@@ -19,7 +19,6 @@ public class STransporte {
 
 	public void guardar(Transporte trans) {
 		transporteDAO.save(trans);
-		
 	}
 
 	public List<Transporte> buscarTodos() {
@@ -32,6 +31,11 @@ public class STransporte {
 
 	public void eliminarVarios(List<Transporte> eliminarLista) {
 		transporteDAO.delete(eliminarLista);
+	}
+
+	public Transporte buscar(long idTransporte) {
+		// TODO Auto-generated method stub
+		return transporteDAO.findOne(idTransporte);
 	}
 
 }

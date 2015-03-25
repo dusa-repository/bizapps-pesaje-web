@@ -1,6 +1,9 @@
 package controlador.reporte;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -9,11 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controlador.maestros.CPesaje;
+import net.sf.jasperreports.engine.JRException;
+
 /**
- * Servlet implementation class Generador
+ * Servlet implementation class Reportero
  */
 @WebServlet("/Generador")
 public class Generador extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -30,32 +37,29 @@ public class Generador extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+
+		CPesaje pesaje = new CPesaje();
 		ServletOutputStream out;
-		String tipo = request.getParameter("valor1");
-		String aliado = request.getParameter("valor2");
-		String zona = request.getParameter("valor3");
-		String cliente = request.getParameter("valor4");
-		String vendedor = request.getParameter("valor5");
-		String desde = request.getParameter("valor6");
-		String hasta = request.getParameter("valor7");
-		String tipoReporte = request.getParameter("valor8");
+		String par1 = request.getParameter("valor");
+		String par2 = request.getParameter("valor2");
+
 		byte[] fichero = null;
-		
-		if (tipoReporte != null) {
-			if (tipoReporte.equals("EXCEL")) {
-				response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-				response.setHeader("Content-Disposition",
-						"inline; filename=Reporte.xlsx");
-			} else {
-				response.setContentType("application/pdf");
-				response.setHeader("Content-disposition",
-						"inline; filename=Reporte.pdf");
+		try {
+			switch (par1) {
+			case "1":
+				fichero = pesaje.mostrarReporte(par2);
+				break;
+			default:
+				break;
 			}
-		} else {
-			response.setContentType("application/pdf");
-			response.setHeader("Content-disposition",
-					"inline; filename=Reporte.pdf");
+		} catch (JRException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+
+		response.setContentType("application/pdf");
+		response.setHeader("Content-disposition",
+				"inline; filename=Reporte.pdf");
 
 		response.setHeader("Cache-Control", "max-age=30");
 		response.setHeader("Pragma", "No-cache");

@@ -1,0 +1,249 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divPesaje" apply="controlador.maestros.CPesaje">
+		<groupbox width="auto" mold="3d" title="Pesaje">
+			<div id="divBotoneraPesaje"></div>
+			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
+				open="false">
+				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
+					tooltiptext="Presione para Registrar un nuevo Pesaje" />
+				<groupbox id="gpxVehiculo" width="auto" class="blanco"
+					title="Vehiculo">
+					<grid width="100%">
+						<columns visible="false">
+							<column label="" width="17%" />
+							<column label="" width="18%" />
+							<column label="" width="15%" />
+							<column label="" width="50%" />
+						</columns>
+						<rows>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Boleto:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox id="txtBoleto" hflex="1" width="100%" readonly="true"
+									style="background-color:yellow" />
+								<hbox />
+								<hbox />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Vehiculo:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox disabled="true" id="txtVehiculo" hflex="1"
+									maxlength="100" tooltiptext="Seleccione el Vehiculo" width="100%" />
+								<button autodisable="self" id="btnBuscarVehiculo" class="btn"
+									label="Buscar" tooltiptext="Catalogo de Vehiculos"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblVehiculo" />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Transporte:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox disabled="true" id="txtTransporte" hflex="1"
+									maxlength="100" tooltiptext="Seleccione el Transporte" width="100%" />
+								<button autodisable="self" id="btnBuscarTransporte"
+									class="btn" label="Buscar" tooltiptext="Catalogo de Transportes"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblTransporte" />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Conductor:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox disabled="true" id="txtConductor" hflex="1"
+									maxlength="100" tooltiptext="Seleccione el Conductor" width="100%" />
+								<button autodisable="self" id="btnBuscarConductor" class="btn"
+									label="Buscar" tooltiptext="Catalogo de Conductores"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblConductor" />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Producto:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox disabled="true" id="txtProducto" hflex="1"
+									maxlength="100" tooltiptext="Seleccione el Producto" width="100%" />
+								<button autodisable="self" id="btnBuscarProducto" class="btn"
+									label="Buscar" tooltiptext="Catalogo de Productos"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblProducto" />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Balanza:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox disabled="true" id="txtBalanza" hflex="1"
+									maxlength="100" tooltiptext="Seleccione la Balanza" width="100%" />
+								<button autodisable="self" id="btnBuscarBalanza" class="btn"
+									label="Buscar" tooltiptext="Catalogo de Balanzas"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblBalanza" />
+							</row>
+							<row>
+								<label class="etiqueta" value="Almacen:" />
+								<textbox disabled="true" id="txtAlmacen" hflex="1"
+									maxlength="100" tooltiptext="Seleccione el Almacen" width="100%" />
+								<button autodisable="self" id="btnBuscarAlmacen" class="btn"
+									label="Buscar" tooltiptext="Catalogo de Almacenes"
+									image="/public/imagenes/botones/buscar.png" />
+								<label style="font-weight:bold;color:black" id="lblAlmacen" />
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+				<groupbox id="gpxComplementario" width="auto" class="blanco"
+					title="Complementario">
+					<grid width="100%">
+						<columns visible="false">
+							<column label="" width="17%" />
+							<column label="" width="18%" />
+							<column label="" width="15%" />
+							<column label="" width="50%" />
+						</columns>
+						<rows>
+							<row>
+								<label class="etiqueta" value="Nro. Factura:" />
+								<textbox id="txtNroFactura" hflex="1" maxlength="100"
+									tooltiptext="Ingrese el Numero de Factura" width="100%" />
+								<hbox />
+								<hbox />
+							</row>
+							<row>
+								<label class="etiqueta" value="Observaciones:" />
+								<cell colspan="3">
+									<textbox id="txtObservacion" hflex="1" maxlength="500"
+										tooltiptext="Ingrese una Observacion" width="100%" multiline="true" />
+								</cell>
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+				<groupbox id="gpxLectura" width="auto" class="blanco"
+					title="Lectura">
+					<grid width="100%">
+						<columns>
+							<column label="" width="10%" />
+							<column label="Fecha/Hora" width="18%"
+								style="font-weight:bold;color:black;background-color:#BDBDBD" />
+							<column label="Peso PT" width="18%"
+								style="font-weight:bold;color:black;background-color:#BDBDBD" />
+							<column label="Vehiculo" width="18%"
+								style="font-weight:bold;color:black;background-color:#BDBDBD" />
+							<column label="Diferencia" width="18%"
+								style="font-weight:bold;color:black;background-color:#BDBDBD" />
+							<column label="Total" width="18%"
+								style="font-weight:bold;color:black;background-color:#BDBDBD" />
+						</columns>
+						<rows>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Entrada:" style="font-size:14px" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<datebox readonly="true" width="100%" id="dtbFechaEntrada"
+									onCreate="self.value = new Date()" />
+								<doublebox readonly="true" style="font-weight:bold"
+									id="dbxPesoPTEntrada" hflex="1" maxlength="100000000"
+									constraint="no negative:Solo valores Positivos" tooltiptext="Ingrese el Peso PT"
+									width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxVehiculoEntrada"
+									hflex="1" maxlength="100000000" tooltiptext="Ingrese el Peso"
+									width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxDiferenciaEntrada"
+									hflex="1" maxlength="100000000"
+									tooltiptext="Diferencia entre Peso de Entrada, Peso PT y Peso de la Balanza"
+									width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxTotalEntrada"
+									hflex="1" maxlength="100000000" tooltiptext="Ingrese el Total"
+									width="100%" />
+							</row>
+							<row>
+								<label class="etiqueta" value="Salida:" style="font-size:14px" />
+								<datebox readonly="true" width="100%" id="dtbFechaSalida" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" id="dbxPesoPTSalida" hflex="1"
+									maxlength="100000000" tooltiptext="Ingrese el Peso PT" width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxVehiculoSalida"
+									hflex="1" maxlength="100000000" tooltiptext="Ingrese el Peso"
+									width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxDiferenciaSalida"
+									hflex="1" maxlength="100000000"
+									tooltiptext="Diferencia entre Peso de Salida, Peso PT y Peso de la Balanza"
+									width="100%" />
+								<doublebox constraint="no negative:Solo valores Positivos"
+									style="font-weight:bold" readonly="true" id="dbxTotalSalida"
+									hflex="1" maxlength="100000000" tooltiptext="Total Salida"
+									width="100%" />
+							</row>
+							<row>
+								<cell colspan="5">
+									<hbox />
+								</cell>
+								<doublebox id="dbxTotal" hflex="1" maxlength="100000000"
+									tooltiptext="Diferencia entre Peso de Entrada y de Salida"
+									width="100%" style="font-weight:bold" readonly="true" />
+
+							</row>
+							<row>
+								<cell colspan="4">
+									<hbox />
+								</cell>
+								<button autodisable="self" id="btnAutomatico" class="btnOtro"
+									style="background: #9FF781;	font-weight:bold;font-size: 15px;width: 100%"
+									label="Automatico" tooltiptext="Presione para obtener pesaje automatico"
+									image="/public/imagenes/botones/procesar.png" />
+								<button autodisable="self" id="btnManual" class="btnOtro"
+									style="background:#F78181;	font-weight:bold;font-size: 15px;width: 100%"
+									label="Manual" tooltiptext="Presione para realizar pesaje manual"
+									image="/public/imagenes/botones/pendiente.png" />
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+
+			</groupbox>
+			<separator />
+			<groupbox id="gpxDatos" class="azul" width="auto">
+				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
+					tooltiptext="Presione para Visualizar los Almacenes Registrados" />
+				<div id="divCatalogoPesaje" tooltiptext="Seleccione eL Almacen para Realizar una Accion" />
+			</groupbox>
+			<separator />
+			<separator />
+		</groupbox>
+		<div id="divCatalogoAlmacen" />
+		<div id="divCatalogoProducto" />
+		<div id="divCatalogoBalanza" />
+		<div id="divCatalogoConductor" />
+		<div id="divCatalogoVehiculo" />
+		<div id="divCatalogoTransporte" />
+		<div id="divCatalogoPesajeCerrado" />
+	</div>
+</zk>

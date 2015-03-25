@@ -16,7 +16,7 @@
 						<column label="" width="45%" />
 					</columns>
 					<rows>
-				
+
 						<row>
 							<hbox>
 								<label class="etiqueta" value="Descripcion:" />
@@ -30,7 +30,81 @@
 							</cell>
 							<hbox />
 						</row>
-		
+						<row>
+							<label class="etiqueta" value="Ip:" />
+							<cell colspan="2">
+								<textbox id="txtIp" hflex="1" maxlength="500"
+									tooltiptext="Ingrese la Ip" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Puerto:" />
+							<cell colspan="2">
+								<textbox id="txtPuerto" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Puerto" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="# Equipo:" />
+							<cell colspan="2">
+								<textbox id="txtEquipo" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Equipo" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Modelo:" />
+							<cell colspan="2">
+								<textbox id="txtModelo" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Modelo" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Baud Rate:" />
+							<cell colspan="2">
+								<textbox id="txtBaudRate" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Baud Rate" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Data Bits:" />
+							<cell colspan="2">
+								<textbox id="txtDataBits" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Data Bits" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Stop Bits:" />
+							<cell colspan="2">
+								<textbox id="txtStopBits" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Stop Bits" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Parity None:" />
+							<cell colspan="2">
+								<textbox id="txtParityNone" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Parity None" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Clasificacion:" />
+							<cell colspan="2">
+								<radiogroup id="rdbClasificacion">
+									<radio id="rdoIP" label="IP" style="font-weight:bold" />
+									<separator />
+									<radio id="rdoRS" label="RS-232" style="font-weight:bold" />
+								</radiogroup>
+							</cell>
+							<hbox />
+						</row>
 					</rows>
 				</grid>
 			</groupbox>

@@ -28,6 +28,34 @@ public class Balanza implements Serializable {
 	private long idBalanza;
 
 	private String descripcion;
+	
+	@Column(length = 500)
+	private String equipo;
+	
+	@Column(length = 500)
+	private String ip;
+	
+	@Column(length = 500)
+	private String puerto;
+	
+	@Column(length = 500)
+	private String modelo;
+	
+	@Column(length = 500)
+	private String baudrate;
+	
+	@Column(length = 500)
+	private String databits;
+	
+	@Column(length = 500)
+	private String stopbits;
+	
+	@Column(length = 500)
+	private String paritynone;
+	
+	@Column(length = 500)
+	private String clasificacion;
+	
 
 	public Balanza() {
 	}
@@ -46,6 +74,78 @@ public class Balanza implements Serializable {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public String getEquipo() {
+		return equipo;
+	}
+
+	public void setEquipo(String equipo) {
+		this.equipo = equipo;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getPuerto() {
+		return puerto;
+	}
+
+	public void setPuerto(String puerto) {
+		this.puerto = puerto;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public String getBaudrate() {
+		return baudrate;
+	}
+
+	public void setBaudrate(String baudrate) {
+		this.baudrate = baudrate;
+	}
+
+	public String getDatabits() {
+		return databits;
+	}
+
+	public void setDatabits(String databits) {
+		this.databits = databits;
+	}
+
+	public String getStopbits() {
+		return stopbits;
+	}
+
+	public void setStopbits(String stopbits) {
+		this.stopbits = stopbits;
+	}
+
+	public String getParitynone() {
+		return paritynone;
+	}
+
+	public void setParitynone(String paritynone) {
+		this.paritynone = paritynone;
+	}
+
+	public String getClasificacion() {
+		return clasificacion;
+	}
+
+	public void setClasificacion(String clasificacion) {
+		this.clasificacion = clasificacion;
 	}
 
 	

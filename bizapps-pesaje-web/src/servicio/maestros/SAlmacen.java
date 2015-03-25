@@ -20,7 +20,6 @@ public class SAlmacen {
 
 	public void guardar(Almacen almacen) {
 		almacenDAO.save(almacen);
-		
 	}
 
 	public List<Almacen> buscarTodos() {
@@ -33,6 +32,10 @@ public class SAlmacen {
 
 	public void eliminarVarios(List<Almacen> eliminarLista) {
 		almacenDAO.delete(eliminarLista);
+	}
+
+	public Almacen buscar(long idAlmacen) {
+	return	almacenDAO.findOne(idAlmacen);
 	}
 
 }
