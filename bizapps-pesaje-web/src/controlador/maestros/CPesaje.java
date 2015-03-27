@@ -36,6 +36,7 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.annotation.Listen;
@@ -50,6 +51,7 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import componente.Botonera;
 import componente.Catalogo;
@@ -148,6 +150,8 @@ public class CPesaje extends CGenerico {
 	private Button btnManual;
 	@Wire
 	private Button btnBuscarBalanza;
+	@Wire
+	private Button btnDevolucion;
 
 	Botonera botonera;
 
@@ -185,11 +189,13 @@ public class CPesaje extends CGenerico {
 		mostrarCatalogoPesaje();
 
 		Usuario usuario = usuarioSesion(nombreUsuarioSesion());
-		if(usuario.isVerPesajeYEditar())
+		if (usuario.isVerPesajeYEditar())
 			btnManual.setDisabled(false);
 		else
 			btnManual.setDisabled(true);
 		
+		btnDevolucion.setDisabled(true);
+
 		botonera = new Botonera() {
 
 			@Override
@@ -245,67 +251,72 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void guardar() {
-				if (validar()) {
-					Pesaje pesaje = new Pesaje();
-					Balanza balanza = servicioBalanza.buscar(idBalanza);
-					if (id == 0) {
-						Producto producto = servicioProducto.buscar(idProducto);
-						Vehiculo vehiculo = servicioVehiculo.buscar(idVehiculo);
-						Conductor conductor = servicioConductor
-								.buscar(idConductor);
-						Transporte transporte = servicioTransporte
-								.buscar(idTransporte);
-						Almacen almacen = new Almacen();
-						if (idAlmacen != 0) {
-							almacen = servicioAlmacen.buscar(idAlmacen);
-							pesaje.setAlmacen(almacen);
-						}
+				if (idCerrado == 0) {
+					if (validar()) {
+						Pesaje pesaje = new Pesaje();
+						Balanza balanza = servicioBalanza.buscar(idBalanza);
+						if (id == 0) {
+							Producto producto = servicioProducto
+									.buscar(idProducto);
+							Vehiculo vehiculo = servicioVehiculo
+									.buscar(idVehiculo);
+							Conductor conductor = servicioConductor
+									.buscar(idConductor);
+							Transporte transporte = servicioTransporte
+									.buscar(idTransporte);
+							Almacen almacen = new Almacen();
+							if (idAlmacen != 0) {
+								almacen = servicioAlmacen.buscar(idAlmacen);
+								pesaje.setAlmacen(almacen);
+							}
 
-						pesaje.setConductor(conductor);
-						pesaje.setEntrada(dbxVehiculoEntrada.getValue());
-						pesaje.setTransporte(transporte);
-						pesaje.setVehiculo(vehiculo);
-						pesaje.setProducto(producto);
-						pesaje.setBalanza(balanza);
-						Timestamp fechaPesaje = new Timestamp(dtbFechaEntrada
-								.getValue().getTime());
-						pesaje.setFechaPesaje(fechaPesaje);
-						pesaje.setHoraPesaje(metodoHora());
-						pesaje.setEstatus("Activo");
+							pesaje.setConductor(conductor);
+							pesaje.setEntrada(dbxVehiculoEntrada.getValue());
+							pesaje.setTransporte(transporte);
+							pesaje.setVehiculo(vehiculo);
+							pesaje.setProducto(producto);
+							pesaje.setBalanza(balanza);
+							Timestamp fechaPesaje = new Timestamp(
+									dtbFechaEntrada.getValue().getTime());
+							pesaje.setFechaPesaje(fechaPesaje);
+							pesaje.setHoraPesaje(metodoHora());
+							pesaje.setEstatus("Activo");
+							pesaje.setNroFactura(txtNroFactura.getValue());
+						} else {
+							pesaje = servicioPesaje.buscar(id);
+							Timestamp fechaPesaje = new Timestamp(
+									dtbFechaSalida.getValue().getTime());
+							pesaje.setFechaPesajeSalida(fechaPesaje);
+							Double pesoSalida = dbxVehiculoSalida.getValue();
+							pesaje.setSalida(pesoSalida);
+							pesaje.setEstatus("Cerrado");
+							pesaje.setPesoPTSalida(dbxPesoPTSalida.getValue());
+							pesaje.setBalanza(balanza);
+							Clients.evalJavaScript("window.open('"
+									+ damePath()
+									+ "Generador?valor=1&valor2="
+									+ String.valueOf(id)
+									+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+						}
+						pesaje.setObservacion(txtObservacion.getValue());
 						pesaje.setNroFactura(txtNroFactura.getValue());
-					} else {
-						pesaje = servicioPesaje.buscar(id);
-						Timestamp fechaPesaje = new Timestamp(dtbFechaSalida
-								.getValue().getTime());
-						pesaje.setFechaPesajeSalida(fechaPesaje);
-						Double pesoSalida = dbxVehiculoSalida.getValue();
-						pesaje.setSalida(pesoSalida);
-						pesaje.setEstatus("Cerrado");
-						pesaje.setPesoPTSalida(dbxPesoPTSalida.getValue());
-						pesaje.setBalanza(balanza);
-						Clients.evalJavaScript("window.open('"
-								+ damePath()
-								+ "Generador?valor=1&valor2="
-								+ String.valueOf(id)
-								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+						pesaje.setHoraAuditoria(metodoHora());
+						pesaje.setFechaAuditoria(metodoFecha());
+						servicioPesaje.guardar(pesaje);
+						if (id == 0) {
+							Pesaje pesaje2 = servicioPesaje.buscarUltimo();
+							Clients.evalJavaScript("window.open('"
+									+ damePath()
+									+ "Generador?valor=1&valor2="
+									+ String.valueOf(pesaje2.getBoleto())
+									+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+						}
+						limpiar();
+						listaGeneral = servicioPesaje
+								.buscarPorEstatus("Activo");
+						catalogoPesaje.actualizarLista(listaGeneral, true);
+						msj.mensajeInformacion(Mensaje.guardado);
 					}
-					pesaje.setObservacion(txtObservacion.getValue());
-					pesaje.setNroFactura(txtNroFactura.getValue());
-					pesaje.setHoraAuditoria(metodoHora());
-					pesaje.setFechaAuditoria(metodoFecha());
-					servicioPesaje.guardar(pesaje);
-					if (id == 0) {
-						Pesaje pesaje2 = servicioPesaje.buscarUltimo();
-						Clients.evalJavaScript("window.open('"
-								+ damePath()
-								+ "Generador?valor=1&valor2="
-								+ String.valueOf(pesaje2.getBoleto())
-								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
-					}
-					limpiar();
-					listaGeneral = servicioPesaje.buscarPorEstatus("Activo");
-					catalogoPesaje.actualizarLista(listaGeneral, true);
-					msj.mensajeInformacion(Mensaje.guardado);
 				}
 			}
 
@@ -392,7 +403,7 @@ public class CPesaje extends CGenerico {
 	}
 
 	public boolean camposEditando() {
-			return false;
+		return false;
 	}
 
 	public boolean validarSeleccion() {
@@ -434,6 +445,8 @@ public class CPesaje extends CGenerico {
 	}
 
 	public void limpiarCampos() {
+		
+		btnDevolucion.setDisabled(true);
 		id = 0;
 		idCerrado = 0;
 		idVehiculo = "";
@@ -479,20 +492,20 @@ public class CPesaje extends CGenerico {
 							.contains(valores.get(0).toLowerCase())
 							&& String.valueOf(tipo.getFechaPesaje())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(1).toLowerCase())
 							&& String
 									.valueOf(
 											tipo.getProducto().getDescripcion())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(2).toLowerCase())
 							&& String.valueOf(tipo.getVehiculo().getPlaca())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(3).toLowerCase())
 							&& String.valueOf(tipo.getConductor().getNombres())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(4).toLowerCase())
 							&& String.valueOf(tipo.getEstatus()).toLowerCase()
-									.contains(valores.get(0).toLowerCase())) {
+									.contains(valores.get(5).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -518,7 +531,7 @@ public class CPesaje extends CGenerico {
 
 	@Listen("onClick = #btnBuscarAlmacen")
 	public void mostrarCatalogoAlmacen() {
-		List<Almacen> lista = servicioAlmacen.buscarTodos();
+		final List<Almacen> lista = servicioAlmacen.buscarTodos();
 		catalogoAlmacen = new Catalogo<Almacen>(divCatalogoAlmacen,
 				"Catalogo de Almacenes", lista, true, false, false,
 				"Descripcion") {
@@ -526,15 +539,15 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Almacen> buscar(List<String> valores) {
 
-				List<Almacen> lista = new ArrayList<Almacen>();
+				List<Almacen> listaa = new ArrayList<Almacen>();
 
 				for (Almacen tipo : lista) {
 					if (tipo.getDescripcion().toLowerCase()
 							.contains(valores.get(0).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -560,7 +573,7 @@ public class CPesaje extends CGenerico {
 	@Listen("onClick = #btnBuscarVehiculo")
 	public void mostrarCatalogoVehiculo() {
 
-		List<Vehiculo> lista = servicioVehiculo.buscarTodos();
+		final List<Vehiculo> lista = servicioVehiculo.buscarTodos();
 		catalogoVehiculo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
 				"Catalogo de Vehiculos", lista, true, false, false, "Placa",
 				"Descripcion", "Peso") {
@@ -568,7 +581,7 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Vehiculo> buscar(List<String> valores) {
 
-				List<Vehiculo> lista = new ArrayList<Vehiculo>();
+				List<Vehiculo> listaa = new ArrayList<Vehiculo>();
 
 				for (Vehiculo tipo : lista) {
 					if (tipo.getPlaca().toLowerCase()
@@ -577,10 +590,10 @@ public class CPesaje extends CGenerico {
 									.contains(valores.get(1).toLowerCase())
 							&& String.valueOf(tipo.getPeso()).toLowerCase()
 									.contains(valores.get(2).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -607,7 +620,7 @@ public class CPesaje extends CGenerico {
 
 	@Listen("onClick = #btnBuscarTransporte")
 	public void mostrarCatalogoTransporte() {
-		List<Transporte> lista = servicioTransporte.buscarTodos();
+		final List<Transporte> lista = servicioTransporte.buscarTodos();
 		catalogoTransporte = new Catalogo<Transporte>(divCatalogoTransporte,
 				"Catalogo de Transportes", lista, true, false, false, "Codigo",
 				"Descripcion") {
@@ -615,17 +628,17 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Transporte> buscar(List<String> valores) {
 
-				List<Transporte> lista = new ArrayList<Transporte>();
+				List<Transporte> listaa = new ArrayList<Transporte>();
 
 				for (Transporte tipo : lista) {
 					if (tipo.getCodigo().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -651,7 +664,7 @@ public class CPesaje extends CGenerico {
 
 	@Listen("onClick = #btnBuscarConductor")
 	public void mostrarCatalogoConductor() {
-		List<Conductor> lista = servicioConductor.buscarTodos();
+		final List<Conductor> lista = servicioConductor.buscarTodos();
 		catalogoConductor = new Catalogo<Conductor>(divCatalogoConductor,
 				"Catalogo de Conductores", lista, true, false, false, "Cedula",
 				"Nombres", "Apellidos") {
@@ -659,7 +672,7 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Conductor> buscar(List<String> valores) {
 
-				List<Conductor> lista = new ArrayList<Conductor>();
+				List<Conductor> listaa = new ArrayList<Conductor>();
 
 				for (Conductor tipo : lista) {
 					if (tipo.getCedula().toLowerCase()
@@ -668,10 +681,10 @@ public class CPesaje extends CGenerico {
 									.contains(valores.get(1).toLowerCase())
 							&& tipo.getApellidos().toLowerCase()
 									.contains(valores.get(2).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -698,7 +711,7 @@ public class CPesaje extends CGenerico {
 
 	@Listen("onClick = #btnBuscarProducto")
 	public void mostrarCatalogoProducto() {
-		List<Producto> lista = servicioProducto.buscarTodos();
+		final List<Producto> lista = servicioProducto.buscarTodos();
 		catalogoProducto = new Catalogo<Producto>(divCatalogoProducto,
 				"Catalogo de Productos", lista, true, false, false, "Codigo",
 				"Descripcion") {
@@ -706,17 +719,17 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Producto> buscar(List<String> valores) {
 
-				List<Producto> lista = new ArrayList<Producto>();
+				List<Producto> listaa = new ArrayList<Producto>();
 
 				for (Producto tipo : lista) {
 					if (tipo.getIdProducto().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -742,7 +755,7 @@ public class CPesaje extends CGenerico {
 
 	@Listen("onClick = #btnBuscarBalanza")
 	public void mostrarCatalogoBalanza() {
-		List<Balanza> lista = servicioBalanza.buscarTodos();
+		final List<Balanza> lista = servicioBalanza.buscarTodos();
 		catalogoBalanza = new Catalogo<Balanza>(divCatalogoBalanza,
 				"Catalogo de Balanzas", lista, true, false, false,
 				"Descripcion") {
@@ -750,15 +763,15 @@ public class CPesaje extends CGenerico {
 			@Override
 			protected List<Balanza> buscar(List<String> valores) {
 
-				List<Balanza> lista = new ArrayList<Balanza>();
+				List<Balanza> listaa = new ArrayList<Balanza>();
 
 				for (Balanza tipo : lista) {
 					if (tipo.getDescripcion().toLowerCase()
 							.contains(valores.get(0).toLowerCase())) {
-						lista.add(tipo);
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -783,39 +796,40 @@ public class CPesaje extends CGenerico {
 
 	public void mostrarCatalogoPesajeCerrados() {
 
-		List<Pesaje> lista = servicioPesaje.buscarPorEstatus("Cerrado");
+		final List<Pesaje> lista = servicioPesaje.buscarPorEstatus("Cerrado");
 		catalogoPesajeCerrado = new Catalogo<Pesaje>(divCatalogoPesajeCerrado,
-				"Catalogo de Pesajes Cerrados", lista, true, false, false, "Boleto",
-				"Fecha", "Producto", "Placa Vehiculo", "Conductor", "Estatus") {
+				"Catalogo de Pesajes Cerrados", lista, true, false, false,
+				"Boleto", "Fecha", "Producto", "Placa Vehiculo", "Conductor",
+				"Estatus") {
 
 			@Override
 			protected List<Pesaje> buscar(List<String> valores) {
 
-				List<Pesaje> lista = new ArrayList<Pesaje>();
+				List<Pesaje> listaa = new ArrayList<Pesaje>();
 
 				for (Pesaje tipo : lista) {
 					if (String.valueOf(tipo.getBoleto()).toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& String.valueOf(tipo.getFechaPesaje())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(1).toLowerCase())
 							&& String
 									.valueOf(
 											tipo.getProducto().getDescripcion())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(2).toLowerCase())
 							&& String.valueOf(tipo.getVehiculo().getPlaca())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(3).toLowerCase())
 							&& String.valueOf(tipo.getConductor().getNombres())
 									.toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(4).toLowerCase())
 							&& String.valueOf(tipo.getEstatus()).toLowerCase()
-									.contains(valores.get(0).toLowerCase())) {
-						lista.add(tipo);
+									.contains(valores.get(5).toLowerCase())) {
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
@@ -846,15 +860,14 @@ public class CPesaje extends CGenerico {
 	}
 
 	public void llenarCamposPesaje(Pesaje tipo) {
-		if (tipo.getBalanza() != null)
-		idBalanza = tipo.getBalanza().getIdBalanza();
-		if (tipo.getAlmacen() != null)
-			idAlmacen = tipo.getAlmacen().getIdAlmacen();
+
+		btnDevolucion.setDisabled(false);
 		txtBoleto.setValue(String.valueOf(tipo.getBoleto()));
 		if (tipo.getAlmacen() != null) {
 			txtAlmacen.setValue(String
 					.valueOf(tipo.getAlmacen().getIdAlmacen()));
 			lblAlmacen.setValue(tipo.getAlmacen().getDescripcion());
+			idAlmacen = tipo.getAlmacen().getIdAlmacen();
 		}
 		txtVehiculo.setValue(String.valueOf(tipo.getVehiculo().getPlaca()));
 		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion());
@@ -871,6 +884,7 @@ public class CPesaje extends CGenerico {
 			txtBalanza.setValue(String
 					.valueOf(tipo.getBalanza().getIdBalanza()));
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
+			idBalanza = tipo.getBalanza().getIdBalanza();
 		}
 		txtObservacion.setValue(tipo.getObservacion());
 		txtNroFactura.setValue(tipo.getNroFactura());
@@ -894,13 +908,14 @@ public class CPesaje extends CGenerico {
 				if (tipo.getEntrada() != null) {
 					double entrada = tipo.getEntrada();
 					Double total = (double) 0;
-					if (entrada > dbxVehiculoSalida.getValue())
-						total = entrada - dbxVehiculoSalida.getValue();
+					if (entrada > tipo.getSalida())
+						total = entrada - tipo.getSalida();
 					else
-						total = dbxVehiculoSalida.getValue() - entrada;
+						total = tipo.getSalida() - entrada;
 					dbxTotal.setValue(total);
 					Double diferencia = (double) 0;
 					if (tipo.getPesoPTSalida() != null) {
+						dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
 						diferencia = tipo.getEntrada() + tipo.getPesoPTSalida()
 								- tipo.getSalida();
 						if (diferencia < 0)
@@ -911,9 +926,8 @@ public class CPesaje extends CGenerico {
 				dtbFechaSalida.setDisabled(true);
 				dtbFechaSalida.setValue(tipo.getFechaPesajeSalida());
 			}
-			if (tipo.getPesoPTSalida() != null)
-				dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
 			inhabilitar(true);
+			btnDevolucion.setDisabled(true);
 		}
 
 	}
@@ -984,7 +998,7 @@ public class CPesaje extends CGenerico {
 			dbxTotalSalida.setReadonly(false);
 			dtbFechaSalida.setReadonly(false);
 			dtbFechaSalida.setDisabled(false);
-
+			dtbFechaSalida.setValue(fechaHora);
 		}
 	}
 
@@ -996,6 +1010,7 @@ public class CPesaje extends CGenerico {
 				Pesaje pesaje = servicioPesaje.buscar(id);
 				double entrada = pesaje.getEntrada();
 				dbxTotalSalida.setValue(dbxVehiculoSalida.getValue());
+				dbxTotalSalida.setReadonly(true);
 				Double diferencia = (double) 0;
 				diferencia = entrada + dbxPesoPTSalida.getValue()
 						- dbxVehiculoSalida.getValue();
@@ -1141,12 +1156,19 @@ public class CPesaje extends CGenerico {
 		btnBuscarVehiculo.setDisabled(a);
 		btnBuscarBalanza.setDisabled(a);
 		Usuario usuario = usuarioSesion(nombreUsuarioSesion());
-		
-		if(usuario.isVerPesajeYEditar())
-			btnManual.setDisabled(false);
-		else
-			btnManual.setDisabled(a);
 
+		if (usuario.isVerPesajeYEditar()) {
+			if (btnManual.isDisabled())
+				btnManual.setDisabled(false);
+		} else {
+			if (a && !btnManual.isDisabled())
+				btnManual.setDisabled(a);
+		}
+
+		if (idCerrado != 0) {
+			if (!btnManual.isDisabled())
+				btnManual.setDisabled(true);
+		}
 
 	}
 
@@ -1218,8 +1240,21 @@ public class CPesaje extends CGenerico {
 		return fichero;
 	}
 
-	private void showNotify(String msg) {
-		Clients.showNotification(msg);
+	@Listen("onClick = #btnDevolucion")
+	public void devolucion() {
+		if (id != 0) {
+			Pesaje pesaje = servicioPesaje.buscar(id);
+			if (pesaje != null) {
+				HashMap<String, Object> mapa = new HashMap<String, Object>();
+				
+				mapa.put("boleto", String.valueOf(pesaje.getBoleto()));
+				mapa.put("c", this);
+				Sessions.getCurrent().setAttribute("devolucion", mapa);
+				Window window = (Window) Executions.createComponents(
+						"/vistas/transacciones/VDevolucion.zul", null,
+						mapa);
+				window.doModal();
+			}
+		}
 	}
-
 }

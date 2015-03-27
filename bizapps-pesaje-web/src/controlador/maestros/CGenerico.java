@@ -45,6 +45,7 @@ import servicio.maestros.SAlmacen;
 import servicio.maestros.SBalanza;
 import servicio.maestros.SCliente;
 import servicio.maestros.SConductor;
+import servicio.maestros.SEmpresa;
 import servicio.maestros.SF0004;
 import servicio.maestros.SF0005;
 import servicio.maestros.SFlete;
@@ -55,6 +56,7 @@ import servicio.maestros.SVehiculo;
 import servicio.seguridad.SArbol;
 import servicio.seguridad.SGrupo;
 import servicio.seguridad.SUsuario;
+import servicio.transacciones.SDevolucion;
 import servicio.transacciones.SPesaje;
 import componente.Mensaje;
 
@@ -93,7 +95,10 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	protected SConductor servicioConductor;
 	@WireVariable("SPesaje")
 	protected SPesaje servicioPesaje;
-	
+	@WireVariable("SEmpresa")
+	protected SEmpresa servicioEmpresa;
+	@WireVariable("SDevolucion")
+	protected SDevolucion servicioDevolucion;
 	
 	private static ApplicationContext app = new ClassPathXmlApplicationContext(
 			"/META-INF/ConfiguracionAplicacion.xml");

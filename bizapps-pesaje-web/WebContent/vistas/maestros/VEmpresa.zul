@@ -1,0 +1,70 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divEmpresa" apply="controlador.maestros.CEmpresa">
+		<groupbox width="auto" mold="3d" title="Empresa (VEmpresa)">
+			<div id="botoneraEmpresa" />
+			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
+				open="false">
+				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
+					tooltiptext="Presione para Registrar una nueva Empresa" />
+				<separator />
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="20%" />
+						<column label="" width="10%" />
+						<column label="" width="25%" />
+						<column label="" width="45%" />
+					</columns>
+					<rows>
+
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Rif:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtRif" hflex="1" maxlength="50"
+									tooltiptext="Ingrese el Rif" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Nombre:" />
+							<cell colspan="2">
+								<textbox id="txtNombre" hflex="1" maxlength="500"
+									tooltiptext="Ingrese el Nombre" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Direccion:" />
+							<cell colspan="2">
+								<textbox id="txtDireccion" hflex="1" maxlength="500"
+									tooltiptext="Ingrese la Direccion" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Telefono:" />
+							<cell colspan="2">
+								<textbox id="txtTelefono" hflex="1" maxlength="50"
+									tooltiptext="Ingrese el Telefono  (0426-9999999)" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<separator />
+			<groupbox id="gpxDatos" class="azul" width="auto">
+				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
+					tooltiptext="Presione para Visualizar las Empresas Registradas" />
+				<div id="divCatalogoEmpresa" tooltiptext="Seleccione la Empresa para Realizar una Accion" />
+			</groupbox>
+			<separator />
+			<separator />
+		</groupbox>
+	</div>
+</zk>

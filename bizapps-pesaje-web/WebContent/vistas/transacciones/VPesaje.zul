@@ -212,9 +212,13 @@
 
 							</row>
 							<row>
-								<cell colspan="4">
+								<cell colspan="3">
 									<hbox />
 								</cell>
+								<button autodisable="self" id="btnDevolucion" class="btnOtro"
+									style="background: #A9E2F3;font-weight:bold;font-size: 15px;width: 100%"
+									label="Devolucion" tooltiptext="Presione para realizar una Devolucion"
+									image="/public/imagenes/botones/devolucion.png" />
 								<button autodisable="self" id="btnAutomatico" class="btnOtro"
 									style="background: #9FF781;	font-weight:bold;font-size: 15px;width: 100%"
 									label="Automatico" tooltiptext="Presione para obtener pesaje automatico"

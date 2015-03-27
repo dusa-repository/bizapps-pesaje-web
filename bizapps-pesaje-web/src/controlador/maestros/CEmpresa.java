@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import modelo.maestros.Almacen;
-
+import modelo.maestros.Empresa;
+import modelo.seguridad.Usuario;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -21,27 +21,34 @@ import org.zkoss.zul.Textbox;
 import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
+import componente.Validador;
 
-public class CAlmacen extends CGenerico {
+public class CEmpresa extends CGenerico {
 
 	private static final long serialVersionUID = -6868106910332150746L;
 	@Wire
-	private Textbox txtDescripcion;
+	private Textbox txtRif;
 	@Wire
-	private Div divAlmacen;
+	private Div divEmpresa;
 	@Wire
-	private Div botoneraAlmacen;
+	private Div botoneraEmpresa;
 	@Wire
-	private Div divCatalogoAlmacen;
+	private Div divCatalogoEmpresa;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
+	@Wire
+	private Textbox txtNombre;
+	@Wire
+	private Textbox txtTelefono;
+	@Wire
+	private Textbox txtDireccion;
 
 	Botonera botonera;
-	Catalogo<Almacen> catalogo;
-	long id = 0;
-	private List<Almacen> listaGeneral = new ArrayList<Almacen>();
+	Catalogo<Empresa> catalogo;
+	String id = "";
+	private List<Empresa> listaGeneral = new ArrayList<Empresa>();
 
 	@Override
 	public void inicializar() throws IOException {
@@ -55,7 +62,7 @@ public class CAlmacen extends CGenerico {
 				map = null;
 			}
 		}
-		txtDescripcion.setFocus(true);
+		txtRif.setFocus(true);
 		mostrarCatalogo();
 
 		botonera = new Botonera() {
@@ -66,10 +73,14 @@ public class CAlmacen extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Almacen tipo = catalogo
-								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getIdAlmacen();				
-						txtDescripcion.setValue(tipo.getDescripcion());
+						Empresa tipo = catalogo.objetoSeleccionadoDelCatalogo();
+						id = tipo.getRif();
+						txtRif.setValue(tipo.getRif());
+						txtNombre.setValue(tipo.getNombre());
+						txtDireccion.setValue(tipo.getDireccion());
+						txtTelefono.setValue(tipo.getTelefono());
+						txtRif.setDisabled(true);
+						
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -77,7 +88,7 @@ public class CAlmacen extends CGenerico {
 
 			@Override
 			public void salir() {
-				cerrarVentana(divAlmacen, cerrar, tabs);
+				cerrarVentana(divEmpresa, cerrar, tabs);
 
 			}
 
@@ -89,28 +100,33 @@ public class CAlmacen extends CGenerico {
 			public void limpiar() {
 				mostrarBotones(false);
 				limpiarCampos();
-				id = 0;
+				id = "";
 			}
 
 			@Override
 			public void guardar() {
 				if (validar()) {
-						String descripcion = txtDescripcion.getValue();
-						Almacen almacen = new Almacen();
-						almacen.setIdAlmacen(id);
-						almacen.setDescripcion(descripcion);
-						servicioAlmacen.guardar(almacen);
+					if (buscarPorLogin()) {
+						Empresa empresa = new Empresa();
+						empresa.setRif(txtRif.getValue());
+						empresa.setNombre(txtNombre.getValue());
+						empresa.setTelefono(txtTelefono.getValue());
+						empresa.setDireccion(txtDireccion.getValue());
+						empresa.setUsuarioAuditoria(nombreUsuarioSesion());
+						empresa.setHoraAuditoria(metodoHora());
+						empresa.setFechaAuditoria(metodoFecha());
+						servicioEmpresa.guardar(empresa);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
-						listaGeneral = servicioAlmacen.buscarTodos();
+						listaGeneral = servicioEmpresa.buscarTodos();
 						catalogo.actualizarLista(listaGeneral, true);
 						abrirCatalogo();
 					}
+				}
 			}
 
 			@Override
 			public void eliminar() {
-
 			}
 
 			@Override
@@ -134,7 +150,7 @@ public class CAlmacen extends CGenerico {
 		botonera.getChildren().get(1).setVisible(false);
 		botonera.getChildren().get(3).setVisible(false);
 		botonera.getChildren().get(5).setVisible(false);
-		botoneraAlmacen.appendChild(botonera);
+		botoneraEmpresa.appendChild(botonera);
 
 	}
 
@@ -149,12 +165,16 @@ public class CAlmacen extends CGenerico {
 	}
 
 	public void limpiarCampos() {
-		id = 0;
-		txtDescripcion.setValue("");
+		id = "";
+		txtRif.setValue("");
+		txtNombre.setValue("");
+		txtDireccion.setValue("");
+		txtTelefono.setValue("");
+		txtRif.setDisabled(false);
 	}
 
 	public boolean validarSeleccion() {
-		List<Almacen> seleccionados = catalogo.obtenerSeleccionados();
+		List<Empresa> seleccionados = catalogo.obtenerSeleccionados();
 		if (seleccionados == null) {
 			msj.mensajeAlerta(Mensaje.noHayRegistros);
 			return false;
@@ -172,19 +192,25 @@ public class CAlmacen extends CGenerico {
 		if (!camposLLenos()) {
 			msj.mensajeError(Mensaje.camposVacios);
 			return false;
-		} else
-			return true;
+		} else {
+			if (txtTelefono.getText().compareTo("") != 0
+					&& !Validador.validarTelefono(txtTelefono.getValue())) {
+				msj.mensajeAlerta(Mensaje.telefonoInvalido);
+				return false;
+			} else
+				return true;
+		}
 	}
 
 	public boolean camposLLenos() {
-		if (txtDescripcion.getText().compareTo("") == 0) {
+		if (txtRif.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
 	}
 
 	public boolean camposEditando() {
-		if (txtDescripcion.getText().compareTo("") != 0) {
+		if (txtRif.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -227,33 +253,63 @@ public class CAlmacen extends CGenerico {
 	}
 
 	public void mostrarCatalogo() {
-		listaGeneral = servicioAlmacen.buscarTodos();
-		catalogo = new Catalogo<Almacen>(divCatalogoAlmacen,
-				"Catalogo de Almacenes", listaGeneral, false, false, false,
-				"Descripcion") {
+		listaGeneral = servicioEmpresa.buscarTodos();
+		catalogo = new Catalogo<Empresa>(divCatalogoEmpresa,
+				"Catalogo de Empresas", listaGeneral, false, false, false,
+				"Rif", "Nombre", "Direccion") {
 
 			@Override
-			protected List<Almacen> buscar(List<String> valores) {
+			protected List<Empresa> buscar(List<String> valores) {
 
-				List<Almacen> listaa = new ArrayList<Almacen>();
+				List<Empresa> lista = new ArrayList<Empresa>();
 
-				for (Almacen tipo : listaGeneral) {
-					if (tipo.getDescripcion().toLowerCase()
+				for (Empresa tipo : listaGeneral) {
+					if (tipo.getRif().toLowerCase()
+							.contains(valores.get(0).toLowerCase())
+							&& tipo.getNombre().toLowerCase()
+									.contains(valores.get(0).toLowerCase())
+							&& tipo.getDireccion().toLowerCase()
 									.contains(valores.get(0).toLowerCase())) {
-						listaa.add(tipo);
+						lista.add(tipo);
 					}
 				}
-				return listaa;
+				return lista;
 			}
 
 			@Override
-			protected String[] crearRegistros(Almacen tipo) {
-				String[] registros = new String[1];
-				registros[0] = tipo.getDescripcion();
+			protected String[] crearRegistros(Empresa tipo) {
+				String[] registros = new String[3];
+				registros[0] = tipo.getRif();
+				registros[1] = tipo.getNombre();
+				registros[2] = tipo.getDireccion();
 				return registros;
 			}
 		};
-		catalogo.setParent(divCatalogoAlmacen);
+		catalogo.setParent(divCatalogoEmpresa);
 	}
 
+	@Listen("onChange = #txtTelefono")
+	public void validarTelefono() {
+		if (txtTelefono.getText().compareTo("") != 0
+				&& !Validador.validarTelefono(txtTelefono.getValue())) {
+			msj.mensajeAlerta(Mensaje.telefonoInvalido);
+		}
+	}
+
+	@Listen("onChange = #txtRif")
+	public boolean buscarPorLogin() {
+		Empresa usuario = servicioEmpresa.buscar(txtRif.getValue());
+		if (usuario == null)
+			return true;
+		else {
+			if (usuario.getRif() == id)
+				return true;
+			else {
+				msj.mensajeAlerta("El rif fue usado por otro registro");
+				txtRif.setValue("");
+				txtRif.setFocus(true);
+				return false;
+			}
+		}
+	}
 }
