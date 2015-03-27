@@ -303,9 +303,9 @@ public class CBalanza extends CGenerico {
 					if (tipo.getDescripcion().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getIp().toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(1).toLowerCase())
 							&& tipo.getPuerto().toLowerCase()
-									.contains(valores.get(0).toLowerCase())) {
+									.contains(valores.get(2).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}

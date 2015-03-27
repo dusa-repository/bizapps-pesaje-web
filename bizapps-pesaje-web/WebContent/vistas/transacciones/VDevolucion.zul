@@ -1,0 +1,39 @@
+<zk>
+	<window title="Devolucion" border="normal" width="35%"
+		height="auto" contentStyle="overflow:auto" apply="controlador.maestros.CDevolucion"
+		closable="false" id="wdwDevolucion">
+		<style src="../public/Estilo.css" />
+		<separator/>
+		<div id="botoneraDevolucion" />
+		<separator/>
+		<grid width="100%">
+			<columns visible="false">
+				<column label="" width="30%" />
+				<column label="" width="70%" />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label class="etiqueta" value="Boleto" />
+						<space />
+						<label value="*" style="font-weight:bold;color:red">
+						</label>
+					</hbox>
+						<textbox id="txtBoleto" hflex="1" width="100%" />
+					<hbox />
+				</row>
+				<row>
+					<hbox>
+						<label class="etiqueta" value="Descripcion:" />
+						<space />
+						<label value="*" style="font-weight:bold;color:red">
+						</label>
+					</hbox>
+						<textbox multiline="true" id="txtDescripcion" hflex="1" maxlength="500" class="multilinea"
+							tooltiptext="Ingrese la Descripcion" width="100%" />
+					<hbox />
+				</row>
+			</rows>
+		</grid>
+	</window>
+</zk>
