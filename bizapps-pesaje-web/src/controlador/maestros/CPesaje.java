@@ -896,6 +896,8 @@ public class CPesaje extends CGenerico {
 					.valueOf(tipo.getBalanza().getIdBalanza()));
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
 			idBalanza = tipo.getBalanza().getIdBalanza();
+			ip_balanza= tipo.getBalanza().getIp();
+			port_balanza= Integer.parseInt(tipo.getBalanza().getPuerto());
 		}
 		txtObservacion.setValue(tipo.getObservacion());
 		txtNroFactura.setValue(tipo.getNroFactura());
@@ -1061,6 +1063,8 @@ public class CPesaje extends CGenerico {
 
 		try {
 			// client = new Socket("172.23.22.12", 1600);
+			//System.out.println(ip);
+			//System.out.println(port);
 			client = new Socket(ip, port);
 			output = new PrintWriter(client.getOutputStream(), false);
 			in = new BufferedReader(new InputStreamReader(
