@@ -172,6 +172,8 @@ public class CPesaje extends CGenerico {
 	long idAlmacen = 0;
 	long idBalanza = 0;
 	private List<Pesaje> listaGeneral = new ArrayList<Pesaje>();
+	String ip_balanza = "";
+	int port_balanza = 0;
 
 	@Override
 	public void inicializar() throws IOException {
@@ -193,7 +195,7 @@ public class CPesaje extends CGenerico {
 			btnManual.setDisabled(false);
 		else
 			btnManual.setDisabled(true);
-		
+
 		btnDevolucion.setDisabled(true);
 
 		botonera = new Botonera() {
@@ -791,6 +793,8 @@ public class CPesaje extends CGenerico {
 		idBalanza = tipo.getIdBalanza();
 		txtBalanza.setValue(String.valueOf(tipo.getIdBalanza()));
 		lblBalanza.setValue(tipo.getDescripcion());
+		ip_balanza= tipo.getIp();
+		port_balanza= Integer.parseInt(tipo.getPuerto());
 		catalogoBalanza.setParent(null);
 	}
 
@@ -861,7 +865,14 @@ public class CPesaje extends CGenerico {
 
 	public void llenarCamposPesaje(Pesaje tipo) {
 
+		if (tipo.getBalanza() != null)
+			idBalanza = tipo.getBalanza().getIdBalanza();
+		if (tipo.getAlmacen() != null)
+			idAlmacen = tipo.getAlmacen().getIdAlmacen();
+
+
 		btnDevolucion.setDisabled(false);
+
 		txtBoleto.setValue(String.valueOf(tipo.getBoleto()));
 		if (tipo.getAlmacen() != null) {
 			txtAlmacen.setValue(String
@@ -935,39 +946,47 @@ public class CPesaje extends CGenerico {
 	@Listen("onClick = #btnAutomatico")
 	public void automatico() {
 		editable(false);
-		if (id == 0) {
-			dbxDiferenciaEntrada.setValue(0);
-			dbxPesoPTEntrada.setValue(0);
-			dbxPesoPTSalida.setReadonly(true);
-			dtbFechaEntrada.setValue(fechaHora);
-			Double peso = obtenerPeso("172.23.22.12",1600);
-			dbxVehiculoEntrada.setValue(peso);
-			dbxTotalEntrada.setValue(peso);
-			dbxTotal.setValue(peso);
+
+		if (txtBalanza.getText().compareTo("") != 0) {
+
+			if (id == 0) {
+				dbxDiferenciaEntrada.setValue(0);
+				dbxPesoPTEntrada.setValue(0);
+				dbxPesoPTSalida.setReadonly(true);
+				dtbFechaEntrada.setValue(fechaHora);
+				Double peso = obtenerPeso(ip_balanza, port_balanza);
+				dbxVehiculoEntrada.setValue(peso);
+				dbxTotalEntrada.setValue(peso);
+				dbxTotal.setValue(peso);
+			} else {
+				if (dbxPesoPTSalida.getValue() != null) {
+					dtbFechaSalida.setValue(fechaHora);
+					Double peso = obtenerPeso(ip_balanza, port_balanza);
+					dbxVehiculoSalida.setValue(peso);
+					dbxTotalSalida.setValue(peso);
+					Double total = (double) 0;
+					Pesaje pesaje = servicioPesaje.buscar(id);
+					double entrada = pesaje.getEntrada();
+					if (entrada > peso)
+						total = entrada - peso;
+					else
+						total = peso - entrada;
+
+					dbxTotal.setValue(total);
+					Double diferencia = (double) 0;
+					diferencia = entrada + dbxPesoPTSalida.getValue() - peso;
+					if (diferencia < 0)
+						diferencia = diferencia * (-1);
+					dbxDiferenciaSalida.setValue(diferencia);
+
+				} else
+					msj.mensajeError("Debe Ingresar el Peso PT");
+			}
 		} else {
-			if (dbxPesoPTSalida.getValue() != null) {
-				dtbFechaSalida.setValue(fechaHora);
-				Double peso = obtenerPeso("172.23.22.12",1600);
-				dbxVehiculoSalida.setValue(peso);
-				dbxTotalSalida.setValue(peso);
-				Double total = (double) 0;
-				Pesaje pesaje = servicioPesaje.buscar(id);
-				double entrada = pesaje.getEntrada();
-				if (entrada > peso)
-					total = entrada - peso;
-				else
-					total = peso - entrada;
-
-				dbxTotal.setValue(total);
-				Double diferencia = (double) 0;
-				diferencia = entrada + dbxPesoPTSalida.getValue() - peso;
-				if (diferencia < 0)
-					diferencia = diferencia * (-1);
-				dbxDiferenciaSalida.setValue(diferencia);
-
-			} else
-				msj.mensajeError("Debe Ingresar el Peso PT");
+			
+			msj.mensajeError("Debe seleccionar una balanza");
 		}
+
 	}
 
 	@Listen("onChange = #dbxVehiculoEntrada")
@@ -1033,77 +1052,57 @@ public class CPesaje extends CGenerico {
 
 	private Double obtenerPeso(String ip, int port) {
 
-		 	Socket client = null;
-	        PrintWriter output = null;
-	        BufferedReader in = null;
-	        byte[] bytes = new byte[1];
-	        String strx = new String();
-	        Double numero=0.0;
-	        
-	        
-	        try {
-	               //client = new Socket("172.23.22.12", 1600);
-	        	   client = new Socket(ip, port);
-	               output = new PrintWriter(client.getOutputStream(), false);
-	               in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-	              
-	              int contadorA=0;
-	              while (true)
-	              {
-	                int caracter=in.read();
-	                System.out.println(caracter);
-	                
-	                if (caracter>=48 && caracter<=57)
-	                {
-	                    bytes[0]= (byte)caracter;
-	                    String numero_aux=new String(bytes, "UTF-8");
-	                    strx+=numero_aux;
-	                }
-	                
-	                if (caracter==65)
-	                {
-	                 contadorA++;   
-	                }
-	                
-	                if (contadorA>=2)
-	                    break;
-	                
-	              }
-	              
-	              //String numero=new String(bytes, "UTF-8");
-	             
-	              try
-	              {
-	                   numero = Double.parseDouble(strx);
-	              }
-	              catch (Exception ex)
-	              {
-	                  numero=0.0;
-	              }
-	              System.out.println(numero);
-	             // System.out.println(Float.parseFloat(numero));
-	              
-	           
-	        }
-	        catch (IOException e) {
-	            System.out.println(e);
-	        }
-	        output.close();
-	        try {
-				in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Socket client = null;
+		PrintWriter output = null;
+		BufferedReader in = null;
+		byte[] bytes = new byte[1];
+		String strx = new String();
+		Double numero = 0.0;
+
+		try {
+			// client = new Socket("172.23.22.12", 1600);
+			client = new Socket(ip, port);
+			output = new PrintWriter(client.getOutputStream(), false);
+			in = new BufferedReader(new InputStreamReader(
+					client.getInputStream()));
+
+			int contadorA = 0;
+			while (true) {
+				int caracter = in.read();
+				//System.out.println(caracter);
+
+				if (caracter >= 48 && caracter <= 57) {
+					bytes[0] = (byte) caracter;
+					String numero_aux = new String(bytes, "UTF-8");
+					strx += numero_aux;
+				}
+
+				if (caracter == 65) {
+					contadorA++;
+				}
+
+				if (contadorA >= 2)
+					break;
+
 			}
-	        try {
-				client.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			// String numero=new String(bytes, "UTF-8");
+
+			try {
+				numero = Double.parseDouble(strx);
+			} catch (Exception ex) {
+				numero = 0.0;
 			}
-	   
-		
-		
+			//System.out.println(numero);
+			// System.out.println(Float.parseFloat(numero));
+
+			output.close();
+			in.close();
+			client.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
 		return numero;
 	}
 
@@ -1157,6 +1156,12 @@ public class CPesaje extends CGenerico {
 		btnBuscarBalanza.setDisabled(a);
 		Usuario usuario = usuarioSesion(nombreUsuarioSesion());
 
+
+		if (usuario.isVerPesajeYEditar())
+			btnManual.setDisabled(false);
+		else
+			btnManual.setDisabled(a);
+
 		if (usuario.isVerPesajeYEditar()) {
 			if (btnManual.isDisabled())
 				btnManual.setDisabled(false);
@@ -1169,6 +1174,7 @@ public class CPesaje extends CGenerico {
 			if (!btnManual.isDisabled())
 				btnManual.setDisabled(true);
 		}
+
 
 	}
 
