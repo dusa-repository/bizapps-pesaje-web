@@ -5,16 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import modelo.maestros.Conductor;
-import modelo.maestros.Vehiculo;
+import modelo.maestros.Pais;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Doublebox;
-import org.zkoss.zul.Doublespinner;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
@@ -24,36 +21,27 @@ import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
 
-public class CVehiculo extends CGenerico {
+public class CPais extends CGenerico {
 
 	private static final long serialVersionUID = -6868106910332150746L;
+
 	@Wire
-	private Textbox txtDescripcion;
+	private Div botoneraPais;
 	@Wire
-	private Doublespinner dbsPeso;
+	private Div catalogoPais;
 	@Wire
-	private Textbox txtPlaca;
-	@Wire
-	private Div divVehiculo;
-	@Wire
-	private Div botoneraVehiculo;
-	@Wire
-	private Div divCatalogoVehiculo;
-	@Wire
-	private Textbox txtPlacaChuto;
-	@Wire
-	private Textbox txtPlacaBatea;
-	@Wire
-	private Doublespinner dbsPesoTara;
+	private Div divPais;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
+	@Wire
+	private Textbox txtNombrePais;
 
 	Botonera botonera;
-	Catalogo<Vehiculo> catalogo;
-	String id = "";
-	private List<Vehiculo> listaGeneral = new ArrayList<Vehiculo>();
+	Catalogo<Pais> catalogo;
+	long id = 0;
+	private List<Pais> listaGeneral = new ArrayList<Pais>();
 
 	@Override
 	public void inicializar() throws IOException {
@@ -67,7 +55,7 @@ public class CVehiculo extends CGenerico {
 				map = null;
 			}
 		}
-		txtDescripcion.setFocus(true);
+		txtNombrePais.setFocus(true);
 		mostrarCatalogo();
 
 		botonera = new Botonera() {
@@ -78,18 +66,9 @@ public class CVehiculo extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Vehiculo tipo = catalogo
-								.objetoSeleccionadoDelCatalogo();
-						id = tipo.getPlaca();
-						if (tipo.getPeso() != null)
-							dbsPeso.setValue(tipo.getPeso());
-						txtDescripcion.setValue(tipo.getDescripcion());
-						if (tipo.getPesoTara() != null)
-							dbsPesoTara.setValue(tipo.getPesoTara());
-						txtPlacaBatea.setValue(tipo.getPlacaBatea());
-						txtPlacaChuto.setValue(tipo.getPlacaChuto());
-						txtPlaca.setValue(tipo.getPlaca());
-						txtPlaca.setDisabled(true);
+						Pais tipo = catalogo.objetoSeleccionadoDelCatalogo();
+						id = tipo.getIdPais();
+						txtNombrePais.setValue(tipo.getNombre());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -97,7 +76,7 @@ public class CVehiculo extends CGenerico {
 
 			@Override
 			public void salir() {
-				cerrarVentana(divVehiculo, cerrar, tabs);
+				cerrarVentana(divPais, cerrar, tabs);
 
 			}
 
@@ -109,35 +88,21 @@ public class CVehiculo extends CGenerico {
 			public void limpiar() {
 				mostrarBotones(false);
 				limpiarCampos();
-				id = "";
+				id = 0;
 			}
 
 			@Override
 			public void guardar() {
 				if (validar()) {
-					if (id.equals("") && !idLibre())
-						msj.mensajeError(Mensaje.placaUsada);
-					else {
-						String descripcion = txtDescripcion.getValue();
-						Double peso = dbsPeso.getValue();
-						id = txtPlaca.getValue();
-						Vehiculo vehiculo = new Vehiculo();
-						vehiculo.setDescripcion(descripcion);
-						vehiculo.setPeso(peso);
-						vehiculo.setPlaca(id);
-						vehiculo.setPlacaBatea(txtPlacaBatea.getValue());
-						vehiculo.setPlacaChuto(txtPlacaChuto.getValue());
-						vehiculo.setPesoTara(dbsPesoTara.getValue());
-						vehiculo.setUsuarioAuditoria(nombreUsuarioSesion());
-						vehiculo.setFechaAuditoria(fechaHora);
-						vehiculo.setHoraAuditoria(horaAuditoria);
-						servicioVehiculo.guardar(vehiculo);
-						msj.mensajeInformacion(Mensaje.guardado);
-						limpiar();
-						listaGeneral = servicioVehiculo.buscarTodos();
-						catalogo.actualizarLista(listaGeneral, true);
-						abrirCatalogo();
-					}
+					String nombre = txtNombrePais.getValue();
+					Pais pais = new Pais(id, fechaHora, horaAuditoria, nombre,
+							nombreUsuarioSesion());
+					servicioPais.guardar(pais);
+					msj.mensajeInformacion(Mensaje.guardado);
+					limpiar();
+					listaGeneral = servicioPais.buscarTodos();
+					catalogo.actualizarLista(listaGeneral, true);
+					abrirCatalogo();
 				}
 			}
 
@@ -167,7 +132,7 @@ public class CVehiculo extends CGenerico {
 		botonera.getChildren().get(1).setVisible(false);
 		botonera.getChildren().get(3).setVisible(false);
 		botonera.getChildren().get(5).setVisible(false);
-		botoneraVehiculo.appendChild(botonera);
+		botoneraPais.appendChild(botonera);
 
 	}
 
@@ -182,18 +147,12 @@ public class CVehiculo extends CGenerico {
 	}
 
 	public void limpiarCampos() {
-		id = "";
-		txtDescripcion.setValue("");
-		dbsPeso.setValue(0.0);
-		txtPlaca.setValue("");
-		txtPlaca.setDisabled(false);
-		txtPlacaBatea.setValue("");
-		txtPlacaChuto.setValue("");
-		dbsPesoTara.setValue(0.0);
+		id = 0;
+		txtNombrePais.setValue("");
 	}
 
 	public boolean validarSeleccion() {
-		List<Vehiculo> seleccionados = catalogo.obtenerSeleccionados();
+		List<Pais> seleccionados = catalogo.obtenerSeleccionados();
 		if (seleccionados == null) {
 			msj.mensajeAlerta(Mensaje.noHayRegistros);
 			return false;
@@ -216,22 +175,14 @@ public class CVehiculo extends CGenerico {
 	}
 
 	public boolean camposLLenos() {
-		if (dbsPeso.getText().compareTo("") == 0.0
-				|| txtDescripcion.getText().compareTo("") == 0
-				|| txtPlaca.getText().compareTo("") == 0
-				|| dbsPesoTara.getText().compareTo("") == 0.0
-				|| txtPlacaBatea.getText().compareTo("") == 0
-				|| txtPlacaChuto.getText().compareTo("") == 0) {
+		if (txtNombrePais.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
 	}
 
 	public boolean camposEditando() {
-		if (txtDescripcion.getText().compareTo("") != 0
-				|| txtPlaca.getText().compareTo("") != 0
-				|| txtPlacaBatea.getText().compareTo("") != 0
-				|| txtPlacaChuto.getText().compareTo("") != 0) {
+		if (txtNombrePais.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -274,53 +225,33 @@ public class CVehiculo extends CGenerico {
 	}
 
 	public void mostrarCatalogo() {
-		listaGeneral = servicioVehiculo.buscarTodos();
-		catalogo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
-				"Catalogo de Vehiculos", listaGeneral, false, false, false,
-				"Placa", "Descripcion", "Peso", "Placa Chuto", "Placa Batea") {
+		listaGeneral = servicioPais.buscarTodos();
+		catalogo = new Catalogo<Pais>(catalogoPais,
+				"Catalogo de Paises", listaGeneral, false, false, false,
+				"Nombre") {
 
 			@Override
-			protected List<Vehiculo> buscar(List<String> valores) {
+			protected List<Pais> buscar(List<String> valores) {
 
-				List<Vehiculo> lista = new ArrayList<Vehiculo>();
+				List<Pais> listaa = new ArrayList<Pais>();
 
-				for (Vehiculo tipo : listaGeneral) {
-					if (tipo.getPlaca().toLowerCase()
-							.contains(valores.get(0).toLowerCase())
-							&& tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())
-							&& String.valueOf(tipo.getPeso()).toLowerCase()
-									.contains(valores.get(2).toLowerCase())
-							&& tipo.getPlacaChuto().toLowerCase()
-									.contains(valores.get(2).toLowerCase())
-							&&  tipo.getPlacaBatea().toLowerCase()
-									.contains(valores.get(2).toLowerCase())) {
-						lista.add(tipo);
+				for (Pais tipo : listaGeneral) {
+					if (tipo.getNombre().toLowerCase()
+							.contains(valores.get(0).toLowerCase())) {
+						listaa.add(tipo);
 					}
 				}
-				return lista;
+				return listaa;
 			}
 
 			@Override
-			protected String[] crearRegistros(Vehiculo tipo) {
-				String[] registros = new String[5];
-				registros[0] = tipo.getPlaca();
-				registros[1] = tipo.getDescripcion();
-				registros[2] = String.valueOf(tipo.getPeso());
-				registros[3] = tipo.getPlacaChuto();
-				registros[4] = tipo.getPlacaBatea();
+			protected String[] crearRegistros(Pais tipo) {
+				String[] registros = new String[1];
+				registros[0] = tipo.getNombre();
 				return registros;
 			}
 		};
-		catalogo.setParent(divCatalogoVehiculo);
-	}
-
-	public boolean idLibre() {
-		if (servicioVehiculo.buscar(txtPlaca.getValue()) != null)
-			return false;
-		else
-			return true;
-
+		catalogo.setParent(catalogoPais);
 	}
 
 }

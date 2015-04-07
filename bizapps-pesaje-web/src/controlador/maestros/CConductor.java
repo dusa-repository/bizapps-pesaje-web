@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Ciudad;
 import modelo.maestros.Conductor;
 import modelo.maestros.Producto;
 
@@ -12,8 +13,10 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
@@ -21,6 +24,7 @@ import org.zkoss.zul.Textbox;
 import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
+import componente.Validador;
 
 public class CConductor extends CGenerico {
 
@@ -37,6 +41,12 @@ public class CConductor extends CGenerico {
 	private Div botoneraConductor;
 	@Wire
 	private Div divCatalogoConductor;
+	@Wire
+	private Combobox cmbCiudad;
+	@Wire
+	private Textbox txtDireccion;
+	@Wire
+	private Textbox txtTelefono1;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
@@ -77,6 +87,10 @@ public class CConductor extends CGenerico {
 						txtNombres.setValue(tipo.getNombres());
 						txtCedula.setValue(tipo.getCedula());
 						txtCedula.setDisabled(true);
+						txtDireccion.setValue(tipo.getDireccion());
+						txtTelefono1.setValue(tipo.getTelefono());
+						if (tipo.getCiudad() != null)
+							cmbCiudad.setValue(tipo.getCiudad().getNombre());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -105,6 +119,11 @@ public class CConductor extends CGenerico {
 					if (id.equals("") && !idLibre())
 						msj.mensajeError(Mensaje.cedulaUsada);
 					else {
+						Ciudad ciudad = null;
+						if (cmbCiudad.getSelectedItem() != null)
+							ciudad = servicioCiudad.buscar(Long
+									.parseLong(cmbCiudad.getSelectedItem()
+											.getContext()));
 						String nombres = txtNombres.getValue();
 						String apellidos = txtApellidos.getValue();
 						id = txtCedula.getValue();
@@ -112,6 +131,12 @@ public class CConductor extends CGenerico {
 						conductor.setApellidos(apellidos);
 						conductor.setNombres(nombres);
 						conductor.setCedula(id);
+						conductor.setDireccion(txtDireccion.getValue());
+						conductor.setTelefono(txtTelefono1.getValue());
+						conductor.setCiudad(ciudad);
+						conductor.setUsuarioAuditoria(nombreUsuarioSesion());
+						conductor.setFechaAuditoria(fechaHora);
+						conductor.setHoraAuditoria(horaAuditoria);
 						servicioConductor.guardar(conductor);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -124,77 +149,6 @@ public class CConductor extends CGenerico {
 
 			@Override
 			public void eliminar() {
-				// if (gpxDatos.isOpen()) {
-				// /* Elimina Varios Registros */
-				// if (validarSeleccion()) {
-				// final List<Balanza> eliminarLista = catalogo
-				// .obtenerSeleccionados();
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorIds(eliminarLista);
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show("¿Desea Eliminar los "
-				// + eliminarLista.size()
-				// + " Registros?",
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				// servicioBalanza
-				// .eliminarVarios(eliminarLista);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// }
-				// } else {
-				// /* Elimina un solo registro */
-				// if (id != 0) {
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorBalanza(id);
-				//
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show(Mensaje.deseaEliminar,
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				//
-				// servicioBalanza
-				// .eliminarUno(id);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// limpiar();
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// } else
-				// msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-				// }
 
 			}
 
@@ -239,6 +193,9 @@ public class CConductor extends CGenerico {
 		txtApellidos.setValue("");
 		txtCedula.setValue("");
 		txtCedula.setDisabled(false);
+		txtDireccion.setValue("");
+		txtTelefono1.setValue("");
+		cmbCiudad.setValue("");
 	}
 
 	public boolean validarSeleccion() {
@@ -260,14 +217,21 @@ public class CConductor extends CGenerico {
 		if (!camposLLenos()) {
 			msj.mensajeError(Mensaje.camposVacios);
 			return false;
-		} else
-			return true;
+		} else {
+			if (!Validador.validarTelefono(txtTelefono1.getValue())) {
+				msj.mensajeError(Mensaje.telefonoInvalido);
+				return false;
+			} else
+				return true;
+		}
 	}
 
 	public boolean camposLLenos() {
 		if (txtApellidos.getText().compareTo("") == 0
-				||txtNombres.getText().compareTo("") == 0
-				|| txtCedula.getText().compareTo("") == 0) {
+				|| txtNombres.getText().compareTo("") == 0
+				|| txtCedula.getText().compareTo("") == 0
+				|| txtDireccion.getText().compareTo("") == 0
+				|| txtTelefono1.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
@@ -275,8 +239,10 @@ public class CConductor extends CGenerico {
 
 	public boolean camposEditando() {
 		if (txtApellidos.getText().compareTo("") != 0
-				||txtNombres.getText().compareTo("") != 0
-				|| txtCedula.getText().compareTo("") != 0) {
+				|| txtNombres.getText().compareTo("") != 0
+				|| txtCedula.getText().compareTo("") != 0
+				|| txtDireccion.getText().compareTo("") != 0
+				|| txtTelefono1.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -322,7 +288,7 @@ public class CConductor extends CGenerico {
 		listaGeneral = servicioConductor.buscarTodos();
 		catalogo = new Catalogo<Conductor>(divCatalogoConductor,
 				"Catalogo de Conductores", listaGeneral, false, false, false,
-				"Cedula", "Nombres","Apellidos") {
+				"Cedula", "Nombres", "Apellidos", "Direccion", "Telefono") {
 
 			@Override
 			protected List<Conductor> buscar(List<String> valores) {
@@ -334,8 +300,12 @@ public class CConductor extends CGenerico {
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getNombres().toLowerCase()
 									.contains(valores.get(1).toLowerCase())
-									&& tipo.getApellidos().toLowerCase()
-									.contains(valores.get(2).toLowerCase())) {
+							&& tipo.getApellidos().toLowerCase()
+									.contains(valores.get(2).toLowerCase())
+							&& tipo.getDireccion().toLowerCase()
+									.contains(valores.get(1).toLowerCase())
+							&& tipo.getTelefono().toLowerCase()
+									.contains(valores.get(1).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -344,10 +314,12 @@ public class CConductor extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Conductor tipo) {
-				String[] registros = new String[3];
+				String[] registros = new String[5];
 				registros[0] = tipo.getCedula();
 				registros[1] = tipo.getNombres();
 				registros[2] = tipo.getApellidos();
+				registros[2] = tipo.getDireccion();
+				registros[3] = tipo.getTelefono();
 				return registros;
 			}
 		};
@@ -359,7 +331,20 @@ public class CConductor extends CGenerico {
 			return false;
 		else
 			return true;
+	}
 
+	@Listen("onOpen = #cmbCiudad")
+	public void llenarComboCiudad() {
+		List<Ciudad> ciudades = servicioCiudad.buscarTodas();
+		cmbCiudad.setModel(new ListModelList<Ciudad>(ciudades));
+	}
+
+	/* Metodo que valida el formmato del telefono ingresado */
+	@Listen("onChange = #txtTelefono1")
+	public void validarTelefono() throws IOException {
+		if (Validador.validarTelefono(txtTelefono1.getValue()) == false) {
+			msj.mensajeAlerta(Mensaje.telefonoInvalido);
+		}
 	}
 
 }

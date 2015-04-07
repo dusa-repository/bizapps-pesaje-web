@@ -5,15 +5,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+import modelo.maestros.Ciudad;
 import modelo.maestros.Cliente;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
@@ -21,6 +23,7 @@ import org.zkoss.zul.Textbox;
 import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
+import componente.Validador;
 
 public class CCliente extends CGenerico {
 
@@ -35,6 +38,12 @@ public class CCliente extends CGenerico {
 	private Div botoneraCliente;
 	@Wire
 	private Div divCatalogoCliente;
+	@Wire
+	private Combobox cmbCiudad;
+	@Wire
+	private Textbox txtDireccion;
+	@Wire
+	private Textbox txtTelefono1;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
@@ -68,12 +77,15 @@ public class CCliente extends CGenerico {
 					if (catalogo.obtenerSeleccionados().size() == 1) {
 						mostrarBotones(false);
 						abrirRegistro();
-						Cliente tipo = catalogo
-								.objetoSeleccionadoDelCatalogo();
+						Cliente tipo = catalogo.objetoSeleccionadoDelCatalogo();
 						id = tipo.getIdCliente();
 						txtDescripcion.setValue(tipo.getDescripcion());
 						txtCodigo.setValue(tipo.getIdCliente());
 						txtCodigo.setDisabled(true);
+						txtDireccion.setValue(tipo.getDireccion());
+						txtTelefono1.setValue(tipo.getTelefono());
+						if (tipo.getCiudad() != null)
+							cmbCiudad.setValue(tipo.getCiudad().getNombre());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -102,11 +114,22 @@ public class CCliente extends CGenerico {
 					if (id.equals("") && !idLibre())
 						msj.mensajeError(Mensaje.codigoUsado);
 					else {
+						Ciudad ciudad = null;
+						if (cmbCiudad.getSelectedItem() != null)
+							ciudad = servicioCiudad.buscar(Long
+									.parseLong(cmbCiudad.getSelectedItem()
+											.getContext()));
 						String descripcion = txtDescripcion.getValue();
 						id = txtCodigo.getValue();
 						Cliente cliente = new Cliente();
 						cliente.setDescripcion(descripcion);
 						cliente.setIdCliente(id);
+						cliente.setDireccion(txtDireccion.getValue());
+						cliente.setTelefono(txtTelefono1.getValue());
+						cliente.setCiudad(ciudad);
+						cliente.setUsuarioAuditoria(nombreUsuarioSesion());
+						cliente.setFechaAuditoria(fechaHora);
+						cliente.setHoraAuditoria(horaAuditoria);
 						servicioCliente.guardar(cliente);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -119,77 +142,7 @@ public class CCliente extends CGenerico {
 
 			@Override
 			public void eliminar() {
-				// if (gpxDatos.isOpen()) {
-				// /* Elimina Varios Registros */
-				// if (validarSeleccion()) {
-				// final List<Balanza> eliminarLista = catalogo
-				// .obtenerSeleccionados();
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorIds(eliminarLista);
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show("¿Desea Eliminar los "
-				// + eliminarLista.size()
-				// + " Registros?",
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				// servicioBalanza
-				// .eliminarVarios(eliminarLista);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// }
-				// } else {
-				// /* Elimina un solo registro */
-				// if (id != 0) {
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorBalanza(id);
-				//
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show(Mensaje.deseaEliminar,
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				//
-				// servicioBalanza
-				// .eliminarUno(id);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// limpiar();
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// } else
-				// msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-				// }
+
 
 			}
 
@@ -233,6 +186,9 @@ public class CCliente extends CGenerico {
 		txtDescripcion.setValue("");
 		txtCodigo.setValue("");
 		txtCodigo.setDisabled(false);
+		txtDireccion.setValue("");
+		txtTelefono1.setValue("");
+		cmbCiudad.setValue("");
 	}
 
 	public boolean validarSeleccion() {
@@ -254,13 +210,20 @@ public class CCliente extends CGenerico {
 		if (!camposLLenos()) {
 			msj.mensajeError(Mensaje.camposVacios);
 			return false;
-		} else
-			return true;
+		} else {
+			if (!Validador.validarTelefono(txtTelefono1.getValue())) {
+				msj.mensajeError(Mensaje.telefonoInvalido);
+				return false;
+			} else
+				return true;
+		}
 	}
 
 	public boolean camposLLenos() {
 		if (txtDescripcion.getText().compareTo("") == 0
-				|| txtCodigo.getText().compareTo("") == 0) {
+				|| txtCodigo.getText().compareTo("") == 0
+				|| txtDireccion.getText().compareTo("") == 0
+				|| txtTelefono1.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
@@ -268,7 +231,9 @@ public class CCliente extends CGenerico {
 
 	public boolean camposEditando() {
 		if (txtDescripcion.getText().compareTo("") != 0
-				|| txtCodigo.getText().compareTo("") != 0) {
+				|| txtCodigo.getText().compareTo("") != 0
+				|| txtDireccion.getText().compareTo("") != 0
+				|| txtTelefono1.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -314,7 +279,7 @@ public class CCliente extends CGenerico {
 		listaGeneral = servicioCliente.buscarTodos();
 		catalogo = new Catalogo<Cliente>(divCatalogoCliente,
 				"Catalogo de Clientes", listaGeneral, false, false, false,
-				"Codigo", "Descripcion") {
+				"Codigo", "Descripcion", "Direccion", "Telefono") {
 
 			@Override
 			protected List<Cliente> buscar(List<String> valores) {
@@ -325,6 +290,10 @@ public class CCliente extends CGenerico {
 					if (tipo.getIdCliente().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
+									.contains(valores.get(1).toLowerCase())
+							&& tipo.getDireccion().toLowerCase()
+									.contains(valores.get(1).toLowerCase())
+							&& tipo.getTelefono().toLowerCase()
 									.contains(valores.get(1).toLowerCase())) {
 						lista.add(tipo);
 					}
@@ -334,9 +303,11 @@ public class CCliente extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Cliente tipo) {
-				String[] registros = new String[2];
+				String[] registros = new String[4];
 				registros[0] = tipo.getIdCliente();
 				registros[1] = tipo.getDescripcion();
+				registros[2] = tipo.getDireccion();
+				registros[3] = tipo.getTelefono();
 				return registros;
 			}
 		};
@@ -348,7 +319,19 @@ public class CCliente extends CGenerico {
 			return false;
 		else
 			return true;
-
 	}
 
+	@Listen("onOpen = #cmbCiudad")
+	public void llenarComboCiudad() {
+		List<Ciudad> ciudades = servicioCiudad.buscarTodas();
+		cmbCiudad.setModel(new ListModelList<Ciudad>(ciudades));
+	}
+
+	/* Metodo que valida el formmato del telefono ingresado */
+	@Listen("onChange = #txtTelefono1")
+	public void validarTelefono() throws IOException {
+		if (Validador.validarTelefono(txtTelefono1.getValue()) == false) {
+			msj.mensajeAlerta(Mensaje.telefonoInvalido);
+		}
+	}
 }

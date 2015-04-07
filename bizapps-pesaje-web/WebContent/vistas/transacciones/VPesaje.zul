@@ -11,10 +11,10 @@
 					title="Vehiculo">
 					<grid width="100%">
 						<columns visible="false">
-							<column label="" width="17%" />
+							<column label="" width="12%" />
 							<column label="" width="18%" />
-							<column label="" width="15%" />
-							<column label="" width="50%" />
+							<column label="" width="12%" />
+							<column label="" width="58%" />
 						</columns>
 						<rows>
 							<row>
@@ -100,7 +100,12 @@
 								<label style="font-weight:bold;color:black" id="lblBalanza" />
 							</row>
 							<row>
-								<label class="etiqueta" value="Almacen:" />
+								<hbox>
+									<label class="etiqueta" value="Almacen:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
 								<textbox disabled="true" id="txtAlmacen" hflex="1"
 									maxlength="100" tooltiptext="Seleccione el Almacen" width="100%" />
 								<button autodisable="self" id="btnBuscarAlmacen" class="btn"
@@ -115,22 +120,64 @@
 					title="Complementario">
 					<grid width="100%">
 						<columns visible="false">
-							<column label="" width="17%" />
-							<column label="" width="18%" />
 							<column label="" width="15%" />
-							<column label="" width="50%" />
+							<column label="" width="22%" />
+							<column label="" width="15%" />
+							<column label="" width="22%" />
+							<column label="" width="26%" />
 						</columns>
 						<rows>
 							<row>
 								<label class="etiqueta" value="Nro. Factura:" />
 								<textbox id="txtNroFactura" hflex="1" maxlength="100"
 									tooltiptext="Ingrese el Numero de Factura" width="100%" />
+								<label class="etiqueta" value="Nro. Predespacho:" />
+								<textbox id="txtNroPredespacho" hflex="1" maxlength="100"
+									tooltiptext="Ingrese el Numero de Predespacho" width="100%" />
+								<hbox />
+							</row>
+							<row>
+								<hbox>
+									<label class="etiqueta" value="Destino:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox id="txtDestino" hflex="1" maxlength="100"
+									tooltiptext="Ingrese el Destino" width="100%" />
+								<hbox>
+									<label class="etiqueta" value="Procedencia:" />
+									<space />
+									<label value="*" style="font-weight:bold;color:red">
+									</label>
+								</hbox>
+								<textbox id="txtProcedencia" hflex="1" maxlength="100"
+									tooltiptext="Ingrese la Procedencia" width="100%" />
+								<hbox />
+							</row>
+							<row>
+								<label class="etiqueta" value="Peso Origen:" />
+								<doublespinner id="dbsPesoOrigen" value="0" hflex="1"
+									step="0.1" maxlength="100000" tooltiptext="Ingrese el Peso de Origen"
+									width="100%" />
+								<label class="etiqueta" value="Cant. Cajas:" />
+								<spinner id="spnCajas" value="0" hflex="1" step="1"
+									maxlength="1000000" tooltiptext="Ingrese la Cantidad de Cajas"
+									width="100%" />
+								<hbox />
+							</row>
+							<row>
+								<label class="etiqueta" value="Despachador:" />
+								<cell colspan="2">
+									<textbox id="txtDespachador" hflex="1" maxlength="500"
+										tooltiptext="Ingrese un Despachador" width="100%" />
+								</cell>
 								<hbox />
 								<hbox />
 							</row>
 							<row>
 								<label class="etiqueta" value="Observaciones:" />
-								<cell colspan="3">
+								<cell colspan="4">
 									<textbox id="txtObservacion" hflex="1" maxlength="500"
 										tooltiptext="Ingrese una Observacion" width="100%" multiline="true" />
 								</cell>

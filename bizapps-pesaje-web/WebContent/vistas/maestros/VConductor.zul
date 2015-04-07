@@ -55,6 +55,44 @@
 							</cell>
 							<hbox />
 						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Direccion:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red" />
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtDireccion" maxlength="1000"
+									tooltiptext="Ingrese la Direccion Actual" multiline="true"
+									class="multilinea" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Ciudad:" />
+							<cell colspan="2">
+								<combobox tooltiptext="Seleccione una Ciudad"
+									placeholder="Seleccione una Ciudad" id="cmbCiudad" readonly="true"
+									width="200px">
+									<template name="model">
+										<comboitem label="${each.nombre}" context="${each.idCiudad}" />
+									</template>
+								</combobox>
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Numero Contacto:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red" />
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtTelefono1" hflex="1" maxlength="50"
+									tooltiptext="Ingrese el Numero de telefono" />
+							</cell>
+							<hbox />
+						</row>
 					</rows>
 				</grid>
 			</groupbox>

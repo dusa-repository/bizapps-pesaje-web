@@ -95,6 +95,24 @@ public class Pesaje implements Serializable {
 	
 	@Column(length = 100)
 	private String nroFactura;
+	
+	@Column(length = 100)
+	private String destino;
+	
+	@Column(length = 100)
+	private String procedencia;
+	
+	@Column(length = 100,name = "nro_predespacho")
+	private String nroPredespacho;
+	
+	@Column(length = 500)
+	private String despachador;
+	
+	@Column(name = "peso_origen")
+	private Double pesoOrigen;
+	
+	@Column(name = "cantidad_cajas")
+	private Integer cantCajas;
 
 	public Pesaje() {
 		super();
@@ -275,6 +293,54 @@ public class Pesaje implements Serializable {
 
 	public void setPesoPTSalida(Double pesoPTSalida) {
 		this.pesoPTSalida = pesoPTSalida;
+	}
+
+	public String getDestino() {
+		return destino;
+	}
+
+	public void setDestino(String destino) {
+		this.destino = destino;
+	}
+
+	public String getProcedencia() {
+		return procedencia;
+	}
+
+	public void setProcedencia(String procedencia) {
+		this.procedencia = procedencia;
+	}
+
+	public String getNroPredespacho() {
+		return nroPredespacho;
+	}
+
+	public void setNroPredespacho(String nroPredespacho) {
+		this.nroPredespacho = nroPredespacho;
+	}
+
+	public String getDespachador() {
+		return despachador;
+	}
+
+	public void setDespachador(String despachador) {
+		this.despachador = despachador;
+	}
+
+	public Double getPesoOrigen() {
+		return pesoOrigen;
+	}
+
+	public void setPesoOrigen(Double pesoOrigen) {
+		this.pesoOrigen = pesoOrigen;
+	}
+
+	public Integer getCantCajas() {
+		return cantCajas;
+	}
+
+	public void setCantCajas(Integer cantCajas) {
+		this.cantCajas = cantCajas;
 	}
 
 

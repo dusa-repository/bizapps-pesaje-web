@@ -1,0 +1,42 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divPais" apply="controlador.maestros.CPais">
+		<groupbox width="auto" mold="3d" title="Pais (VPais)">
+			<div id="botoneraPais" />
+			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
+				open="false">
+				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
+					tooltiptext="Presione para Registrar un nuevo Pais" />
+				<separator />
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="25%" />
+						<column label="" width="45%" />
+						<column label="" width="30%" />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Nombre:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red" />
+							</hbox>
+							<textbox class="multilinea" id="txtNombrePais" hflex="1"
+								maxlength="500" tooltiptext="Ingrese el Nombre del Pais"
+								multiline="true" />
+							<hbox />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<separator />
+			<groupbox id="gpxDatos" class="azul" width="auto">
+				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
+					tooltiptext="Presione para Visualizar los Paises Registrados" />
+				<div id="catalogoPais" tooltiptext="Seleccione eL Pais para Realizar una Accion" />
+			</groupbox>
+			<separator />
+			<separator />
+		</groupbox>
+	</div>
+</zk>
