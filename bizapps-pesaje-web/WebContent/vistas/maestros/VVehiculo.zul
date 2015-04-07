@@ -56,6 +56,46 @@
 							</cell>
 							<hbox />
 						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Placa Chuto:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtPlacaChuto" hflex="1" maxlength="100"
+									tooltiptext="Ingrese la Placa Chuto" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+									<row>
+							<hbox>
+								<label class="etiqueta" value="Placa Batea:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<textbox id="txtPlacaBatea" hflex="1" maxlength="100"
+									tooltiptext="Ingrese la Placa Batea" width="100%" />
+							</cell>
+							<hbox />
+						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Peso Tara:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<cell colspan="2">
+								<doublespinner id="dbsPesoTara" value="0" hflex="1"
+									step="0.1" maxlength="100000" tooltiptext="Ingrese el Peso Tara del Vehiculo"
+									width="100%" />
+							</cell>
+							<hbox />
+						</row>
 					</rows>
 				</grid>
 			</groupbox>

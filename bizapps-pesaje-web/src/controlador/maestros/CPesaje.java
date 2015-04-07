@@ -46,9 +46,11 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Doublebox;
+import org.zkoss.zul.Doublespinner;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -152,6 +154,18 @@ public class CPesaje extends CGenerico {
 	private Button btnBuscarBalanza;
 	@Wire
 	private Button btnDevolucion;
+	@Wire
+	private Doublespinner dbsPesoOrigen;
+	@Wire
+	private Spinner spnCajas;
+	@Wire
+	private Textbox txtDespachador;
+	@Wire
+	private Textbox txtProcedencia;
+	@Wire
+	private Textbox txtDestino;
+	@Wire
+	private Textbox txtNroPredespacho;
 
 	Botonera botonera;
 
@@ -284,6 +298,7 @@ public class CPesaje extends CGenerico {
 							pesaje.setHoraPesaje(metodoHora());
 							pesaje.setEstatus("Activo");
 							pesaje.setNroFactura(txtNroFactura.getValue());
+
 						} else {
 							pesaje = servicioPesaje.buscar(id);
 							Timestamp fechaPesaje = new Timestamp(
@@ -300,6 +315,14 @@ public class CPesaje extends CGenerico {
 									+ String.valueOf(id)
 									+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
 						}
+						pesaje.setNroPredespacho(txtNroPredespacho.getValue());
+						pesaje.setDespachador(txtDespachador.getValue());
+						pesaje.setDestino(txtDestino.getValue());
+						pesaje.setProcedencia(txtProcedencia.getValue());
+						if (spnCajas.getValue() != null)
+							pesaje.setCantCajas(spnCajas.getValue());
+						if (dbsPesoOrigen.getValue() != null)
+							pesaje.setPesoOrigen(dbsPesoOrigen.getValue());
 						pesaje.setObservacion(txtObservacion.getValue());
 						pesaje.setNroFactura(txtNroFactura.getValue());
 						pesaje.setHoraAuditoria(metodoHora());
@@ -430,7 +453,9 @@ public class CPesaje extends CGenerico {
 					|| dbxPesoPTEntrada.getText().compareTo("") == 0
 					|| idConductor.equals("") || idProducto.equals("")
 					|| idTransporte == 0 || idVehiculo.equals("")
-					|| idBalanza == 0) {
+					|| idBalanza == 0 || idAlmacen == 0
+					|| txtDestino.getText().compareTo("") == 0
+					|| txtProcedencia.getText().compareTo("") == 0) {
 				msj.mensajeError(Mensaje.camposVacios);
 				return false;
 			} else
@@ -447,7 +472,7 @@ public class CPesaje extends CGenerico {
 	}
 
 	public void limpiarCampos() {
-		
+
 		btnDevolucion.setDisabled(true);
 		id = 0;
 		idCerrado = 0;
@@ -472,6 +497,12 @@ public class CPesaje extends CGenerico {
 		lblProducto.setValue("");
 		txtObservacion.setValue("");
 		txtNroFactura.setValue("");
+		txtNroPredespacho.setValue("");
+		txtDespachador.setValue("");
+		txtDestino.setValue("");
+		txtProcedencia.setValue("");
+		dbsPesoOrigen.setValue(0.0);
+		spnCajas.setValue(0);
 		limpiarCamposLectura();
 		inhabilitar(false);
 		inhabilitarParaSalida(false);
@@ -616,7 +647,7 @@ public class CPesaje extends CGenerico {
 		Vehiculo tipo = catalogoVehiculo.objetoSeleccionadoDelCatalogo();
 		idVehiculo = tipo.getPlaca();
 		txtVehiculo.setValue(String.valueOf(tipo.getPlaca()));
-		lblVehiculo.setValue(tipo.getDescripcion());
+		lblVehiculo.setValue(tipo.getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getPlacaChuto()+"   "+"Placa Batea:"+"   "+tipo.getPlacaBatea());
 		catalogoVehiculo.setParent(null);
 	}
 
@@ -793,8 +824,8 @@ public class CPesaje extends CGenerico {
 		idBalanza = tipo.getIdBalanza();
 		txtBalanza.setValue(String.valueOf(tipo.getIdBalanza()));
 		lblBalanza.setValue(tipo.getDescripcion());
-		ip_balanza= tipo.getIp();
-		port_balanza= Integer.parseInt(tipo.getPuerto());
+		ip_balanza = tipo.getIp();
+		port_balanza = Integer.parseInt(tipo.getPuerto());
 		catalogoBalanza.setParent(null);
 	}
 
@@ -870,7 +901,6 @@ public class CPesaje extends CGenerico {
 		if (tipo.getAlmacen() != null)
 			idAlmacen = tipo.getAlmacen().getIdAlmacen();
 
-
 		btnDevolucion.setDisabled(false);
 
 		txtBoleto.setValue(String.valueOf(tipo.getBoleto()));
@@ -881,7 +911,7 @@ public class CPesaje extends CGenerico {
 			idAlmacen = tipo.getAlmacen().getIdAlmacen();
 		}
 		txtVehiculo.setValue(String.valueOf(tipo.getVehiculo().getPlaca()));
-		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion());
+		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto()+"   "+"Placa Batea:"+"   "+tipo.getVehiculo().getPlacaBatea());
 		txtTransporte
 				.setValue(String.valueOf(tipo.getTransporte().getCodigo()));
 		lblTransporte.setValue(tipo.getTransporte().getDescripcion());
@@ -896,12 +926,20 @@ public class CPesaje extends CGenerico {
 					.valueOf(tipo.getBalanza().getIdBalanza()));
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
 			idBalanza = tipo.getBalanza().getIdBalanza();
-			ip_balanza= tipo.getBalanza().getIp();
-			port_balanza= Integer.parseInt(tipo.getBalanza().getPuerto());
+			ip_balanza = tipo.getBalanza().getIp();
+			
+			port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
 		}
 		txtObservacion.setValue(tipo.getObservacion());
 		txtNroFactura.setValue(tipo.getNroFactura());
-
+		txtProcedencia.setValue(tipo.getProcedencia());
+		txtDestino.setValue(tipo.getDestino());
+		txtNroPredespacho.setValue(tipo.getNroPredespacho());
+		txtDespachador.setValue(tipo.getDespachador());
+		if(tipo.getPesoOrigen()!=null)
+		dbsPesoOrigen.setValue(tipo.getPesoOrigen());
+		if(tipo.getCantCajas()!=null)
+			spnCajas.setValue(tipo.getCantCajas());
 		dbxDiferenciaEntrada.setValue(0);
 		dbxPesoPTEntrada.setValue(0);
 		if (tipo.getEntrada() != null) {
@@ -985,7 +1023,7 @@ public class CPesaje extends CGenerico {
 					msj.mensajeError("Debe Ingresar el Peso PT");
 			}
 		} else {
-			
+
 			msj.mensajeError("Debe seleccionar una balanza");
 		}
 
@@ -1063,8 +1101,8 @@ public class CPesaje extends CGenerico {
 
 		try {
 			// client = new Socket("172.23.22.12", 1600);
-			//System.out.println(ip);
-			//System.out.println(port);
+			// System.out.println(ip);
+			// System.out.println(port);
 			client = new Socket(ip, port);
 			output = new PrintWriter(client.getOutputStream(), false);
 			in = new BufferedReader(new InputStreamReader(
@@ -1073,7 +1111,7 @@ public class CPesaje extends CGenerico {
 			int contadorA = 0;
 			while (true) {
 				int caracter = in.read();
-				//System.out.println(caracter);
+				// System.out.println(caracter);
 
 				if (caracter >= 48 && caracter <= 57) {
 					bytes[0] = (byte) caracter;
@@ -1097,7 +1135,7 @@ public class CPesaje extends CGenerico {
 			} catch (Exception ex) {
 				numero = 0.0;
 			}
-			//System.out.println(numero);
+			// System.out.println(numero);
 			// System.out.println(Float.parseFloat(numero));
 
 			output.close();
@@ -1160,7 +1198,6 @@ public class CPesaje extends CGenerico {
 		btnBuscarBalanza.setDisabled(a);
 		Usuario usuario = usuarioSesion(nombreUsuarioSesion());
 
-
 		if (usuario.isVerPesajeYEditar())
 			btnManual.setDisabled(false);
 		else
@@ -1179,7 +1216,6 @@ public class CPesaje extends CGenerico {
 				btnManual.setDisabled(true);
 		}
 
-
 	}
 
 	public byte[] mostrarReporte(String a) throws JRException {
@@ -1189,6 +1225,22 @@ public class CPesaje extends CGenerico {
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put("boleto", pesaje.getBoleto());
 		p.put("status", pesaje.getEstatus());
+		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
+		
+		p.put("placaBatea", pesaje.getVehiculo().getPlacaBatea());
+		p.put("placaChuto", pesaje.getVehiculo().getPlacaChuto());
+		p.put("destino", pesaje.getDestino());
+		p.put("procedencia", pesaje.getProcedencia());
+		p.put("despachador", pesaje.getDespachador());
+		p.put("nroPredespacho", pesaje.getNroPredespacho());
+		if(pesaje.getAlmacen()!=null)
+		p.put("almacen", pesaje.getAlmacen().getDescripcion());
+		
+		if(pesaje.getPesoOrigen()!=null)
+		p.put("pesoOrigen", String.valueOf(pesaje.getPesoOrigen()));
+		if(pesaje.getCantCajas()!=null)
+		p.put("cajas", String.valueOf(pesaje.getCantCajas()));
+		
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
 		p.put("transporte", pesaje.getTransporte().getDescripcion());
 		p.put("producto", pesaje.getProducto().getIdProducto() + " , "
@@ -1256,13 +1308,12 @@ public class CPesaje extends CGenerico {
 			Pesaje pesaje = servicioPesaje.buscar(id);
 			if (pesaje != null) {
 				HashMap<String, Object> mapa = new HashMap<String, Object>();
-				
+
 				mapa.put("boleto", String.valueOf(pesaje.getBoleto()));
 				mapa.put("c", this);
 				Sessions.getCurrent().setAttribute("devolucion", mapa);
 				Window window = (Window) Executions.createComponents(
-						"/vistas/transacciones/VDevolucion.zul", null,
-						mapa);
+						"/vistas/transacciones/VDevolucion.zul", null, mapa);
 				window.doModal();
 			}
 		}

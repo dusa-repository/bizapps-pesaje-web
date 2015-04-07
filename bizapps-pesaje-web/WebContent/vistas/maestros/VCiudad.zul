@@ -1,0 +1,57 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divCiudad" apply="controlador.maestros.CCiudad">
+		<groupbox width="auto" mold="3d" title="Ciudad (VCiudad)">
+			<div id="botoneraCiudad" />
+			<groupbox id="gpxRegistro" width="auto" class="azul" title=""
+				open="false">
+				<caption label="Añadir" style="font-weight:bold; font-size: 13px"
+					tooltiptext="Presione para Registrar una nueva Ciudad" />
+				<separator />
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="25%" />
+						<column label="" width="45%" />
+						<column label="" width="30%" />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Nombre:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red" />
+							</hbox>
+							<textbox class="multilinea" multiline="true" id="txtNombreCiudad"
+								hflex="1" tooltiptext="Ingrese el Nombre de la Ciudad"
+								maxlength="500" />
+							<hbox />
+						</row>
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Estado:" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red" />
+							</hbox>
+							<combobox tooltiptext="Seleccione un Estado"
+								placeholder="Seleccione un Estado" id="cmbEstado" readonly="true"
+								width="100%">
+								<template name="model">
+									<comboitem label="${each.nombre}" context="${each.idEstado}" />
+								</template>
+							</combobox>
+							<hbox />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<separator />
+			<groupbox id="gpxDatos" class="azul" width="auto">
+				<caption label="Registros" style="font-weight:bold; font-size: 13px;"
+					tooltiptext="Presione para Visualizar las Ciudades Registrados" />
+				<div id="catalogoCiudad" tooltiptext="Seleccione La Ciudad para Realizar una Accion" />
+			</groupbox>
+			<separator />
+			<separator />
+		</groupbox>
+	</div>
+</zk>

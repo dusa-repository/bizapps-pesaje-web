@@ -43,12 +43,15 @@ import org.zkoss.zul.Tab;
 
 import servicio.maestros.SAlmacen;
 import servicio.maestros.SBalanza;
+import servicio.maestros.SCiudad;
 import servicio.maestros.SCliente;
 import servicio.maestros.SConductor;
 import servicio.maestros.SEmpresa;
+import servicio.maestros.SEstado;
 import servicio.maestros.SF0004;
 import servicio.maestros.SF0005;
 import servicio.maestros.SFlete;
+import servicio.maestros.SPais;
 import servicio.maestros.SProducto;
 import servicio.maestros.SProveedor;
 import servicio.maestros.STransporte;
@@ -99,6 +102,12 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	protected SEmpresa servicioEmpresa;
 	@WireVariable("SDevolucion")
 	protected SDevolucion servicioDevolucion;
+	@WireVariable("SPais")
+	protected SPais servicioPais;
+	@WireVariable("SCiudad")
+	protected SCiudad servicioCiudad;
+	@WireVariable("SEstado")
+	protected SEstado servicioEstado;
 	
 	private static ApplicationContext app = new ClassPathXmlApplicationContext(
 			"/META-INF/ConfiguracionAplicacion.xml");
