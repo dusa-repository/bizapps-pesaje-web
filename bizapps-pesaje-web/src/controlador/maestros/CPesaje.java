@@ -66,8 +66,8 @@ public class CPesaje extends CGenerico {
 	private Div divBotoneraPesaje;
 	@Wire
 	private Div divCatalogoPesaje;
-	@Wire
-	private Div divCatalogoPesajeCerrado;
+//	@Wire
+//	private Div divCatalogoPesajeCerrado;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
@@ -176,9 +176,9 @@ public class CPesaje extends CGenerico {
 	Catalogo<Transporte> catalogoTransporte;
 	Catalogo<Balanza> catalogoBalanza;
 	Catalogo<Pesaje> catalogoPesaje;
-	Catalogo<Pesaje> catalogoPesajeCerrado;
+//	Catalogo<Pesaje> catalogoPesajeCerrado;
 	long id = 0;
-	long idCerrado = 0;
+//	long idCerrado = 0;
 	String idVehiculo = "";
 	long idTransporte = 0;
 	String idConductor = "";
@@ -246,16 +246,17 @@ public class CPesaje extends CGenerico {
 							+ "Generador?valor=1&valor2="
 							+ String.valueOf(id)
 							+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
-				} else {
-					if (idCerrado != 0)
-						Clients.evalJavaScript("window.open('"
-								+ damePath()
-								+ "Generador?valor=1&valor2="
-								+ String.valueOf(idCerrado)
-								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
-					else
-						msj.mensajeError("Debe Seleccionar un Pesaje");
 				}
+//				else {
+//					if (idCerrado != 0)
+//						Clients.evalJavaScript("window.open('"
+//								+ damePath()
+//								+ "Generador?valor=1&valor2="
+//								+ String.valueOf(idCerrado)
+//								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+//					else
+//						msj.mensajeError("Debe Seleccionar un Pesaje");
+//				}
 			}
 
 			@Override
@@ -267,7 +268,7 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void guardar() {
-				if (idCerrado == 0) {
+			//	if (idCerrado == 0) {
 					if (validar()) {
 						Pesaje pesaje = new Pesaje();
 						Balanza balanza = servicioBalanza.buscar(idBalanza);
@@ -342,7 +343,7 @@ public class CPesaje extends CGenerico {
 						catalogoPesaje.actualizarLista(listaGeneral, true);
 						msj.mensajeInformacion(Mensaje.guardado);
 					}
-				}
+				//}
 			}
 
 			@Override
@@ -359,7 +360,7 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void ayuda() {
-				mostrarCatalogoPesajeCerrados();
+			//	mostrarCatalogoPesajeCerrados();
 
 			}
 
@@ -376,6 +377,7 @@ public class CPesaje extends CGenerico {
 		botonera.getChildren().get(8).setVisible(false);
 		botonera.getChildren().get(3).setVisible(false);
 		botonera.getChildren().get(5).setVisible(false);
+		botonera.getChildren().get(6).setVisible(false);
 		botonera.getChildren().get(4).setVisible(false);
 		divBotoneraPesaje.appendChild(botonera);
 	}
@@ -383,7 +385,7 @@ public class CPesaje extends CGenerico {
 	public void mostrarBotones(boolean bol) {
 		botonera.getChildren().get(1).setVisible(!bol);
 		botonera.getChildren().get(2).setVisible(bol);
-		botonera.getChildren().get(6).setVisible(!bol);
+		botonera.getChildren().get(6).setVisible(false);
 		botonera.getChildren().get(8).setVisible(!bol);
 		botonera.getChildren().get(0).setVisible(bol);
 		botonera.getChildren().get(3).setVisible(!bol);
@@ -475,7 +477,7 @@ public class CPesaje extends CGenerico {
 
 		btnDevolucion.setDisabled(true);
 		id = 0;
-		idCerrado = 0;
+//		idCerrado = 0;
 		idVehiculo = "";
 		idTransporte = 0;
 		idConductor = "";
@@ -828,71 +830,71 @@ public class CPesaje extends CGenerico {
 		port_balanza = Integer.parseInt(tipo.getPuerto());
 		catalogoBalanza.setParent(null);
 	}
-
-	public void mostrarCatalogoPesajeCerrados() {
-
-		final List<Pesaje> lista = servicioPesaje.buscarPorEstatus("Cerrado");
-		catalogoPesajeCerrado = new Catalogo<Pesaje>(divCatalogoPesajeCerrado,
-				"Catalogo de Pesajes Cerrados", lista, true, false, false,
-				"Boleto", "Fecha", "Producto", "Placa Vehiculo", "Conductor",
-				"Estatus") {
-
-			@Override
-			protected List<Pesaje> buscar(List<String> valores) {
-
-				List<Pesaje> listaa = new ArrayList<Pesaje>();
-
-				for (Pesaje tipo : lista) {
-					if (String.valueOf(tipo.getBoleto()).toLowerCase()
-							.contains(valores.get(0).toLowerCase())
-							&& String.valueOf(tipo.getFechaPesaje())
-									.toLowerCase()
-									.contains(valores.get(1).toLowerCase())
-							&& String
-									.valueOf(
-											tipo.getProducto().getDescripcion())
-									.toLowerCase()
-									.contains(valores.get(2).toLowerCase())
-							&& String.valueOf(tipo.getVehiculo().getPlaca())
-									.toLowerCase()
-									.contains(valores.get(3).toLowerCase())
-							&& String.valueOf(tipo.getConductor().getNombres())
-									.toLowerCase()
-									.contains(valores.get(4).toLowerCase())
-							&& String.valueOf(tipo.getEstatus()).toLowerCase()
-									.contains(valores.get(5).toLowerCase())) {
-						listaa.add(tipo);
-					}
-				}
-				return listaa;
-			}
-
-			@Override
-			protected String[] crearRegistros(Pesaje tipo) {
-				String[] registros = new String[6];
-				registros[0] = String.valueOf(tipo.getBoleto());
-				registros[1] = String.valueOf(tipo.getFechaPesaje());
-				registros[2] = String.valueOf(tipo.getProducto()
-						.getDescripcion());
-				registros[3] = String.valueOf(tipo.getVehiculo().getPlaca());
-				registros[4] = String.valueOf(tipo.getConductor().getNombres()
-						+ "  " + tipo.getConductor().getApellidos());
-				registros[5] = String.valueOf(tipo.getEstatus());
-				return registros;
-			}
-		};
-		catalogoPesajeCerrado.setParent(divCatalogoPesajeCerrado);
-		catalogoPesajeCerrado.doModal();
-	}
-
-	@Listen("onSeleccion = #divCatalogoPesajeCerrado")
-	public void seleccionarCerrado() {
-		limpiarCampos();
-		Pesaje tipo = catalogoPesajeCerrado.objetoSeleccionadoDelCatalogo();
-		idCerrado = tipo.getBoleto();
-		llenarCamposPesaje(tipo);
-		catalogoPesajeCerrado.setParent(null);
-	}
+//
+//	public void mostrarCatalogoPesajeCerrados() {
+//
+//		final List<Pesaje> lista = servicioPesaje.buscarPorEstatus("Cerrado");
+//		catalogoPesajeCerrado = new Catalogo<Pesaje>(divCatalogoPesajeCerrado,
+//				"Catalogo de Pesajes Cerrados", lista, true, false, false,
+//				"Boleto", "Fecha", "Producto", "Placa Vehiculo", "Conductor",
+//				"Estatus") {
+//
+//			@Override
+//			protected List<Pesaje> buscar(List<String> valores) {
+//
+//				List<Pesaje> listaa = new ArrayList<Pesaje>();
+//
+//				for (Pesaje tipo : lista) {
+//					if (String.valueOf(tipo.getBoleto()).toLowerCase()
+//							.contains(valores.get(0).toLowerCase())
+//							&& String.valueOf(tipo.getFechaPesaje())
+//									.toLowerCase()
+//									.contains(valores.get(1).toLowerCase())
+//							&& String
+//									.valueOf(
+//											tipo.getProducto().getDescripcion())
+//									.toLowerCase()
+//									.contains(valores.get(2).toLowerCase())
+//							&& String.valueOf(tipo.getVehiculo().getPlaca())
+//									.toLowerCase()
+//									.contains(valores.get(3).toLowerCase())
+//							&& String.valueOf(tipo.getConductor().getNombres())
+//									.toLowerCase()
+//									.contains(valores.get(4).toLowerCase())
+//							&& String.valueOf(tipo.getEstatus()).toLowerCase()
+//									.contains(valores.get(5).toLowerCase())) {
+//						listaa.add(tipo);
+//					}
+//				}
+//				return listaa;
+//			}
+//
+//			@Override
+//			protected String[] crearRegistros(Pesaje tipo) {
+//				String[] registros = new String[6];
+//				registros[0] = String.valueOf(tipo.getBoleto());
+//				registros[1] = String.valueOf(tipo.getFechaPesaje());
+//				registros[2] = String.valueOf(tipo.getProducto()
+//						.getDescripcion());
+//				registros[3] = String.valueOf(tipo.getVehiculo().getPlaca());
+//				registros[4] = String.valueOf(tipo.getConductor().getNombres()
+//						+ "  " + tipo.getConductor().getApellidos());
+//				registros[5] = String.valueOf(tipo.getEstatus());
+//				return registros;
+//			}
+//		};
+//		catalogoPesajeCerrado.setParent(divCatalogoPesajeCerrado);
+//		catalogoPesajeCerrado.doModal();
+//	}
+//
+//	@Listen("onSeleccion = #divCatalogoPesajeCerrado")
+//	public void seleccionarCerrado() {
+//		limpiarCampos();
+//		Pesaje tipo = catalogoPesajeCerrado.objetoSeleccionadoDelCatalogo();
+//		idCerrado = tipo.getBoleto();
+//		llenarCamposPesaje(tipo);
+//		catalogoPesajeCerrado.setParent(null);
+//	}
 
 	public void llenarCamposPesaje(Pesaje tipo) {
 
@@ -927,8 +929,8 @@ public class CPesaje extends CGenerico {
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
 			idBalanza = tipo.getBalanza().getIdBalanza();
 			ip_balanza = tipo.getBalanza().getIp();
-			
 			port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
+
 		}
 		txtObservacion.setValue(tipo.getObservacion());
 		txtNroFactura.setValue(tipo.getNroFactura());
@@ -952,34 +954,34 @@ public class CPesaje extends CGenerico {
 		}
 		editable(false);
 		inhabilitarParaSalida(true);
-		if (idCerrado != 0) {
-			if (tipo.getSalida() != null) {
-				dbxVehiculoSalida.setValue(tipo.getSalida());
-				dbxTotalSalida.setValue(tipo.getSalida());
-				if (tipo.getEntrada() != null) {
-					double entrada = tipo.getEntrada();
-					Double total = (double) 0;
-					if (entrada > tipo.getSalida())
-						total = entrada - tipo.getSalida();
-					else
-						total = tipo.getSalida() - entrada;
-					dbxTotal.setValue(total);
-					Double diferencia = (double) 0;
-					if (tipo.getPesoPTSalida() != null) {
-						dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
-						diferencia = tipo.getEntrada() + tipo.getPesoPTSalida()
-								- tipo.getSalida();
-						if (diferencia < 0)
-							diferencia = diferencia * (-1);
-						dbxDiferenciaSalida.setValue(diferencia);
-					}
-				}
-				dtbFechaSalida.setDisabled(true);
-				dtbFechaSalida.setValue(tipo.getFechaPesajeSalida());
-			}
-			inhabilitar(true);
-			btnDevolucion.setDisabled(true);
-		}
+//		if (idCerrado != 0) {
+//			if (tipo.getSalida() != null) {
+//				dbxVehiculoSalida.setValue(tipo.getSalida());
+//				dbxTotalSalida.setValue(tipo.getSalida());
+//				if (tipo.getEntrada() != null) {
+//					double entrada = tipo.getEntrada();
+//					Double total = (double) 0;
+//					if (entrada > tipo.getSalida())
+//						total = entrada - tipo.getSalida();
+//					else
+//						total = tipo.getSalida() - entrada;
+//					dbxTotal.setValue(total);
+//					Double diferencia = (double) 0;
+//					if (tipo.getPesoPTSalida() != null) {
+//						dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
+//						diferencia = tipo.getEntrada() + tipo.getPesoPTSalida()
+//								- tipo.getSalida();
+//						if (diferencia < 0)
+//							diferencia = diferencia * (-1);
+//						dbxDiferenciaSalida.setValue(diferencia);
+//					}
+//				}
+//				dtbFechaSalida.setDisabled(true);
+//				dtbFechaSalida.setValue(tipo.getFechaPesajeSalida());
+//			}
+//			inhabilitar(true);
+//			btnDevolucion.setDisabled(true);
+//		}
 
 	}
 
@@ -1211,10 +1213,10 @@ public class CPesaje extends CGenerico {
 				btnManual.setDisabled(a);
 		}
 
-		if (idCerrado != 0) {
-			if (!btnManual.isDisabled())
-				btnManual.setDisabled(true);
-		}
+//		if (idCerrado != 0) {
+//			if (!btnManual.isDisabled())
+//				btnManual.setDisabled(true);
+//		}
 
 	}
 
