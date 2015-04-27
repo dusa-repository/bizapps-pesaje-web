@@ -1,0 +1,204 @@
+<zk>
+	<style src="../public/Estilo.css" />
+	<div id="divPesaje" apply="controlador.maestros.CCerrados">
+		<groupbox width="auto" mold="3d" title="Pesajes Cerrados">
+			<div id="divBotoneraPesaje"></div>
+			<groupbox id="gpxVehiculo" width="auto" class="blanco"
+				title="Vehiculo">
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="12%" />
+						<column label="" width="18%" />
+						<column label="" width="12%" />
+						<column label="" width="58%" />
+					</columns>
+					<rows>
+						<row>
+							<label class="etiqueta" value="Boleto:" />
+							<textbox id="txtBoleto" hflex="1" width="100%" readonly="true"
+								style="background-color:yellow" />
+							<hbox />
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Vehiculo:" />
+							<textbox disabled="true" id="txtVehiculo" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Vehiculo" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblVehiculo" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Transporte:" />
+							<textbox disabled="true" id="txtTransporte" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Transporte" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblTransporte" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Conductor:" />
+							<textbox disabled="true" id="txtConductor" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Conductor" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblConductor" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Producto:" />
+							<textbox disabled="true" id="txtProducto" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Producto" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblProducto" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Balanza:" />
+							<textbox disabled="true" id="txtBalanza" hflex="1"
+								maxlength="100" tooltiptext="Seleccione la Balanza" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblBalanza" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Almacen:" />
+							<textbox disabled="true" id="txtAlmacen" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Almacen" width="100%" />
+							<hbox />
+							<label style="font-weight:bold;color:black" id="lblAlmacen" />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<groupbox id="gpxComplementario" width="auto" class="blanco"
+				title="Complementario">
+				<grid width="100%">
+					<columns visible="false">
+						<column label="" width="15%" />
+						<column label="" width="22%" />
+						<column label="" width="15%" />
+						<column label="" width="22%" />
+						<column label="" width="26%" />
+					</columns>
+					<rows>
+						<row>
+							<label class="etiqueta" value="Nro. Factura:" />
+							<textbox readonly="true" id="txtNroFactura" hflex="1"
+								maxlength="100" tooltiptext="Ingrese el Numero de Factura"
+								width="100%" />
+							<label class="etiqueta" value="Nro. Predespacho:" />
+							<textbox readonly="true" id="txtNroPredespacho" hflex="1"
+								maxlength="100" tooltiptext="Ingrese el Numero de Predespacho"
+								width="100%" />
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Destino:" />
+							<textbox readonly="true" id="txtDestino" hflex="1"
+								maxlength="100" tooltiptext="Ingrese el Destino" width="100%" />
+
+							<label class="etiqueta" value="Procedencia:" />
+							<textbox readonly="true" id="txtProcedencia" hflex="1"
+								maxlength="100" tooltiptext="Ingrese la Procedencia" width="100%" />
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Peso Origen:" />
+							<doublespinner readonly="true" id="dbsPesoOrigen"
+								value="0" hflex="1" step="0.1" maxlength="100000"
+								tooltiptext="Ingrese el Peso de Origen" width="100%" />
+							<label class="etiqueta" value="Cant. Cajas:" />
+							<spinner readonly="true" id="spnCajas" value="0" hflex="1"
+								step="1" maxlength="1000000" tooltiptext="Ingrese la Cantidad de Cajas"
+								width="100%" />
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Despachador:" />
+							<cell colspan="2">
+								<textbox readonly="true" id="txtDespachador" hflex="1"
+									maxlength="500" tooltiptext="Ingrese un Despachador" width="100%" />
+							</cell>
+							<hbox />
+							<hbox />
+						</row>
+						<row>
+							<label class="etiqueta" value="Observaciones:" />
+							<cell colspan="4">
+								<textbox readonly="true" id="txtObservacion" hflex="1"
+									maxlength="500" tooltiptext="Ingrese una Observacion" width="100%"
+									multiline="true" />
+							</cell>
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+			<groupbox id="gpxLectura" width="auto" class="blanco" title="Lectura">
+				<grid width="100%">
+					<columns>
+						<column label="" width="10%" />
+						<column label="Fecha/Hora" width="18%"
+							style="font-weight:bold;color:black;background-color:#BDBDBD" />
+						<column label="Peso PT" width="18%"
+							style="font-weight:bold;color:black;background-color:#BDBDBD" />
+						<column label="Vehiculo" width="18%"
+							style="font-weight:bold;color:black;background-color:#BDBDBD" />
+						<column label="Diferencia" width="18%"
+							style="font-weight:bold;color:black;background-color:#BDBDBD" />
+						<column label="Total" width="18%"
+							style="font-weight:bold;color:black;background-color:#BDBDBD" />
+					</columns>
+					<rows>
+						<row>
+							<label class="etiqueta" value="Entrada:" style="font-size:14px" />
+							<datebox readonly="true" width="100%" id="dtbFechaEntrada"
+								onCreate="self.value = new Date()" />
+							<doublebox readonly="true" style="font-weight:bold" id="dbxPesoPTEntrada"
+								hflex="1" maxlength="100000000" constraint="no negative:Solo valores Positivos"
+								tooltiptext="Ingrese el Peso PT" width="100%" />
+							<doublebox constraint="no negative:Solo valores Positivos"
+								style="font-weight:bold" readonly="true" id="dbxVehiculoEntrada"
+								hflex="1" maxlength="100000000" tooltiptext="Ingrese el Peso"
+								width="100%" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxDiferenciaEntrada" hflex="1" maxlength="100000000"
+								tooltiptext="Diferencia entre Peso de Entrada, Peso PT y Peso de la Balanza"
+								width="100%" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxTotalEntrada" hflex="1" maxlength="100000000"
+								tooltiptext="Ingrese el Total" width="100%" />
+						</row>
+						<row>
+							<label class="etiqueta" value="Salida:" style="font-size:14px" />
+							<datebox readonly="true" width="100%" id="dtbFechaSalida" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxPesoPTSalida" hflex="1" maxlength="100000000"
+								tooltiptext="Ingrese el Peso PT" width="100%" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxVehiculoSalida" hflex="1" maxlength="100000000"
+								tooltiptext="Ingrese el Peso" width="100%" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxDiferenciaSalida" hflex="1" maxlength="100000000"
+								tooltiptext="Diferencia entre Peso de Salida, Peso PT y Peso de la Balanza"
+								width="100%" />
+							<doublebox readonly="true"
+								constraint="no negative:Solo valores Positivos" style="font-weight:bold"
+								id="dbxTotalSalida" hflex="1" maxlength="100000000" tooltiptext="Total Salida"
+								width="100%" />
+						</row>
+						<row>
+							<cell colspan="5">
+								<hbox />
+							</cell>
+							<doublebox id="dbxTotal" hflex="1" maxlength="100000000"
+								tooltiptext="Diferencia entre Peso de Entrada y de Salida"
+								width="100%" style="font-weight:bold" readonly="true" />
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
+		</groupbox>
+		<separator />
+		<div id="divCatalogoPesajeCerrado" />
+	</div>
+</zk>
