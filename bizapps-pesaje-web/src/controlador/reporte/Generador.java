@@ -39,15 +39,27 @@ public class Generador extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		CPesaje pesaje = new CPesaje();
+		CReportePesajes pesajes = new CReportePesajes();
 		ServletOutputStream out;
 		String par1 = request.getParameter("valor");
 		String par2 = request.getParameter("valor2");
+		String par3 = request.getParameter("valor3");
+		String par4 = request.getParameter("valor4");
+		String par5 = request.getParameter("valor5");
+		String par6 = request.getParameter("valor6");
+		String par7 = request.getParameter("valor7");
+		String par8 = request.getParameter("valor8");
+		String par9 = request.getParameter("valor9");
+		String par20 = request.getParameter("valor20");
 
 		byte[] fichero = null;
 		try {
 			switch (par1) {
 			case "1":
 				fichero = pesaje.mostrarReporte(par2);
+				break;
+			case "2":
+				fichero = pesajes.mostrarReporte(par2,par3,par4,par5,par6,par7,par8,par9,par20);
 				break;
 			default:
 				break;

@@ -1,5 +1,6 @@
 package controlador.maestros;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -26,6 +28,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import modelo.seguridad.Usuario;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -386,5 +397,57 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 		}
 		return bd.doubleValue();
 	}
+	
+
+	public Date agregarDia(Date fecha) {
+		Calendar calendario = Calendar.getInstance();
+		calendario.setTime(fecha);
+		calendario.add(Calendar.DAY_OF_YEAR, +1);
+		return fecha = calendario.getTime();
+	}
+	
+
+	public byte[] generarReporteGenerico(Map<String, Object> p, List<?> lista,
+			String nombreReporte, String tipo) {
+		Mensaje mensaje = new Mensaje();
+		byte[] fichero = null;
+		JasperReport repor = null;
+		try {
+			repor = (JasperReport) JRLoader.loadObject(getClass().getResource(
+					nombreReporte));
+		} catch (JRException e1) {
+			e1.printStackTrace();
+		}
+
+		if (tipo.equals("EXCEL")) {
+			JasperPrint jasperPrint = null;
+			try {
+				jasperPrint = JasperFillManager.fillReport(repor, p,
+						new JRBeanCollectionDataSource(lista));
+			} catch (JRException e) {
+				e.printStackTrace();
+			}
+			ByteArrayOutputStream xlsReport = new ByteArrayOutputStream();
+			JRXlsxExporter exporter = new JRXlsxExporter();
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, xlsReport);
+			try {
+				exporter.exportReport();
+			} catch (JRException e) {
+				e.printStackTrace();
+			}
+			return xlsReport.toByteArray();
+		} else {
+			try {
+				fichero = JasperRunManager.runReportToPdf(repor, p,
+						new JRBeanCollectionDataSource(lista));
+			} catch (JRException e) {
+				e.printStackTrace();
+				mensaje.mensajeError(e.getMessage());
+			}
+			return fichero;
+		}
+	}
+
 
 }

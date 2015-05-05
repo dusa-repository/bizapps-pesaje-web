@@ -1,0 +1,138 @@
+<zk>
+	<style src="/public/Estilo.css" />
+	<div id="divReporte" apply="controlador.reporte.CReportePesajes">
+		<groupbox width="90%" mold="3d" title="Reporte de Pesajes Realizados">
+			<separator />
+			<div id="divBotoneraPesaje" />
+			<separator />
+			<grid width="100%">
+				<columns visible="false">
+					<column label="" width="15%" />
+					<column label="" width="40%" />
+					<column label="" width="15%" />
+					<column label="" width="40%" />
+				</columns>
+				<rows>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Desde:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red" />
+						</hbox>
+						<datebox width="100%" readonly="true" id="dtbDesde"
+							constraint="no future" onCreate="self.value = new Date()"
+							tooltiptext="Seleccione el inicio del Periodo a buscar" />
+						<hbox>
+							<label class="etiqueta" value="Hasta:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red" />
+						</hbox>
+						<datebox width="100%" readonly="true" id="dtbHasta"
+							onCreate="self.value = new Date()" tooltiptext="Seleccione el fin del Periodo a buscar" />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Boleto:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red">
+							</label>
+						</hbox>
+						<textbox id="txtBoleto" hflex="1" width="100%" value="TODOS"/>
+						<hbox />
+						<hbox />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Movimiento:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red" />
+						</hbox>
+						<combobox id="cmbMovimiento" readonly="true" tabindex="1"
+							value="TODOS" width="100%" tooltiptext="Seleccione un Movimiento"
+							placeholder="Seleccione un Movimiento">
+							<comboitem label="ENTRADAS" />
+							<comboitem label="SALIDAS" />
+							<comboitem label="DEVOLUCIONES" />
+										<comboitem label="TODOS" />
+						</combobox>
+						<hbox></hbox>
+						<hbox></hbox>
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Vehiculo:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red">
+							</label>
+						</hbox>
+						<textbox disabled="true" id="txtVehiculo" hflex="1"
+							value="TODOS" maxlength="100" tooltiptext="Seleccione el Vehiculo" width="100%" />
+						<button autodisable="self" id="btnBuscarVehiculo" class="btn"
+							label="Buscar" tooltiptext="Catalogo de Vehiculos" image="/public/imagenes/botones/buscar.png" />
+						<label style="font-weight:bold;color:black" id="lblVehiculo" />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Conductor:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red">
+							</label>
+						</hbox>
+						<textbox disabled="true" id="txtConductor" hflex="1"
+							value="TODOS" maxlength="100" tooltiptext="Seleccione el Conductor" width="100%" />
+						<button autodisable="self" id="btnBuscarConductor" class="btn"
+							label="Buscar" tooltiptext="Catalogo de Conductores" image="/public/imagenes/botones/buscar.png" />
+						<label style="font-weight:bold;color:black" id="lblConductor" />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Producto:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red">
+							</label>
+						</hbox>
+						<textbox disabled="true" id="txtProducto" hflex="1"
+							value="TODOS" maxlength="100" tooltiptext="Seleccione el Producto" width="100%" />
+						<button autodisable="self" id="btnBuscarProducto" class="btn"
+							label="Buscar" tooltiptext="Catalogo de Productos" image="/public/imagenes/botones/buscar.png" />
+						<label style="font-weight:bold;color:black" id="lblProducto" />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Balanza:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red">
+							</label>
+						</hbox>
+						<textbox disabled="true" id="txtBalanza" hflex="1"
+						value="TODOS"	maxlength="100" tooltiptext="Seleccione la Balanza" width="100%" />
+						<button autodisable="self" id="btnBuscarBalanza" class="btn"
+							label="Buscar" tooltiptext="Catalogo de Balanzas" image="/public/imagenes/botones/buscar.png" />
+						<label style="font-weight:bold;color:black" id="lblBalanza" />
+					</row>
+					<row>
+						<hbox>
+							<label class="etiqueta" value="Reporte de Tipo:" />
+							<space />
+							<label value="*" style="font-weight:bold;color:red" />
+						</hbox>
+						<combobox id="cmbTipo" readonly="true" tabindex="1"
+							value="PDF" width="100%" tooltiptext="Seleccione un Tipo"
+							placeholder="Seleccione un Tipo">
+							<comboitem label="PDF" />
+							<comboitem label="EXCEL" />
+						</combobox>
+						<hbox></hbox>
+						<hbox></hbox>
+					</row>
+				</rows>
+			</grid>
+
+			<div id="divCatalogoAlmacen" />
+			<div id="divCatalogoProducto" />
+			<div id="divCatalogoBalanza" />
+			<div id="divCatalogoConductor" />
+			<div id="divCatalogoVehiculo" />
+		</groupbox>
+	</div>
+</zk>

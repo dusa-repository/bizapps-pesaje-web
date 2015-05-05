@@ -1,5 +1,7 @@
 package servicio.transacciones;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import interfacedao.transacciones.IPesajeDAO;
@@ -35,4 +37,19 @@ public class SPesaje {
 			return pesajeDAO.findOne(id);
 		return null;
 	}
+
+
+	public List<Pesaje> buscarEntreFechasYParametrosDevoluciones(Date desde,
+			Date hasta, String boleto, String vehiculo, String conductor,
+			String producto, String balanza) {
+		return pesajeDAO.buscarEntreFechasyPesajesDevoluciones(desde,hasta,boleto,vehiculo,conductor,producto,balanza);
+	}
+
+	public List<Pesaje> buscarEntreFechasYParametros(Date desde, Date hasta,
+			String boleto, String vehiculo, String conductor, String producto,
+			String balanza, String estatus) {
+		return pesajeDAO.buscarEntreFechasyPesajes(desde,hasta,boleto,vehiculo,conductor,producto,balanza,estatus);
+	}
+
+
 }
