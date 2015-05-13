@@ -33,4 +33,9 @@ public class SProveedor {
 		proveedorDAO.delete(eliminarLista);
 	}
 
+	public Proveedor buscar(String idProveedor) {
+		// TODO Auto-generated method stub
+		return proveedorDAO.findByIdProveedor(idProveedor);
+	}
+
 }

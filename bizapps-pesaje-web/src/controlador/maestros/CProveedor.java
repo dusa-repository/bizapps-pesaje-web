@@ -292,9 +292,9 @@ public class CProveedor extends CGenerico {
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())
 							&& tipo.getDireccion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())
+									.contains(valores.get(2).toLowerCase())
 							&& tipo.getTelefono().toLowerCase()
-									.contains(valores.get(1).toLowerCase())) {
+									.contains(valores.get(3).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}

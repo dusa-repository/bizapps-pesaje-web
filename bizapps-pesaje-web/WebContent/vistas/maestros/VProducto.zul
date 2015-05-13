@@ -16,7 +16,7 @@
 						<column label="" width="45%" />
 					</columns>
 					<rows>
-							<row>
+						<row>
 							<hbox>
 								<label class="etiqueta" value="Codigo" />
 								<space />
@@ -42,7 +42,19 @@
 							</cell>
 							<hbox />
 						</row>
-		
+						<row>
+							<hbox>
+								<label class="etiqueta" value="Proveedor" />
+								<space />
+								<label value="*" style="font-weight:bold;color:red">
+								</label>
+							</hbox>
+							<textbox disabled="true" id="txtProveedor" hflex="1"
+								maxlength="100" tooltiptext="Seleccione el Proveedor" width="100%" />
+							<button autodisable="self" id="btnBuscarProveedor" class="btn"
+								label="Buscar" tooltiptext="Catalogo de Proveedores" image="/public/imagenes/botones/buscar.png" />
+							<label style="font-weight:bold;color:black" id="lblProveedor" />
+						</row>
 					</rows>
 				</grid>
 			</groupbox>
@@ -55,5 +67,6 @@
 			<separator />
 			<separator />
 		</groupbox>
+			<div id="divCatalogoProveedor"/>
 	</div>
 </zk>

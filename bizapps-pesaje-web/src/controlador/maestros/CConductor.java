@@ -221,8 +221,12 @@ public class CConductor extends CGenerico {
 			if (!Validador.validarTelefono(txtTelefono1.getValue())) {
 				msj.mensajeError(Mensaje.telefonoInvalido);
 				return false;
-			} else
-				return true;
+			} else	
+				if (!Validador.validarNumero(txtCedula.getValue())) {
+					msj.mensajeError("La cedula debe contener solo numeros");
+					return false;
+				} else	
+					return true;
 		}
 	}
 
@@ -303,9 +307,9 @@ public class CConductor extends CGenerico {
 							&& tipo.getApellidos().toLowerCase()
 									.contains(valores.get(2).toLowerCase())
 							&& tipo.getDireccion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())
+									.contains(valores.get(3).toLowerCase())
 							&& tipo.getTelefono().toLowerCase()
-									.contains(valores.get(1).toLowerCase())) {
+									.contains(valores.get(4).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
@@ -318,8 +322,8 @@ public class CConductor extends CGenerico {
 				registros[0] = tipo.getCedula();
 				registros[1] = tipo.getNombres();
 				registros[2] = tipo.getApellidos();
-				registros[2] = tipo.getDireccion();
-				registros[3] = tipo.getTelefono();
+				registros[3] = tipo.getDireccion();
+				registros[4] = tipo.getTelefono();
 				return registros;
 			}
 		};
@@ -344,6 +348,14 @@ public class CConductor extends CGenerico {
 	public void validarTelefono() throws IOException {
 		if (Validador.validarTelefono(txtTelefono1.getValue()) == false) {
 			msj.mensajeAlerta(Mensaje.telefonoInvalido);
+		}
+	}
+	
+	/* Metodo que valida el formmato del telefono ingresado */
+	@Listen("onChange = #txtCedula")
+	public void validarCedula() throws IOException {
+		if (!Validador.validarNumero(txtCedula.getValue())) {
+			msj.mensajeError("La cedula debe contener solo numeros");
 		}
 	}
 

@@ -299,7 +299,7 @@ public class CReportePesajes extends CGenerico {
 
 		catalogoVehiculo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
 				"Catalogo de Vehiculos", lista, true, false, false, "Placa",
-				"Descripcion", "Peso") {
+				"Descripcion") {
 
 			@Override
 			protected List<Vehiculo> buscar(List<String> valores) {
@@ -310,9 +310,7 @@ public class CReportePesajes extends CGenerico {
 					if (tipo.getPlaca().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())
-							&& String.valueOf(tipo.getPeso()).toLowerCase()
-									.contains(valores.get(2).toLowerCase())) {
+									.contains(valores.get(1).toLowerCase())) {
 						listaa.add(tipo);
 					}
 				}
@@ -321,10 +319,9 @@ public class CReportePesajes extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Vehiculo tipo) {
-				String[] registros = new String[3];
+				String[] registros = new String[2];
 				registros[0] = tipo.getPlaca();
 				registros[1] = tipo.getDescripcion();
-				registros[2] = String.valueOf(tipo.getPeso());
 				return registros;
 			}
 		};

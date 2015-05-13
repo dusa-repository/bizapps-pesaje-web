@@ -267,9 +267,9 @@ public class CEmpresa extends CGenerico {
 					if (tipo.getRif().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getNombre().toLowerCase()
-									.contains(valores.get(0).toLowerCase())
+									.contains(valores.get(1).toLowerCase())
 							&& tipo.getDireccion().toLowerCase()
-									.contains(valores.get(0).toLowerCase())) {
+									.contains(valores.get(2).toLowerCase())) {
 						lista.add(tipo);
 					}
 				}
