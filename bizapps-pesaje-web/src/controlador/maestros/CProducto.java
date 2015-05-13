@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import modelo.maestros.Producto;
+import modelo.maestros.Proveedor;
+import modelo.maestros.Vehiculo;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -13,6 +15,7 @@ import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
@@ -38,10 +41,18 @@ public class CProducto extends CGenerico {
 	private Groupbox gpxDatos;
 	@Wire
 	private Groupbox gpxRegistro;
+	@Wire
+	private Div divCatalogoProveedor;
+	@Wire
+	private Label lblProveedor;
+	@Wire
+	private Textbox txtProveedor;
 
 	Botonera botonera;
 	Catalogo<Producto> catalogo;
+	Catalogo<Proveedor> catalogoProveedor;
 	String id = "";
+	String idProveedor = "";
 	private List<Producto> listaGeneral = new ArrayList<Producto>();
 
 	@Override
@@ -73,6 +84,13 @@ public class CProducto extends CGenerico {
 						txtDescripcion.setValue(tipo.getDescripcion());
 						txtCodigo.setValue(tipo.getIdProducto());
 						txtCodigo.setDisabled(true);
+						if (tipo.getProveedor() != null) {
+							txtProveedor.setValue(tipo.getProveedor()
+									.getIdProveedor());
+							idProveedor = tipo.getProveedor().getIdProveedor();
+							lblProveedor.setValue(tipo.getProveedor()
+									.getDescripcion());
+						}
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -106,6 +124,11 @@ public class CProducto extends CGenerico {
 						Producto producto = new Producto();
 						producto.setDescripcion(descripcion);
 						producto.setIdProducto(id);
+						if (servicioProveedor.buscar(idProveedor) != null) {
+							Proveedor pro = servicioProveedor
+									.buscar(idProveedor);
+							producto.setProveedor(pro);
+						}
 						servicioProducto.guardar(producto);
 						msj.mensajeInformacion(Mensaje.guardado);
 						limpiar();
@@ -118,77 +141,6 @@ public class CProducto extends CGenerico {
 
 			@Override
 			public void eliminar() {
-				// if (gpxDatos.isOpen()) {
-				// /* Elimina Varios Registros */
-				// if (validarSeleccion()) {
-				// final List<Balanza> eliminarLista = catalogo
-				// .obtenerSeleccionados();
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorIds(eliminarLista);
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show("¿Desea Eliminar los "
-				// + eliminarLista.size()
-				// + " Registros?",
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				// servicioBalanza
-				// .eliminarVarios(eliminarLista);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// }
-				// } else {
-				// /* Elimina un solo registro */
-				// if (id != 0) {
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorBalanza(id);
-				//
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show(Mensaje.deseaEliminar,
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				//
-				// servicioBalanza
-				// .eliminarUno(id);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// limpiar();
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// } else
-				// msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-				// }
 
 			}
 
@@ -232,6 +184,9 @@ public class CProducto extends CGenerico {
 		txtDescripcion.setValue("");
 		txtCodigo.setValue("");
 		txtCodigo.setDisabled(false);
+		txtProveedor.setValue("");
+		lblProveedor.setValue("");
+		idProveedor = "";
 	}
 
 	public boolean validarSeleccion() {
@@ -259,7 +214,8 @@ public class CProducto extends CGenerico {
 
 	public boolean camposLLenos() {
 		if (txtDescripcion.getText().compareTo("") == 0
-				|| txtCodigo.getText().compareTo("") == 0) {
+				|| txtCodigo.getText().compareTo("") == 0
+				|| txtProveedor.getText().compareTo("") == 0) {
 			return false;
 		} else
 			return true;
@@ -267,7 +223,8 @@ public class CProducto extends CGenerico {
 
 	public boolean camposEditando() {
 		if (txtDescripcion.getText().compareTo("") != 0
-				|| txtCodigo.getText().compareTo("") != 0) {
+				|| txtCodigo.getText().compareTo("") != 0
+				|| txtProveedor.getText().compareTo("") != 0) {
 			return true;
 		} else
 			return false;
@@ -340,6 +297,56 @@ public class CProducto extends CGenerico {
 			}
 		};
 		catalogo.setParent(divCatalogoProducto);
+	}
+
+	@Listen("onClick = #btnBuscarProveedor")
+	public void mostrarCatalogoProveedor() {
+		final List<Proveedor> listaP = servicioProveedor.buscarTodos();
+		catalogoProveedor = new Catalogo<Proveedor>(divCatalogoProveedor,
+				"Catalogo de Proveedores", listaP, true, false, false,
+				"Codigo", "Descripcion", "Direccion", "Telefono") {
+
+			@Override
+			protected List<Proveedor> buscar(List<String> valores) {
+
+				List<Proveedor> lista = new ArrayList<Proveedor>();
+
+				for (Proveedor tipo : listaP) {
+					if (tipo.getIdProveedor().toLowerCase()
+							.contains(valores.get(0).toLowerCase())
+							&& tipo.getDescripcion().toLowerCase()
+									.contains(valores.get(1).toLowerCase())
+							&& tipo.getDireccion().toLowerCase()
+									.contains(valores.get(2).toLowerCase())
+							&& tipo.getTelefono().toLowerCase()
+									.contains(valores.get(3).toLowerCase())) {
+						lista.add(tipo);
+					}
+				}
+				return lista;
+			}
+
+			@Override
+			protected String[] crearRegistros(Proveedor tipo) {
+				String[] registros = new String[4];
+				registros[0] = tipo.getIdProveedor();
+				registros[1] = tipo.getDescripcion();
+				registros[2] = tipo.getDireccion();
+				registros[3] = tipo.getTelefono();
+				return registros;
+			}
+		};
+		catalogoProveedor.setParent(divCatalogoProveedor);
+		catalogoProveedor.doModal();
+	}
+
+	@Listen("onSeleccion = #divCatalogoProveedor")
+	public void seleccionarProveedor() {
+		Proveedor tipo = catalogoProveedor.objetoSeleccionadoDelCatalogo();
+		idProveedor = tipo.getIdProveedor();
+		txtProveedor.setValue(tipo.getIdProveedor());
+		lblProveedor.setValue(tipo.getDescripcion());
+		catalogoProveedor.setParent(null);
 	}
 
 	public boolean idLibre() {

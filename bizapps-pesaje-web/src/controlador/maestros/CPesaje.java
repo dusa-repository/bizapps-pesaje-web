@@ -166,6 +166,8 @@ public class CPesaje extends CGenerico {
 	private Textbox txtDestino;
 	@Wire
 	private Textbox txtNroPredespacho;
+	@Wire
+	private Textbox txtPlacaBatea;
 
 	Botonera botonera;
 
@@ -318,6 +320,7 @@ public class CPesaje extends CGenerico {
 						}
 						pesaje.setNroPredespacho(txtNroPredespacho.getValue());
 						pesaje.setDespachador(txtDespachador.getValue());
+						pesaje.setPlacaBatea(txtPlacaBatea.getValue());
 						pesaje.setDestino(txtDestino.getValue());
 						pesaje.setProcedencia(txtProcedencia.getValue());
 						if (spnCajas.getValue() != null)
@@ -501,6 +504,7 @@ public class CPesaje extends CGenerico {
 		txtNroFactura.setValue("");
 		txtNroPredespacho.setValue("");
 		txtDespachador.setValue("");
+		txtPlacaBatea.setValue("");
 		txtDestino.setValue("");
 		txtProcedencia.setValue("");
 		dbsPesoOrigen.setValue(0.0);
@@ -611,7 +615,7 @@ public class CPesaje extends CGenerico {
 		final List<Vehiculo> lista = servicioVehiculo.buscarTodos();
 		catalogoVehiculo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
 				"Catalogo de Vehiculos", lista, true, false, false, "Placa",
-				"Descripcion", "Peso") {
+				"Descripcion") {
 
 			@Override
 			protected List<Vehiculo> buscar(List<String> valores) {
@@ -622,9 +626,7 @@ public class CPesaje extends CGenerico {
 					if (tipo.getPlaca().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
-									.contains(valores.get(1).toLowerCase())
-							&& String.valueOf(tipo.getPeso()).toLowerCase()
-									.contains(valores.get(2).toLowerCase())) {
+									.contains(valores.get(1).toLowerCase())) {
 						listaa.add(tipo);
 					}
 				}
@@ -633,10 +635,9 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			protected String[] crearRegistros(Vehiculo tipo) {
-				String[] registros = new String[3];
+				String[] registros = new String[2];
 				registros[0] = tipo.getPlaca();
 				registros[1] = tipo.getDescripcion();
-				registros[2] = String.valueOf(tipo.getPeso());
 				return registros;
 			}
 		};
@@ -649,7 +650,7 @@ public class CPesaje extends CGenerico {
 		Vehiculo tipo = catalogoVehiculo.objetoSeleccionadoDelCatalogo();
 		idVehiculo = tipo.getPlaca();
 		txtVehiculo.setValue(String.valueOf(tipo.getPlaca()));
-		lblVehiculo.setValue(tipo.getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getPlacaChuto()+"   "+"Placa Batea:"+"   "+tipo.getPlacaBatea());
+		lblVehiculo.setValue(tipo.getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getPlacaChuto());
 		catalogoVehiculo.setParent(null);
 	}
 
@@ -913,7 +914,7 @@ public class CPesaje extends CGenerico {
 			idAlmacen = tipo.getAlmacen().getIdAlmacen();
 		}
 		txtVehiculo.setValue(String.valueOf(tipo.getVehiculo().getPlaca()));
-		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto()+"   "+"Placa Batea:"+"   "+tipo.getVehiculo().getPlacaBatea());
+		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto());
 		txtTransporte
 				.setValue(String.valueOf(tipo.getTransporte().getCodigo()));
 		lblTransporte.setValue(tipo.getTransporte().getDescripcion());
@@ -928,8 +929,8 @@ public class CPesaje extends CGenerico {
 					.valueOf(tipo.getBalanza().getIdBalanza()));
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
 			idBalanza = tipo.getBalanza().getIdBalanza();
-			ip_balanza = tipo.getBalanza().getIp();
-			port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
+//			ip_balanza = tipo.getBalanza().getIp();
+//			port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
 
 		}
 		txtObservacion.setValue(tipo.getObservacion());
@@ -938,6 +939,7 @@ public class CPesaje extends CGenerico {
 		txtDestino.setValue(tipo.getDestino());
 		txtNroPredespacho.setValue(tipo.getNroPredespacho());
 		txtDespachador.setValue(tipo.getDespachador());
+		txtPlacaBatea.setValue(tipo.getPlacaBatea());
 		if(tipo.getPesoOrigen()!=null)
 		dbsPesoOrigen.setValue(tipo.getPesoOrigen());
 		if(tipo.getCantCajas()!=null)
@@ -1228,8 +1230,7 @@ public class CPesaje extends CGenerico {
 		p.put("boleto", pesaje.getBoleto());
 		p.put("status", pesaje.getEstatus());
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
-		
-		p.put("placaBatea", pesaje.getVehiculo().getPlacaBatea());
+
 		p.put("placaChuto", pesaje.getVehiculo().getPlacaChuto());
 		p.put("destino", pesaje.getDestino());
 		p.put("procedencia", pesaje.getProcedencia());
@@ -1242,7 +1243,7 @@ public class CPesaje extends CGenerico {
 		p.put("pesoOrigen", String.valueOf(pesaje.getPesoOrigen()));
 		if(pesaje.getCantCajas()!=null)
 		p.put("cajas", String.valueOf(pesaje.getCantCajas()));
-		
+		p.put("factura", pesaje.getNroFactura());
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
 		p.put("transporte", pesaje.getTransporte().getDescripcion());
 		p.put("producto", pesaje.getProducto().getIdProducto() + " , "

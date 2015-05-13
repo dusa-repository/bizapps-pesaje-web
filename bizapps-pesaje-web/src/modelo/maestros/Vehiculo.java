@@ -25,17 +25,9 @@ public class Vehiculo implements Serializable {
 	private String placa;
 
 	private String descripcion;
-	
-	private Double peso;
-	
-	@Column(name = "placa_batea")
-	private String placaBatea;
 
 	@Column(name = "placa_chuto")
 	private String placaChuto;
-	
-	@Column(name = "peso_tara")
-	private Double pesoTara;
 	
 	@Column(name="usuario_auditoria", length=50)
 	private String usuarioAuditoria;
@@ -65,21 +57,6 @@ public class Vehiculo implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public Double getPeso() {
-		return peso;
-	}
-
-	public void setPeso(Double peso) {
-		this.peso = peso;
-	}
-
-	public String getPlacaBatea() {
-		return placaBatea;
-	}
-
-	public void setPlacaBatea(String placaBatea) {
-		this.placaBatea = placaBatea;
-	}
 
 	public String getPlacaChuto() {
 		return placaChuto;
@@ -89,13 +66,6 @@ public class Vehiculo implements Serializable {
 		this.placaChuto = placaChuto;
 	}
 
-	public Double getPesoTara() {
-		return pesoTara;
-	}
-
-	public void setPesoTara(Double pesoTara) {
-		this.pesoTara = pesoTara;
-	}
 
 	public String getUsuarioAuditoria() {
 		return usuarioAuditoria;

@@ -168,11 +168,11 @@
 							</row>
 							<row>
 								<label class="etiqueta" value="Despachador:" />
-								<cell colspan="2">
-									<textbox id="txtDespachador" hflex="1" maxlength="500"
-										tooltiptext="Ingrese un Despachador" width="100%" />
-								</cell>
-								<hbox />
+								<textbox id="txtDespachador" hflex="1" maxlength="500"
+									tooltiptext="Ingrese un Despachador" width="100%" />
+								<label class="etiqueta" value="Placa Batea:" />
+								<textbox id="txtPlacaBatea" hflex="1" maxlength="500"
+									tooltiptext="Ingrese la placa batea" width="100%" />
 								<hbox />
 							</row>
 							<row>

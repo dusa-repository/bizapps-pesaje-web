@@ -104,6 +104,8 @@ public class CCerrados  extends CGenerico {
 	private Textbox txtDestino;
 	@Wire
 	private Textbox txtNroPredespacho;
+	@Wire
+	private Textbox txtPlacaBatea;
 
 	Botonera botonera;
 
@@ -213,6 +215,7 @@ public class CCerrados  extends CGenerico {
 		txtProcedencia.setValue("");
 		dbsPesoOrigen.setValue(0.0);
 		spnCajas.setValue(0);
+		txtPlacaBatea.setValue("");
 		limpiarCamposLectura();
 	}
 
@@ -290,7 +293,7 @@ public class CCerrados  extends CGenerico {
 			lblAlmacen.setValue(tipo.getAlmacen().getDescripcion());
 		}
 		txtVehiculo.setValue(String.valueOf(tipo.getVehiculo().getPlaca()));
-		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto()+"   "+"Placa Batea:"+"   "+tipo.getVehiculo().getPlacaBatea());
+		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto());
 		txtTransporte
 				.setValue(String.valueOf(tipo.getTransporte().getCodigo()));
 		lblTransporte.setValue(tipo.getTransporte().getDescripcion());
@@ -312,6 +315,7 @@ public class CCerrados  extends CGenerico {
 		txtDestino.setValue(tipo.getDestino());
 		txtNroPredespacho.setValue(tipo.getNroPredespacho());
 		txtDespachador.setValue(tipo.getDespachador());
+		txtPlacaBatea.setValue(tipo.getPlacaBatea());
 		if(tipo.getPesoOrigen()!=null)
 		dbsPesoOrigen.setValue(tipo.getPesoOrigen());
 		if(tipo.getCantCajas()!=null)
@@ -374,8 +378,6 @@ public class CCerrados  extends CGenerico {
 		p.put("boleto", pesaje.getBoleto());
 		p.put("status", pesaje.getEstatus());
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
-		
-		p.put("placaBatea", pesaje.getVehiculo().getPlacaBatea());
 		p.put("placaChuto", pesaje.getVehiculo().getPlacaChuto());
 		p.put("destino", pesaje.getDestino());
 		p.put("procedencia", pesaje.getProcedencia());
@@ -388,7 +390,7 @@ public class CCerrados  extends CGenerico {
 		p.put("pesoOrigen", String.valueOf(pesaje.getPesoOrigen()));
 		if(pesaje.getCantCajas()!=null)
 		p.put("cajas", String.valueOf(pesaje.getCantCajas()));
-		
+		p.put("factura", pesaje.getNroFactura());
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
 		p.put("transporte", pesaje.getTransporte().getDescripcion());
 		p.put("producto", pesaje.getProducto().getIdProducto() + " , "

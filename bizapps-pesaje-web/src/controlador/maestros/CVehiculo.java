@@ -30,8 +30,6 @@ public class CVehiculo extends CGenerico {
 	@Wire
 	private Textbox txtDescripcion;
 	@Wire
-	private Doublespinner dbsPeso;
-	@Wire
 	private Textbox txtPlaca;
 	@Wire
 	private Div divVehiculo;
@@ -41,10 +39,6 @@ public class CVehiculo extends CGenerico {
 	private Div divCatalogoVehiculo;
 	@Wire
 	private Textbox txtPlacaChuto;
-	@Wire
-	private Textbox txtPlacaBatea;
-	@Wire
-	private Doublespinner dbsPesoTara;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
@@ -81,12 +75,7 @@ public class CVehiculo extends CGenerico {
 						Vehiculo tipo = catalogo
 								.objetoSeleccionadoDelCatalogo();
 						id = tipo.getPlaca();
-						if (tipo.getPeso() != null)
-							dbsPeso.setValue(tipo.getPeso());
 						txtDescripcion.setValue(tipo.getDescripcion());
-						if (tipo.getPesoTara() != null)
-							dbsPesoTara.setValue(tipo.getPesoTara());
-						txtPlacaBatea.setValue(tipo.getPlacaBatea());
 						txtPlacaChuto.setValue(tipo.getPlacaChuto());
 						txtPlaca.setValue(tipo.getPlaca());
 						txtPlaca.setDisabled(true);
@@ -119,15 +108,11 @@ public class CVehiculo extends CGenerico {
 						msj.mensajeError(Mensaje.placaUsada);
 					else {
 						String descripcion = txtDescripcion.getValue();
-						Double peso = dbsPeso.getValue();
 						id = txtPlaca.getValue();
 						Vehiculo vehiculo = new Vehiculo();
 						vehiculo.setDescripcion(descripcion);
-						vehiculo.setPeso(peso);
 						vehiculo.setPlaca(id);
-						vehiculo.setPlacaBatea(txtPlacaBatea.getValue());
 						vehiculo.setPlacaChuto(txtPlacaChuto.getValue());
-						vehiculo.setPesoTara(dbsPesoTara.getValue());
 						vehiculo.setUsuarioAuditoria(nombreUsuarioSesion());
 						vehiculo.setFechaAuditoria(fechaHora);
 						vehiculo.setHoraAuditoria(horaAuditoria);
@@ -184,12 +169,9 @@ public class CVehiculo extends CGenerico {
 	public void limpiarCampos() {
 		id = "";
 		txtDescripcion.setValue("");
-		dbsPeso.setValue(0.0);
 		txtPlaca.setValue("");
 		txtPlaca.setDisabled(false);
-		txtPlacaBatea.setValue("");
 		txtPlacaChuto.setValue("");
-		dbsPesoTara.setValue(0.0);
 	}
 
 	public boolean validarSeleccion() {
@@ -216,11 +198,8 @@ public class CVehiculo extends CGenerico {
 	}
 
 	public boolean camposLLenos() {
-		if (dbsPeso.getText().compareTo("") == 0.0
-				|| txtDescripcion.getText().compareTo("") == 0
+		if (txtDescripcion.getText().compareTo("") == 0
 				|| txtPlaca.getText().compareTo("") == 0
-				|| dbsPesoTara.getText().compareTo("") == 0.0
-				|| txtPlacaBatea.getText().compareTo("") == 0
 				|| txtPlacaChuto.getText().compareTo("") == 0) {
 			return false;
 		} else
@@ -230,7 +209,6 @@ public class CVehiculo extends CGenerico {
 	public boolean camposEditando() {
 		if (txtDescripcion.getText().compareTo("") != 0
 				|| txtPlaca.getText().compareTo("") != 0
-				|| txtPlacaBatea.getText().compareTo("") != 0
 				|| txtPlacaChuto.getText().compareTo("") != 0) {
 			return true;
 		} else
@@ -277,7 +255,7 @@ public class CVehiculo extends CGenerico {
 		listaGeneral = servicioVehiculo.buscarTodos();
 		catalogo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
 				"Catalogo de Vehiculos", listaGeneral, false, false, false,
-				"Placa", "Descripcion", "Peso", "Placa Chuto", "Placa Batea") {
+				"Placa", "Descripcion",  "Placa Chuto") {
 
 			@Override
 			protected List<Vehiculo> buscar(List<String> valores) {
@@ -289,26 +267,20 @@ public class CVehiculo extends CGenerico {
 							.contains(valores.get(0).toLowerCase())
 							&& tipo.getDescripcion().toLowerCase()
 									.contains(valores.get(1).toLowerCase())
-							&& String.valueOf(tipo.getPeso()).toLowerCase()
-									.contains(valores.get(2).toLowerCase())
 							&& tipo.getPlacaChuto().toLowerCase()
-									.contains(valores.get(2).toLowerCase())
-							&&  tipo.getPlacaBatea().toLowerCase()
-									.contains(valores.get(2).toLowerCase())) {
+									.contains(valores.get(2).toLowerCase()))
 						lista.add(tipo);
 					}
-				}
+				
 				return lista;
 			}
 
 			@Override
 			protected String[] crearRegistros(Vehiculo tipo) {
-				String[] registros = new String[5];
+				String[] registros = new String[3];
 				registros[0] = tipo.getPlaca();
 				registros[1] = tipo.getDescripcion();
-				registros[2] = String.valueOf(tipo.getPeso());
-				registros[3] = tipo.getPlacaChuto();
-				registros[4] = tipo.getPlacaBatea();
+				registros[2] = tipo.getPlacaChuto();
 				return registros;
 			}
 		};

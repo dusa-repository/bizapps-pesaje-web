@@ -113,6 +113,9 @@ public class Pesaje implements Serializable {
 	
 	@Column(name = "cantidad_cajas")
 	private Integer cantCajas;
+	
+	@Column(length = 500, name = "placa_batea")
+	private String placaBatea;
 
 	public Pesaje() {
 		super();
@@ -341,6 +344,14 @@ public class Pesaje implements Serializable {
 
 	public void setCantCajas(Integer cantCajas) {
 		this.cantCajas = cantCajas;
+	}
+
+	public String getPlacaBatea() {
+		return placaBatea;
+	}
+
+	public void setPlacaBatea(String placaBatea) {
+		this.placaBatea = placaBatea;
 	}
 
 
