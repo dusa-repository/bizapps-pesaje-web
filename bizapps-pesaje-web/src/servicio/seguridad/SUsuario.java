@@ -3,7 +3,6 @@ package servicio.seguridad;
 
 import interfacedao.seguridad.IUsuarioDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import modelo.seguridad.Usuario;

@@ -1,8 +1,6 @@
 package servicio.transacciones;
 
 import interfacedao.transacciones.IDevolucionDAO;
-import interfacedao.transacciones.IPesajeDAO;
-
 import modelo.transacciones.Devolucion;
 
 import org.springframework.beans.factory.annotation.Autowired;

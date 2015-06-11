@@ -1,10 +1,9 @@
 package servicio.transacciones;
 
-import java.math.BigDecimal;
+import interfacedao.transacciones.IPesajeDAO;
+
 import java.util.Date;
 import java.util.List;
-
-import interfacedao.transacciones.IPesajeDAO;
 
 import modelo.transacciones.Pesaje;
 

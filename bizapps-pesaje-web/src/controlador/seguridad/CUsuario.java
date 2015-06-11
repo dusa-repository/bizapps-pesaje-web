@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import modelo.seguridad.Grupo;
+
 import modelo.seguridad.Usuario;
 
 import org.zkoss.image.AImage;
@@ -26,7 +26,6 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Fileupload;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Image;
-import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -36,11 +35,14 @@ import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Textbox;
 
-import arbol.CArbol;
+import security.modelo.Grupo;
+import security.modelo.UsuarioSeguridad;
+
 import componente.Botonera;
 import componente.Catalogo;
 import componente.Mensaje;
 import componente.Validador;
+
 import controlador.maestros.CGenerico;
 
 public class CUsuario extends CGenerico {
@@ -96,8 +98,6 @@ public class CUsuario extends CGenerico {
 	private Radio rdoSexoFUsuario;
 	@Wire
 	private Radio rdoSexoMUsuario;
-	@Wire
-	private Textbox txtAliado;
 	@Wire
 	private Image imagen;
 	@Wire
@@ -256,9 +256,9 @@ public class CUsuario extends CGenerico {
 						}
 
 						Usuario usuario = new Usuario(id, cedula, correo,
-								login, password, imagenUsuario, true,
-								gruposUsuario, nombre, apellido, nombre2,
-								apellido2, sexo, telefono, direccion);
+								login, password, imagenUsuario, true, nombre,
+								apellido, nombre2, apellido2, sexo, telefono,
+								direccion);
 
 						if (rdoNoPermisos.isChecked()) {
 							usuario.setVerPesajeYEditar(false);
@@ -274,6 +274,7 @@ public class CUsuario extends CGenerico {
 							}
 
 						}
+						guardarDatosSeguridad(usuario, gruposUsuario);
 						servicioUsuario.guardar(usuario);
 						limpiar();
 						msj.mensajeInformacion(Mensaje.guardado);
@@ -302,6 +303,7 @@ public class CUsuario extends CGenerico {
 													throws InterruptedException {
 												if (evt.getName()
 														.equals("onOK")) {
+													inhabilitarSeguridad(eliminarLista);
 													servicioUsuario
 															.eliminarVarios(eliminarLista);
 													msj.mensajeInformacion(Mensaje.eliminado);
@@ -326,6 +328,11 @@ public class CUsuario extends CGenerico {
 													throws InterruptedException {
 												if (evt.getName()
 														.equals("onOK")) {
+													Usuario usuario = servicioUsuario
+															.buscar(id);
+													List<Usuario> list = new ArrayList<Usuario>();
+													list.add(usuario);
+													inhabilitarSeguridad(list);
 													servicioUsuario
 															.eliminarClave(id);
 													msj.mensajeInformacion(Mensaje.eliminado);
@@ -426,7 +433,6 @@ public class CUsuario extends CGenerico {
 		rdoNoPermisos.setChecked(true);
 		rdoVerEditar.setChecked(false);
 		rdoVerVista.setChecked(false);
-		txtAliado.setValue("");
 		try {
 			imagen.setContent(new AImage(url));
 		} catch (IOException e1) {
@@ -546,12 +552,15 @@ public class CUsuario extends CGenerico {
 
 	/* LLena las listas dado un usario */
 	public void llenarListas(Usuario usuario) {
+		UsuarioSeguridad user = null;
+		if (usuario != null)
+			user = servicioUsuarioSeguridad.buscarPorLogin(usuario.getLogin());
 		gruposDisponibles = servicioGrupo.buscarTodos();
 		if (usuario == null) {
 			ltbGruposDisponibles.setModel(new ListModelList<Grupo>(
 					gruposDisponibles));
 		} else {
-			gruposOcupados = servicioGrupo.buscarGruposDelUsuario(usuario);
+			gruposOcupados = servicioGrupo.buscarGruposDelUsuario(user);
 			ltbGruposAgregados
 					.setModel(new ListModelList<Grupo>(gruposOcupados));
 			if (!gruposOcupados.isEmpty()) {
@@ -714,7 +723,7 @@ public class CUsuario extends CGenerico {
 	}
 
 	/* Busca si existe un usuario con el mismo login */
-	@Listen("onChange = #txtLoginUsuario")
+	@Listen("onChange = #txtLoginUsuario; onOK = #txtLoginUsuario")
 	public boolean buscarPorLogin() {
 		Usuario usuario = servicioUsuario.buscarPorLogin(txtLoginUsuario
 				.getValue());
@@ -728,6 +737,21 @@ public class CUsuario extends CGenerico {
 				txtLoginUsuario.setValue("");
 				txtLoginUsuario.setFocus(true);
 				return false;
+			}
+		}
+	}
+
+	@Listen("onChange = #txtCedulaUsuario; onOK =  #txtCedulaUsuario")
+	public void buscarCedula() {
+		if (txtCedulaUsuario.getText().compareTo("") != 0) {
+			Usuario empleado = servicioUsuario.buscarPorCedula(txtCedulaUsuario
+					.getValue());
+			if (empleado != null) {
+				if (empleado.getIdUsuario() != id) {
+					txtCedulaUsuario.setFocus(true);
+					txtCedulaUsuario.setValue("");
+					msj.mensajeAlerta("Esta Cedula ya ha sido asignada a otro usuario");
+				}
 			}
 		}
 	}

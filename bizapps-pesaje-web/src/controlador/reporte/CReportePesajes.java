@@ -3,7 +3,6 @@ package controlador.reporte;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import modelo.maestros.Almacen;
 import modelo.maestros.Balanza;
 import modelo.maestros.Conductor;
 import modelo.maestros.Producto;
@@ -38,8 +36,8 @@ import org.zkoss.zul.Textbox;
 
 import componente.Botonera;
 import componente.Catalogo;
-import componente.Convertidor;
 import componente.Mensaje;
+
 import controlador.maestros.CGenerico;
 
 public class CReportePesajes extends CGenerico {
