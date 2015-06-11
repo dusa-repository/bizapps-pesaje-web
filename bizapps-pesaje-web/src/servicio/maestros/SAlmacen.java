@@ -1,13 +1,10 @@
 package servicio.maestros;
 
+import interfacedao.maestros.IAlmacenDAO;
+
 import java.util.List;
 
-import interfacedao.maestros.IAlmacenDAO;
-import interfacedao.maestros.IBalanzaDAO;
-
-
 import modelo.maestros.Almacen;
-import modelo.maestros.Balanza;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

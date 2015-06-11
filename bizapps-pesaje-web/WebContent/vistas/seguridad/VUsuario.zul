@@ -112,15 +112,6 @@
 											tooltiptext="Ingrese el Numero de Telefono del Usuario"
 											multiline="true" />
 									</row>
-									<row>
-										<label class="etiqueta" value="Aliado:" />
-										<textbox id="txtAliado" hflex="1" maxlength="100"
-											tooltiptext="Seleccione del Catalogo el Codigo del Aliado" />
-										<button id="btnBuscarAliado" label="Buscar"
-											tooltiptext="Catalogo de Aliados" image="/public/imagenes/botones/buscar.png"
-											class="btn" autodisable="self" />
-										<label id="lblNombreAliado" />
-									</row>
 								</rows>
 							</grid>
 							<div align="right" style="float: right;">

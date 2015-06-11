@@ -7,7 +7,6 @@ import java.util.List;
 
 import modelo.maestros.Producto;
 import modelo.maestros.Proveedor;
-import modelo.maestros.Vehiculo;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;

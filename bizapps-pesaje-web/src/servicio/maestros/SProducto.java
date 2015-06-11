@@ -1,12 +1,10 @@
 package servicio.maestros;
 
 import interfacedao.maestros.IProductoDAO;
-import interfacedao.maestros.IProveedorDAO;
 
 import java.util.List;
 
 import modelo.maestros.Producto;
-import modelo.maestros.Proveedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

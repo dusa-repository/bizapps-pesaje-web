@@ -7,7 +7,6 @@ import java.util.List;
 
 import modelo.maestros.Ciudad;
 import modelo.maestros.Conductor;
-import modelo.maestros.Producto;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;

@@ -5,7 +5,6 @@ import interfacedao.maestros.IVehiculoDAO;
 
 import java.util.List;
 
-
 import modelo.maestros.Vehiculo;
 
 import org.springframework.beans.factory.annotation.Autowired;

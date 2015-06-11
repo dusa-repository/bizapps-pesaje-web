@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.mail.Address;
@@ -52,6 +53,11 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Tab;
 
+import security.modelo.Grupo;
+import security.modelo.UsuarioSeguridad;
+import security.servicio.SArbol;
+import security.servicio.SGrupo;
+import security.servicio.SUsuarioSeguridad;
 import servicio.maestros.SAlmacen;
 import servicio.maestros.SBalanza;
 import servicio.maestros.SCiudad;
@@ -67,11 +73,10 @@ import servicio.maestros.SProducto;
 import servicio.maestros.SProveedor;
 import servicio.maestros.STransporte;
 import servicio.maestros.SVehiculo;
-import servicio.seguridad.SArbol;
-import servicio.seguridad.SGrupo;
 import servicio.seguridad.SUsuario;
 import servicio.transacciones.SDevolucion;
 import servicio.transacciones.SPesaje;
+
 import componente.Mensaje;
 
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
@@ -85,6 +90,8 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 	protected SGrupo servicioGrupo;
 	@WireVariable("SUsuario")
 	protected SUsuario servicioUsuario;
+	@WireVariable("SUsuarioSeguridad")
+	protected SUsuarioSeguridad servicioUsuarioSeguridad;
 	@WireVariable("SF0004")
 	protected SF0004 servicioF0004;
 	@WireVariable("SF0005")
@@ -449,5 +456,27 @@ public abstract class CGenerico extends SelectorComposer<Component> {
 		}
 	}
 
+
+	public void guardarDatosSeguridad(Usuario usuarioLogica,
+			Set<Grupo> gruposUsuario) {
+		UsuarioSeguridad usuario = new UsuarioSeguridad(
+				usuarioLogica.getLogin(), usuarioLogica.getEmail(),
+				usuarioLogica.getPassword(), usuarioLogica.getImagen(), true,
+				usuarioLogica.getPrimerNombre(),
+				usuarioLogica.getPrimerApellido(), fechaHora, horaAuditoria,
+				nombreUsuarioSesion(), gruposUsuario);
+		servicioUsuarioSeguridad.guardar(usuario);
+	}
+
+	public void inhabilitarSeguridad(List<Usuario> list) {
+		for (int i = 0; i < list.size(); i++) {
+			UsuarioSeguridad usuario = servicioUsuarioSeguridad
+					.buscarPorLogin(list.get(i).getLogin());
+			usuario.setEstado(false);
+			servicioUsuarioSeguridad.guardar(usuario);
+			list.get(i).setEstado(false);
+			servicioUsuario.guardar(list.get(i));
+		}
+	}
 
 }
