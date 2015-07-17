@@ -220,12 +220,11 @@ public class CConductor extends CGenerico {
 			if (!Validador.validarTelefono(txtTelefono1.getValue())) {
 				msj.mensajeError(Mensaje.telefonoInvalido);
 				return false;
-			} else	
-				if (!Validador.validarNumero(txtCedula.getValue())) {
-					msj.mensajeError("La cedula debe contener solo numeros");
-					return false;
-				} else	
-					return true;
+			} else if (!Validador.validarNumero(txtCedula.getValue())) {
+				msj.mensajeError("La cedula debe contener solo numeros");
+				return false;
+			} else
+				return true;
 		}
 	}
 
@@ -297,17 +296,29 @@ public class CConductor extends CGenerico {
 			protected List<Conductor> buscar(List<String> valores) {
 
 				List<Conductor> lista = new ArrayList<Conductor>();
-
+                                    
 				for (Conductor tipo : listaGeneral) {
+					String nombre ="";
+					String apellido = "";
+					String direccion ="";
+					String telefono = "";
+					if(tipo.getNombres()!=null)
+						nombre = tipo.getNombres();
+					if(tipo.getApellidos()!=null)
+						apellido = tipo.getApellidos();
+					if(tipo.getDireccion()!=null)
+						direccion = tipo.getDireccion();
+					if(tipo.getTelefono()!=null)
+						telefono = tipo.getTelefono();
 					if (tipo.getCedula().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
-							&& tipo.getNombres().toLowerCase()
+							&& nombre.toLowerCase()
 									.contains(valores.get(1).toLowerCase())
-							&& tipo.getApellidos().toLowerCase()
+							&& apellido.toLowerCase()
 									.contains(valores.get(2).toLowerCase())
-							&& tipo.getDireccion().toLowerCase()
+							&& direccion.toLowerCase()
 									.contains(valores.get(3).toLowerCase())
-							&& tipo.getTelefono().toLowerCase()
+							&& telefono.toLowerCase()
 									.contains(valores.get(4).toLowerCase())) {
 						lista.add(tipo);
 					}
@@ -349,7 +360,7 @@ public class CConductor extends CGenerico {
 			msj.mensajeAlerta(Mensaje.telefonoInvalido);
 		}
 	}
-	
+
 	/* Metodo que valida el formmato del telefono ingresado */
 	@Listen("onChange = #txtCedula")
 	public void validarCedula() throws IOException {

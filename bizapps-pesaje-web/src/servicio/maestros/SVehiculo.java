@@ -38,5 +38,10 @@ public class SVehiculo {
 		return vehiculoDAO.findOne(value);
 	}
 
+	public List<Vehiculo> buscarTodosCerrados() {
+		// TODO Auto-generated method stub
+		return  vehiculoDAO.pesajesCerrados("Activo");
+	}
+
 
 }

@@ -59,8 +59,6 @@ public class CPesaje extends CGenerico {
 	private Div divBotoneraPesaje;
 	@Wire
 	private Div divCatalogoPesaje;
-//	@Wire
-//	private Div divCatalogoPesajeCerrado;
 	@Wire
 	private Groupbox gpxDatos;
 	@Wire
@@ -171,9 +169,7 @@ public class CPesaje extends CGenerico {
 	Catalogo<Transporte> catalogoTransporte;
 	Catalogo<Balanza> catalogoBalanza;
 	Catalogo<Pesaje> catalogoPesaje;
-//	Catalogo<Pesaje> catalogoPesajeCerrado;
 	long id = 0;
-//	long idCerrado = 0;
 	String idVehiculo = "";
 	long idTransporte = 0;
 	String idConductor = "";
@@ -242,16 +238,6 @@ public class CPesaje extends CGenerico {
 							+ String.valueOf(id)
 							+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
 				}
-//				else {
-//					if (idCerrado != 0)
-//						Clients.evalJavaScript("window.open('"
-//								+ damePath()
-//								+ "Generador?valor=1&valor2="
-//								+ String.valueOf(idCerrado)
-//								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
-//					else
-//						msj.mensajeError("Debe Seleccionar un Pesaje");
-//				}
 			}
 
 			@Override
@@ -263,7 +249,6 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void guardar() {
-			//	if (idCerrado == 0) {
 					if (validar()) {
 						Pesaje pesaje = new Pesaje();
 						Balanza balanza = servicioBalanza.buscar(idBalanza);
@@ -339,7 +324,6 @@ public class CPesaje extends CGenerico {
 						catalogoPesaje.actualizarLista(listaGeneral, true);
 						msj.mensajeInformacion(Mensaje.guardado);
 					}
-				//}
 			}
 
 			@Override
@@ -356,7 +340,6 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void ayuda() {
-			//	mostrarCatalogoPesajeCerrados();
 
 			}
 
@@ -605,7 +588,7 @@ public class CPesaje extends CGenerico {
 	@Listen("onClick = #btnBuscarVehiculo")
 	public void mostrarCatalogoVehiculo() {
 
-		final List<Vehiculo> lista = servicioVehiculo.buscarTodos();
+		final List<Vehiculo> lista = servicioVehiculo.buscarTodosCerrados();
 		catalogoVehiculo = new Catalogo<Vehiculo>(divCatalogoVehiculo,
 				"Catalogo de Vehiculos", lista, true, false, false, "Placa",
 				"Descripcion") {
@@ -824,71 +807,7 @@ public class CPesaje extends CGenerico {
 		port_balanza = Integer.parseInt(tipo.getPuerto());
 		catalogoBalanza.setParent(null);
 	}
-//
-//	public void mostrarCatalogoPesajeCerrados() {
-//
-//		final List<Pesaje> lista = servicioPesaje.buscarPorEstatus("Cerrado");
-//		catalogoPesajeCerrado = new Catalogo<Pesaje>(divCatalogoPesajeCerrado,
-//				"Catalogo de Pesajes Cerrados", lista, true, false, false,
-//				"Boleto", "Fecha", "Producto", "Placa Vehiculo", "Conductor",
-//				"Estatus") {
-//
-//			@Override
-//			protected List<Pesaje> buscar(List<String> valores) {
-//
-//				List<Pesaje> listaa = new ArrayList<Pesaje>();
-//
-//				for (Pesaje tipo : lista) {
-//					if (String.valueOf(tipo.getBoleto()).toLowerCase()
-//							.contains(valores.get(0).toLowerCase())
-//							&& String.valueOf(tipo.getFechaPesaje())
-//									.toLowerCase()
-//									.contains(valores.get(1).toLowerCase())
-//							&& String
-//									.valueOf(
-//											tipo.getProducto().getDescripcion())
-//									.toLowerCase()
-//									.contains(valores.get(2).toLowerCase())
-//							&& String.valueOf(tipo.getVehiculo().getPlaca())
-//									.toLowerCase()
-//									.contains(valores.get(3).toLowerCase())
-//							&& String.valueOf(tipo.getConductor().getNombres())
-//									.toLowerCase()
-//									.contains(valores.get(4).toLowerCase())
-//							&& String.valueOf(tipo.getEstatus()).toLowerCase()
-//									.contains(valores.get(5).toLowerCase())) {
-//						listaa.add(tipo);
-//					}
-//				}
-//				return listaa;
-//			}
-//
-//			@Override
-//			protected String[] crearRegistros(Pesaje tipo) {
-//				String[] registros = new String[6];
-//				registros[0] = String.valueOf(tipo.getBoleto());
-//				registros[1] = String.valueOf(tipo.getFechaPesaje());
-//				registros[2] = String.valueOf(tipo.getProducto()
-//						.getDescripcion());
-//				registros[3] = String.valueOf(tipo.getVehiculo().getPlaca());
-//				registros[4] = String.valueOf(tipo.getConductor().getNombres()
-//						+ "  " + tipo.getConductor().getApellidos());
-//				registros[5] = String.valueOf(tipo.getEstatus());
-//				return registros;
-//			}
-//		};
-//		catalogoPesajeCerrado.setParent(divCatalogoPesajeCerrado);
-//		catalogoPesajeCerrado.doModal();
-//	}
-//
-//	@Listen("onSeleccion = #divCatalogoPesajeCerrado")
-//	public void seleccionarCerrado() {
-//		limpiarCampos();
-//		Pesaje tipo = catalogoPesajeCerrado.objetoSeleccionadoDelCatalogo();
-//		idCerrado = tipo.getBoleto();
-//		llenarCamposPesaje(tipo);
-//		catalogoPesajeCerrado.setParent(null);
-//	}
+
 
 	public void llenarCamposPesaje(Pesaje tipo) {
 
