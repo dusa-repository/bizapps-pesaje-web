@@ -260,11 +260,17 @@ public class CVehiculo extends CGenerico {
 				List<Vehiculo> lista = new ArrayList<Vehiculo>();
 
 				for (Vehiculo tipo : listaGeneral) {
+					String descripcion ="";
+					String chuto = "";
+					if(tipo.getDescripcion()!=null)
+						descripcion = tipo.getDescripcion();
+					if(tipo.getPlacaChuto()!=null)
+						chuto = tipo.getPlacaChuto();
 					if (tipo.getPlaca().toLowerCase()
 							.contains(valores.get(0).toLowerCase())
-							&& tipo.getDescripcion().toLowerCase()
+							&& descripcion.toLowerCase()
 									.contains(valores.get(1).toLowerCase())
-							&& tipo.getPlacaChuto().toLowerCase()
+							&& chuto.toLowerCase()
 									.contains(valores.get(2).toLowerCase()))
 						lista.add(tipo);
 					}
