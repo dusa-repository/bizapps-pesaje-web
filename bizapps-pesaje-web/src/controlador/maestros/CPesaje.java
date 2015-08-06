@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +180,7 @@ public class CPesaje extends CGenerico {
 	private List<Pesaje> listaGeneral = new ArrayList<Pesaje>();
 	String ip_balanza = "";
 	int port_balanza = 0;
+	private Timestamp fechaPesaje = null;
 
 	@Override
 	public void inicializar() throws IOException {
@@ -249,81 +251,74 @@ public class CPesaje extends CGenerico {
 
 			@Override
 			public void guardar() {
-					if (validar()) {
-						Pesaje pesaje = new Pesaje();
-						Balanza balanza = servicioBalanza.buscar(idBalanza);
-						if (id == 0) {
-							Producto producto = servicioProducto
-									.buscar(idProducto);
-							Vehiculo vehiculo = servicioVehiculo
-									.buscar(idVehiculo);
-							Conductor conductor = servicioConductor
-									.buscar(idConductor);
-							Transporte transporte = servicioTransporte
-									.buscar(idTransporte);
-							Almacen almacen = new Almacen();
-							if (idAlmacen != 0) {
-								almacen = servicioAlmacen.buscar(idAlmacen);
-								pesaje.setAlmacen(almacen);
-							}
-
-							pesaje.setConductor(conductor);
-							pesaje.setEntrada(dbxVehiculoEntrada.getValue());
-							pesaje.setTransporte(transporte);
-							pesaje.setVehiculo(vehiculo);
-							pesaje.setProducto(producto);
-							pesaje.setBalanza(balanza);
-							Timestamp fechaPesaje = new Timestamp(
-									dtbFechaEntrada.getValue().getTime());
-							pesaje.setFechaPesaje(fechaPesaje);
-							pesaje.setHoraPesaje(metodoHora());
-							pesaje.setEstatus("Activo");
-							pesaje.setNroFactura(txtNroFactura.getValue());
-
-						} else {
-							pesaje = servicioPesaje.buscar(id);
-							Timestamp fechaPesaje = new Timestamp(
-									dtbFechaSalida.getValue().getTime());
-							pesaje.setFechaPesajeSalida(fechaPesaje);
-							Double pesoSalida = dbxVehiculoSalida.getValue();
-							pesaje.setSalida(pesoSalida);
-							pesaje.setEstatus("Cerrado");
-							pesaje.setPesoPTSalida(dbxPesoPTSalida.getValue());
-							pesaje.setBalanza(balanza);
-							Clients.evalJavaScript("window.open('"
-									+ damePath()
-									+ "Generador?valor=1&valor2="
-									+ String.valueOf(id)
-									+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+				if (validar()) {
+					Pesaje pesaje = new Pesaje();
+					Balanza balanza = servicioBalanza.buscar(idBalanza);
+					if (id == 0) {
+						Producto producto = servicioProducto.buscar(idProducto);
+						Vehiculo vehiculo = servicioVehiculo.buscar(idVehiculo);
+						Conductor conductor = servicioConductor
+								.buscar(idConductor);
+						Transporte transporte = servicioTransporte
+								.buscar(idTransporte);
+						Almacen almacen = new Almacen();
+						if (idAlmacen != 0) {
+							almacen = servicioAlmacen.buscar(idAlmacen);
+							pesaje.setAlmacen(almacen);
 						}
-						pesaje.setNroPredespacho(txtNroPredespacho.getValue());
-						pesaje.setDespachador(txtDespachador.getValue());
-						pesaje.setPlacaBatea(txtPlacaBatea.getValue());
-						pesaje.setDestino(txtDestino.getValue());
-						pesaje.setProcedencia(txtProcedencia.getValue());
-						if (spnCajas.getValue() != null)
-							pesaje.setCantCajas(spnCajas.getValue());
-						if (dbsPesoOrigen.getValue() != null)
-							pesaje.setPesoOrigen(dbsPesoOrigen.getValue());
-						pesaje.setObservacion(txtObservacion.getValue());
+
+						pesaje.setConductor(conductor);
+						pesaje.setEntrada(dbxVehiculoEntrada.getValue());
+						pesaje.setTransporte(transporte);
+						pesaje.setVehiculo(vehiculo);
+						pesaje.setProducto(producto);
+						pesaje.setBalanza(balanza);
+						pesaje.setFechaPesaje(fechaPesaje);
+						pesaje.setHoraPesaje(metodoHora());
+						pesaje.setEstatus("Activo");
 						pesaje.setNroFactura(txtNroFactura.getValue());
-						pesaje.setHoraAuditoria(metodoHora());
-						pesaje.setFechaAuditoria(metodoFecha());
-						servicioPesaje.guardar(pesaje);
-						if (id == 0) {
-							Pesaje pesaje2 = servicioPesaje.buscarUltimo();
-							Clients.evalJavaScript("window.open('"
-									+ damePath()
-									+ "Generador?valor=1&valor2="
-									+ String.valueOf(pesaje2.getBoleto())
-									+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
-						}
-						limpiar();
-						listaGeneral = servicioPesaje
-								.buscarPorEstatus("Activo");
-						catalogoPesaje.actualizarLista(listaGeneral, true);
-						msj.mensajeInformacion(Mensaje.guardado);
+
+					} else {
+						pesaje = servicioPesaje.buscar(id);
+						pesaje.setFechaPesajeSalida(fechaPesaje);
+						Double pesoSalida = dbxVehiculoSalida.getValue();
+						pesaje.setSalida(pesoSalida);
+						pesaje.setEstatus("Cerrado");
+						pesaje.setPesoPTSalida(dbxPesoPTSalida.getValue());
+						pesaje.setBalanza(balanza);
+						Clients.evalJavaScript("window.open('"
+								+ damePath()
+								+ "Generador?valor=1&valor2="
+								+ String.valueOf(id)
+								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
 					}
+					pesaje.setNroPredespacho(txtNroPredespacho.getValue());
+					pesaje.setDespachador(txtDespachador.getValue());
+					pesaje.setPlacaBatea(txtPlacaBatea.getValue());
+					pesaje.setDestino(txtDestino.getValue());
+					pesaje.setProcedencia(txtProcedencia.getValue());
+					if (spnCajas.getValue() != null)
+						pesaje.setCantCajas(spnCajas.getValue());
+					if (dbsPesoOrigen.getValue() != null)
+						pesaje.setPesoOrigen(dbsPesoOrigen.getValue());
+					pesaje.setObservacion(txtObservacion.getValue());
+					pesaje.setNroFactura(txtNroFactura.getValue());
+					pesaje.setHoraAuditoria(metodoHora());
+					pesaje.setFechaAuditoria(metodoFecha());
+					servicioPesaje.guardar(pesaje);
+					if (id == 0) {
+						Pesaje pesaje2 = servicioPesaje.buscarUltimo();
+						Clients.evalJavaScript("window.open('"
+								+ damePath()
+								+ "Generador?valor=1&valor2="
+								+ String.valueOf(pesaje2.getBoleto())
+								+ "','','top=100,left=200,height=600,width=800,scrollbars=1,resizable=1')");
+					}
+					limpiar();
+					listaGeneral = servicioPesaje.buscarPorEstatus("Activo");
+					catalogoPesaje.actualizarLista(listaGeneral, true);
+					msj.mensajeInformacion(Mensaje.guardado);
+				}
 			}
 
 			@Override
@@ -347,7 +342,11 @@ public class CPesaje extends CGenerico {
 			public void annadir() {
 				abrirRegistro();
 				mostrarBotones(false);
-
+				Usuario usuario = usuarioSesion(nombreUsuarioSesion());
+				if (usuario.isVerPesajeYEditar())
+					btnManual.setDisabled(false);
+				else
+					btnManual.setDisabled(true);
 			}
 		};
 
@@ -456,7 +455,7 @@ public class CPesaje extends CGenerico {
 
 		btnDevolucion.setDisabled(true);
 		id = 0;
-//		idCerrado = 0;
+		// idCerrado = 0;
 		idVehiculo = "";
 		idTransporte = 0;
 		idConductor = "";
@@ -626,7 +625,8 @@ public class CPesaje extends CGenerico {
 		Vehiculo tipo = catalogoVehiculo.objetoSeleccionadoDelCatalogo();
 		idVehiculo = tipo.getPlaca();
 		txtVehiculo.setValue(String.valueOf(tipo.getPlaca()));
-		lblVehiculo.setValue(tipo.getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getPlacaChuto());
+		lblVehiculo.setValue(tipo.getDescripcion() + "   " + "Placa Chuto:"
+				+ "   " + tipo.getPlacaChuto());
 		catalogoVehiculo.setParent(null);
 	}
 
@@ -808,7 +808,6 @@ public class CPesaje extends CGenerico {
 		catalogoBalanza.setParent(null);
 	}
 
-
 	public void llenarCamposPesaje(Pesaje tipo) {
 
 		if (tipo.getBalanza() != null)
@@ -826,7 +825,8 @@ public class CPesaje extends CGenerico {
 			idAlmacen = tipo.getAlmacen().getIdAlmacen();
 		}
 		txtVehiculo.setValue(String.valueOf(tipo.getVehiculo().getPlaca()));
-		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion()+"   "+"Placa Chuto:"+"   "+tipo.getVehiculo().getPlacaChuto());
+		lblVehiculo.setValue(tipo.getVehiculo().getDescripcion() + "   "
+				+ "Placa Chuto:" + "   " + tipo.getVehiculo().getPlacaChuto());
 		txtTransporte
 				.setValue(String.valueOf(tipo.getTransporte().getCodigo()));
 		lblTransporte.setValue(tipo.getTransporte().getDescripcion());
@@ -841,8 +841,8 @@ public class CPesaje extends CGenerico {
 					.valueOf(tipo.getBalanza().getIdBalanza()));
 			lblBalanza.setValue(tipo.getBalanza().getDescripcion());
 			idBalanza = tipo.getBalanza().getIdBalanza();
-//			ip_balanza = tipo.getBalanza().getIp();
-//			port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
+			// ip_balanza = tipo.getBalanza().getIp();
+			// port_balanza = Integer.parseInt(tipo.getBalanza().getPuerto());
 
 		}
 		txtObservacion.setValue(tipo.getObservacion());
@@ -852,9 +852,9 @@ public class CPesaje extends CGenerico {
 		txtNroPredespacho.setValue(tipo.getNroPredespacho());
 		txtDespachador.setValue(tipo.getDespachador());
 		txtPlacaBatea.setValue(tipo.getPlacaBatea());
-		if(tipo.getPesoOrigen()!=null)
-		dbsPesoOrigen.setValue(tipo.getPesoOrigen());
-		if(tipo.getCantCajas()!=null)
+		if (tipo.getPesoOrigen() != null)
+			dbsPesoOrigen.setValue(tipo.getPesoOrigen());
+		if (tipo.getCantCajas() != null)
 			spnCajas.setValue(tipo.getCantCajas());
 		dbxDiferenciaEntrada.setValue(0);
 		dbxPesoPTEntrada.setValue(0);
@@ -868,34 +868,34 @@ public class CPesaje extends CGenerico {
 		}
 		editable(false);
 		inhabilitarParaSalida(true);
-//		if (idCerrado != 0) {
-//			if (tipo.getSalida() != null) {
-//				dbxVehiculoSalida.setValue(tipo.getSalida());
-//				dbxTotalSalida.setValue(tipo.getSalida());
-//				if (tipo.getEntrada() != null) {
-//					double entrada = tipo.getEntrada();
-//					Double total = (double) 0;
-//					if (entrada > tipo.getSalida())
-//						total = entrada - tipo.getSalida();
-//					else
-//						total = tipo.getSalida() - entrada;
-//					dbxTotal.setValue(total);
-//					Double diferencia = (double) 0;
-//					if (tipo.getPesoPTSalida() != null) {
-//						dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
-//						diferencia = tipo.getEntrada() + tipo.getPesoPTSalida()
-//								- tipo.getSalida();
-//						if (diferencia < 0)
-//							diferencia = diferencia * (-1);
-//						dbxDiferenciaSalida.setValue(diferencia);
-//					}
-//				}
-//				dtbFechaSalida.setDisabled(true);
-//				dtbFechaSalida.setValue(tipo.getFechaPesajeSalida());
-//			}
-//			inhabilitar(true);
-//			btnDevolucion.setDisabled(true);
-//		}
+		// if (idCerrado != 0) {
+		// if (tipo.getSalida() != null) {
+		// dbxVehiculoSalida.setValue(tipo.getSalida());
+		// dbxTotalSalida.setValue(tipo.getSalida());
+		// if (tipo.getEntrada() != null) {
+		// double entrada = tipo.getEntrada();
+		// Double total = (double) 0;
+		// if (entrada > tipo.getSalida())
+		// total = entrada - tipo.getSalida();
+		// else
+		// total = tipo.getSalida() - entrada;
+		// dbxTotal.setValue(total);
+		// Double diferencia = (double) 0;
+		// if (tipo.getPesoPTSalida() != null) {
+		// dbxPesoPTSalida.setValue(tipo.getPesoPTSalida());
+		// diferencia = tipo.getEntrada() + tipo.getPesoPTSalida()
+		// - tipo.getSalida();
+		// if (diferencia < 0)
+		// diferencia = diferencia * (-1);
+		// dbxDiferenciaSalida.setValue(diferencia);
+		// }
+		// }
+		// dtbFechaSalida.setDisabled(true);
+		// dtbFechaSalida.setValue(tipo.getFechaPesajeSalida());
+		// }
+		// inhabilitar(true);
+		// btnDevolucion.setDisabled(true);
+		// }
 
 	}
 
@@ -1127,10 +1127,10 @@ public class CPesaje extends CGenerico {
 				btnManual.setDisabled(a);
 		}
 
-//		if (idCerrado != 0) {
-//			if (!btnManual.isDisabled())
-//				btnManual.setDisabled(true);
-//		}
+		// if (idCerrado != 0) {
+		// if (!btnManual.isDisabled())
+		// btnManual.setDisabled(true);
+		// }
 
 	}
 
@@ -1148,13 +1148,13 @@ public class CPesaje extends CGenerico {
 		p.put("procedencia", pesaje.getProcedencia());
 		p.put("despachador", pesaje.getDespachador());
 		p.put("nroPredespacho", pesaje.getNroPredespacho());
-		if(pesaje.getAlmacen()!=null)
-		p.put("almacen", pesaje.getAlmacen().getDescripcion());
-		
-		if(pesaje.getPesoOrigen()!=null)
-		p.put("pesoOrigen", String.valueOf(pesaje.getPesoOrigen()));
-		if(pesaje.getCantCajas()!=null)
-		p.put("cajas", String.valueOf(pesaje.getCantCajas()));
+		if (pesaje.getAlmacen() != null)
+			p.put("almacen", pesaje.getAlmacen().getDescripcion());
+
+		if (pesaje.getPesoOrigen() != null)
+			p.put("pesoOrigen", String.valueOf(pesaje.getPesoOrigen()));
+		if (pesaje.getCantCajas() != null)
+			p.put("cajas", String.valueOf(pesaje.getCantCajas()));
 		p.put("factura", pesaje.getNroFactura());
 		p.put("vehiculo", pesaje.getVehiculo().getPlaca());
 		p.put("transporte", pesaje.getTransporte().getDescripcion());
@@ -1232,5 +1232,15 @@ public class CPesaje extends CGenerico {
 				window.doModal();
 			}
 		}
+	}
+
+	@Listen("onClick = #btnAutomatico")
+	public void fechaPesaje() {
+		fechaPesaje = new Timestamp(new Date().getTime());
+	}
+
+	@Listen("onChange = #dbxVehiculoSalida;onChange = #dbxPesoPTSalida;onChange = #dbxVehiculoEntrada")
+	public void fechaPesajeChange() {
+		fechaPesaje = new Timestamp(new Date().getTime());
 	}
 }

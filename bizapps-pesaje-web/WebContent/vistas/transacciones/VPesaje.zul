@@ -158,7 +158,7 @@
 							<row>
 								<label class="etiqueta" value="Peso Origen:" />
 								<doublespinner id="dbsPesoOrigen" value="0" hflex="1"
-									step="0.1" maxlength="100000" tooltiptext="Ingrese el Peso de Origen"
+									step="1" maxlength="100000" tooltiptext="Ingrese el Peso de Origen"
 									width="100%" />
 								<label class="etiqueta" value="Cant. Cajas:" />
 								<spinner id="spnCajas" value="0" hflex="1" step="1"
@@ -215,7 +215,7 @@
 									id="dbxPesoPTEntrada" hflex="1" maxlength="100000000"
 									constraint="no negative:Solo valores Positivos" tooltiptext="Ingrese el Peso PT"
 									width="100%" />
-								<doublebox constraint="no negative:Solo valores Positivos"
+								<doublebox instant="true" constraint="no negative:Solo valores Positivos"
 									style="font-weight:bold" readonly="true" id="dbxVehiculoEntrada"
 									hflex="1" maxlength="100000000" tooltiptext="Ingrese el Peso"
 									width="100%" />
@@ -232,10 +232,10 @@
 							<row>
 								<label class="etiqueta" value="Salida:" style="font-size:14px" />
 								<datebox readonly="true" width="100%" id="dtbFechaSalida" />
-								<doublebox constraint="no negative:Solo valores Positivos"
+								<doublebox instant="true" constraint="no negative:Solo valores Positivos"
 									style="font-weight:bold" id="dbxPesoPTSalida" hflex="1"
 									maxlength="100000000" tooltiptext="Ingrese el Peso PT" width="100%" />
-								<doublebox constraint="no negative:Solo valores Positivos"
+								<doublebox  instant="true" constraint="no negative:Solo valores Positivos"
 									style="font-weight:bold" readonly="true" id="dbxVehiculoSalida"
 									hflex="1" maxlength="100000000" tooltiptext="Ingrese el Peso"
 									width="100%" />
@@ -253,7 +253,7 @@
 								<cell colspan="5">
 									<hbox />
 								</cell>
-								<doublebox id="dbxTotal" hflex="1" maxlength="100000000"
+								<doublebox instant="true" id="dbxTotal" hflex="1" maxlength="100000000"
 									tooltiptext="Diferencia entre Peso de Entrada y de Salida"
 									width="100%" style="font-weight:bold" readonly="true" />
 
