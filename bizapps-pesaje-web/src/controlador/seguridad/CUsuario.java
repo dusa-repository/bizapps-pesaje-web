@@ -113,8 +113,6 @@ public class CUsuario extends CGenerico {
 	@Wire
 	private Radiogroup rdbPesaje;
 	@Wire
-	private Radio rdoNoPermisos;
-	@Wire
 	private Radio rdoVerVista;
 	@Wire
 	private Radio rdoVerEditar;
@@ -144,7 +142,6 @@ public class CUsuario extends CGenerico {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		rdoNoPermisos.setChecked(true);
 		mostrarCatalogo();
 		gpxRegistro.setOpen(false);
 		botonera = new Botonera() {
@@ -180,8 +177,6 @@ public class CUsuario extends CGenerico {
 						else {
 							if (usuario.isVerPesajeYEditar())
 								rdoVerEditar.setChecked(true);
-							else
-								rdoNoPermisos.setChecked(true);
 						}
 
 						BufferedImage imag;
@@ -260,10 +255,6 @@ public class CUsuario extends CGenerico {
 								apellido, nombre2, apellido2, sexo, telefono,
 								direccion);
 
-						if (rdoNoPermisos.isChecked()) {
-							usuario.setVerPesajeYEditar(false);
-							usuario.setSoloVer(false);
-						} else {
 							if (rdoVerEditar.isChecked()) {
 								usuario.setVerPesajeYEditar(true);
 								usuario.setSoloVer(false);
@@ -271,7 +262,7 @@ public class CUsuario extends CGenerico {
 								if (rdoVerVista.isChecked())
 									usuario.setVerPesajeYEditar(false);
 								usuario.setSoloVer(true);
-							}
+							
 
 						}
 						guardarDatosSeguridad(usuario, gruposUsuario);
@@ -430,7 +421,6 @@ public class CUsuario extends CGenerico {
 		txtTelefonoUsuario.setValue("");
 		rdoSexoFUsuario.setChecked(false);
 		rdoSexoMUsuario.setChecked(false);
-		rdoNoPermisos.setChecked(true);
 		rdoVerEditar.setChecked(false);
 		rdoVerVista.setChecked(false);
 		try {

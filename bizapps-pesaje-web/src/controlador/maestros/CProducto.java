@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Conductor;
 import modelo.maestros.Producto;
 import modelo.maestros.Proveedor;
+import modelo.transacciones.Pesaje;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -141,6 +143,75 @@ public class CProducto extends CGenerico {
 			@Override
 			public void eliminar() {
 
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Producto> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorProducto(eliminarLista);
+						if (pesajes.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioProducto
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioProducto
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (!id.equals("")) {
+						final Producto producto = servicioProducto
+								.buscar(id);
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorProducto(producto);
+						if (pesajes.isEmpty()) 
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioProducto.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioProducto
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
 			}
 
 			@Override

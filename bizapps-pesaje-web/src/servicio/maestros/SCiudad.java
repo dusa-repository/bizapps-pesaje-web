@@ -52,4 +52,14 @@ public class SCiudad {
 	public List<Ciudad> filtroPais(String valor) {
 		return ciudadDAO.findByEstadoPaisNombreStartingWithAllIgnoreCase(valor);
 	}
+
+	public List<Ciudad> buscarPorEstado(List<Estado> eliminarLista) {
+		// TODO Auto-generated method stub
+		return ciudadDAO.findByEstadoIn(eliminarLista);
+	}
+
+	public void eliminarVarios(List<Ciudad> eliminarLista) {
+		ciudadDAO.delete(eliminarLista);
+		
+	}
 }

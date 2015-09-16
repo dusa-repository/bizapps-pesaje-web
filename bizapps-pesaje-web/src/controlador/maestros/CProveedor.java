@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import modelo.maestros.Ciudad;
+import modelo.maestros.Estado;
+import modelo.maestros.Producto;
 import modelo.maestros.Proveedor;
 
 import org.zkoss.zk.ui.Sessions;
@@ -144,6 +146,76 @@ public class CProveedor extends CGenerico {
 			@Override
 			public void eliminar() {
 
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Proveedor> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Producto> productos = servicioProducto
+								.buscarPorProveedor(eliminarLista);
+						if (productos.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioProveedor
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioProveedor
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (!id.equals("")) {
+						final Proveedor proveedor = servicioProveedor
+								.buscar(id);
+						List<Producto> productos = servicioProducto
+								.buscarPorProveedor(proveedor);
+						if (productos.isEmpty())
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioProveedor.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioProveedor
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
+		
 			}
 
 			@Override

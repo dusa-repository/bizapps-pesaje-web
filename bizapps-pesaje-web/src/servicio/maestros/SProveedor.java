@@ -4,6 +4,7 @@ import interfacedao.maestros.IProveedorDAO;
 
 import java.util.List;
 
+import modelo.maestros.Ciudad;
 import modelo.maestros.Proveedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,15 @@ public class SProveedor {
 	public Proveedor buscar(String idProveedor) {
 		// TODO Auto-generated method stub
 		return proveedorDAO.findByIdProveedor(idProveedor);
+	}
+
+	public List<Proveedor> buscarPorCiudad(Ciudad ciudad) {
+		// TODO Auto-generated method stub
+		return proveedorDAO.findByCiudad(ciudad);
+	}
+
+	public List<Proveedor> buscarPorCiudad(List<Ciudad> eliminarLista) {
+		return proveedorDAO.findByCiudadIn(eliminarLista);
 	}
 
 }

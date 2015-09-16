@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Conductor;
+import modelo.maestros.Transporte;
 import modelo.maestros.Vehiculo;
+import modelo.transacciones.Pesaje;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -126,6 +129,77 @@ public class CVehiculo extends CGenerico {
 			@Override
 			public void eliminar() {
 
+
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Vehiculo> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorVehiculo(eliminarLista);
+						if (pesajes.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioVehiculo
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioVehiculo
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (!id.equals("")) {
+						final Vehiculo vehiculo = servicioVehiculo
+								.buscar(id);
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorVehiculo(vehiculo);
+						if (pesajes.isEmpty()) 
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioVehiculo.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioVehiculo
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
+		
 			}
 
 			@Override

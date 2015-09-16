@@ -19,4 +19,6 @@ public interface ICiudadDAO extends JpaRepository<Ciudad, Long> {
 
 	List<Ciudad> findByEstadoPaisNombreStartingWithAllIgnoreCase(String valor);
 
+	List<Ciudad> findByEstadoIn(List<Estado> eliminarLista);
+
 }

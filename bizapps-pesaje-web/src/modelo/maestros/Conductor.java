@@ -40,6 +40,10 @@ public class Conductor implements Serializable {
 	@JoinColumn(name = "id_ciudad")
 	private Ciudad ciudad;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_transporte")
+	private Transporte transporte;
+	
 	@Column(name="usuario_auditoria", length=50)
 	private String usuarioAuditoria;
 	
@@ -138,6 +142,16 @@ public class Conductor implements Serializable {
 
 	public void setHoraAuditoria(String horaAuditoria) {
 		this.horaAuditoria = horaAuditoria;
+	}
+
+
+	public Transporte getTransporte() {
+		return transporte;
+	}
+
+
+	public void setTransporte(Transporte transporte) {
+		this.transporte = transporte;
 	}
 
 

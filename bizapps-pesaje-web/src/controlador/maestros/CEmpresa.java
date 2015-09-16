@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Cliente;
 import modelo.maestros.Empresa;
 
 import org.zkoss.zk.ui.Sessions;
@@ -126,6 +127,66 @@ public class CEmpresa extends CGenerico {
 
 			@Override
 			public void eliminar() {
+				
+
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Empresa> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioEmpresa
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioEmpresa
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					
+				} else {
+					/* Elimina un solo registro */
+					if (!id.equals("")) {
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioEmpresa.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioEmpresa
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
 			}
 
 			@Override

@@ -7,6 +7,9 @@ import java.util.List;
 
 import modelo.maestros.Ciudad;
 import modelo.maestros.Conductor;
+import modelo.maestros.Transporte;
+import modelo.maestros.Vehiculo;
+import modelo.transacciones.Pesaje;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -42,6 +45,8 @@ public class CConductor extends CGenerico {
 	private Div divCatalogoConductor;
 	@Wire
 	private Combobox cmbCiudad;
+	@Wire
+	private Combobox cmbTransporte;
 	@Wire
 	private Textbox txtDireccion;
 	@Wire
@@ -90,6 +95,8 @@ public class CConductor extends CGenerico {
 						txtTelefono1.setValue(tipo.getTelefono());
 						if (tipo.getCiudad() != null)
 							cmbCiudad.setValue(tipo.getCiudad().getNombre());
+						if (tipo.getTransporte() != null)
+							cmbTransporte.setValue(tipo.getTransporte().getDescripcion());
 					} else
 						msj.mensajeAlerta(Mensaje.editarSoloUno);
 				}
@@ -123,6 +130,11 @@ public class CConductor extends CGenerico {
 							ciudad = servicioCiudad.buscar(Long
 									.parseLong(cmbCiudad.getSelectedItem()
 											.getContext()));
+						Transporte transporte = null;
+						if (cmbTransporte.getSelectedItem() != null)
+							transporte = servicioTransporte.buscar(Long
+									.parseLong(cmbTransporte.getSelectedItem()
+											.getContext()));
 						String nombres = txtNombres.getValue();
 						String apellidos = txtApellidos.getValue();
 						id = txtCedula.getValue();
@@ -133,6 +145,7 @@ public class CConductor extends CGenerico {
 						conductor.setDireccion(txtDireccion.getValue());
 						conductor.setTelefono(txtTelefono1.getValue());
 						conductor.setCiudad(ciudad);
+						conductor.setTransporte(transporte);
 						conductor.setUsuarioAuditoria(nombreUsuarioSesion());
 						conductor.setFechaAuditoria(fechaHora);
 						conductor.setHoraAuditoria(horaAuditoria);
@@ -149,6 +162,75 @@ public class CConductor extends CGenerico {
 			@Override
 			public void eliminar() {
 
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Conductor> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorConductor(eliminarLista);
+						if (pesajes.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioConductor
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioConductor
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (!id.equals("")) {
+						final Conductor conductor = servicioConductor
+								.buscar(id);
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorConductor(conductor);
+						if (pesajes.isEmpty()) 
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioConductor.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioConductor
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
 			}
 
 			@Override
@@ -195,6 +277,7 @@ public class CConductor extends CGenerico {
 		txtDireccion.setValue("");
 		txtTelefono1.setValue("");
 		cmbCiudad.setValue("");
+		cmbTransporte.setValue("");
 	}
 
 	public boolean validarSeleccion() {
@@ -351,6 +434,12 @@ public class CConductor extends CGenerico {
 	public void llenarComboCiudad() {
 		List<Ciudad> ciudades = servicioCiudad.buscarTodas();
 		cmbCiudad.setModel(new ListModelList<Ciudad>(ciudades));
+	}
+
+	@Listen("onOpen = #cmbTransporte")
+	public void llenarComboTransporte() {
+		List<Transporte> transportes = servicioTransporte.buscarTodos();
+		cmbTransporte.setModel(new ListModelList<Transporte>(transportes));
 	}
 
 	/* Metodo que valida el formmato del telefono ingresado */

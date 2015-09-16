@@ -199,9 +199,9 @@ public class CPesaje extends CGenerico {
 
 		Usuario usuario = usuarioSesion(nombreUsuarioSesion());
 		if (usuario.isVerPesajeYEditar())
-			btnManual.setDisabled(false);
+			btnManual.setVisible(true);
 		else
-			btnManual.setDisabled(true);
+			btnManual.setVisible(false);
 
 		btnDevolucion.setDisabled(true);
 
@@ -439,7 +439,16 @@ public class CPesaje extends CGenerico {
 				msj.mensajeError(Mensaje.camposVacios);
 				return false;
 			} else
-				return true;
+			{
+				if (dbxVehiculoEntrada.getValue()<=0) 
+				{
+					msj.mensajeError("El peso de entrada debe ser mayor a cero (0)");
+					return false;
+				}
+					else
+						return true;
+			}
+				
 		} else {
 			if (dtbFechaSalida.getValue() == null
 					|| dbxVehiculoSalida.getText().compareTo("") == 0
@@ -447,7 +456,15 @@ public class CPesaje extends CGenerico {
 				msj.mensajeError(Mensaje.camposVacios);
 				return false;
 			} else
-				return true;
+			{
+				if (dbxVehiculoSalida.getValue()<=0) 
+				{
+					msj.mensajeError("El peso de salida debe ser mayor a cero (0)");
+					return false;
+				}
+					else
+						return true;
+			}
 		}
 	}
 
@@ -987,6 +1004,7 @@ public class CPesaje extends CGenerico {
 				dbxTotalSalida.setValue(dbxVehiculoSalida.getValue());
 				dbxTotalSalida.setReadonly(true);
 				Double diferencia = (double) 0;
+				if( dbxPesoPTSalida.getValue()!=null && dbxVehiculoSalida.getValue()!=null)
 				diferencia = entrada + dbxPesoPTSalida.getValue()
 						- dbxVehiculoSalida.getValue();
 				if (diferencia < 0)

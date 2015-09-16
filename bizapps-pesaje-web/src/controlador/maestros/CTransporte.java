@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Conductor;
+import modelo.maestros.Producto;
+import modelo.maestros.Proveedor;
 import modelo.maestros.Transporte;
+import modelo.transacciones.Pesaje;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -114,77 +118,81 @@ public class CTransporte extends CGenerico {
 
 			@Override
 			public void eliminar() {
-				// if (gpxDatos.isOpen()) {
-				// /* Elimina Varios Registros */
-				// if (validarSeleccion()) {
-				// final List<Balanza> eliminarLista = catalogo
-				// .obtenerSeleccionados();
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorIds(eliminarLista);
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show("¿Desea Eliminar los "
-				// + eliminarLista.size()
-				// + " Registros?",
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				// servicioBalanza
-				// .eliminarVarios(eliminarLista);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// }
-				// } else {
-				// /* Elimina un solo registro */
-				// if (id != 0) {
-				// List<Pesaje> pesajes = servicioBalanza
-				// .buscarPorBalanza(id);
-				//
-				// if (pesajes.isEmpty()) {
-				// Messagebox
-				// .show(Mensaje.deseaEliminar,
-				// "Alerta",
-				// Messagebox.OK | Messagebox.CANCEL,
-				// Messagebox.QUESTION,
-				// new org.zkoss.zk.ui.event.EventListener<Event>() {
-				// public void onEvent(Event evt)
-				// throws InterruptedException {
-				// if (evt.getName().equals(
-				// "onOK")) {
-				//
-				// servicioBalanza
-				// .eliminarUno(id);
-				// msj.mensajeInformacion(Mensaje.eliminado);
-				// limpiar();
-				// listaGeneral = servicioBalanza
-				// .buscarTodos();
-				// catalogo.actualizarLista(
-				// listaGeneral,
-				// true);
-				// }
-				// }
-				// });
-				//
-				// } else
-				// msj.mensajeError(Mensaje.noEliminar);
-				// } else
-				// msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
-				// }
+
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Transporte> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Conductor> conductores = servicioConductor
+								.buscarPorTransporte(eliminarLista);
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorTransporte(eliminarLista);
+						if (conductores.isEmpty() && pesajes.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioTransporte
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioTransporte
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (id!=0) {
+						final Transporte transporte = servicioTransporte
+								.buscar(id);
+						List<Conductor> conductores = servicioConductor
+								.buscarPorTransporte(transporte);
+						List<Pesaje> pesajes = servicioPesaje
+								.buscarPorTransporte(transporte);
+						if (conductores.isEmpty() && pesajes.isEmpty()) 
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioTransporte.eliminarUno(id);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioTransporte
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}	
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
+		
 
 			}
 

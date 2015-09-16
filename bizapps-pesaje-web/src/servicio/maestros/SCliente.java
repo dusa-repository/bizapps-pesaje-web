@@ -4,6 +4,7 @@ import interfacedao.maestros.IClienteDAO;
 
 import java.util.List;
 
+import modelo.maestros.Ciudad;
 import modelo.maestros.Cliente;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,15 @@ public class SCliente {
 	public Cliente buscar(String value) {
 		// TODO Auto-generated method stub
 		return clienteDAO.findOne(value);
+	}
+
+	public List<Cliente> buscarPorCiudad(Ciudad ciudad) {
+		// TODO Auto-generated method stub
+		return clienteDAO.findByCiudad(ciudad);
+	}
+
+	public List<Cliente> buscarPorCiudad(List<Ciudad> eliminarLista) {
+		return clienteDAO.findByCiudadIn(eliminarLista);
 	}
 
 }

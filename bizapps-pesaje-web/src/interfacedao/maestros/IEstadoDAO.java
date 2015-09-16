@@ -17,4 +17,6 @@ public interface IEstadoDAO extends JpaRepository<Estado, Long> {
 
 	List<Estado> findByPaisNombreStartingWithAllIgnoreCase(String valor);
 
+	List<Estado> findByPaisIn(List<Pais> eliminarLista);
+
 }

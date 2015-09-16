@@ -3,6 +3,12 @@ package interfacedao.transacciones;
 import java.util.Date;
 import java.util.List;
 
+import modelo.maestros.Almacen;
+import modelo.maestros.Balanza;
+import modelo.maestros.Conductor;
+import modelo.maestros.Producto;
+import modelo.maestros.Transporte;
+import modelo.maestros.Vehiculo;
 import modelo.transacciones.Pesaje;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +35,29 @@ public interface IPesajeDAO extends JpaRepository<Pesaje, Long> {
 	List<Pesaje> buscarEntreFechasyPesajesDevoluciones(Date desde, Date hasta,
 			String boleto, String vehiculo, String conductor, String producto,
 			String balanza);
+
+	List<Pesaje> findByTransporteIn(List<Transporte> eliminarLista);
+
+	List<Pesaje> findByTransporte(Transporte transporte);
+
+	List<Pesaje> findByVehiculoIn(List<Vehiculo> eliminarLista);
+
+	List<Pesaje> findByVehiculo(Vehiculo vehiculo);
+
+	List<Pesaje> findByConductorIn(List<Conductor> eliminarLista);
+
+	List<Pesaje> findByConductor(Conductor conductor);
+
+	List<Pesaje> findByProductoIn(List<Producto> eliminarLista);
+
+	List<Pesaje> findByProducto(Producto producto);
+
+	List<Pesaje> findByBalanzaIn(List<Balanza> eliminarLista);
+
+	List<Pesaje> findByBalanza(Balanza balanza);
+
+	List<Pesaje> findByAlmacenIn(List<Almacen> eliminarLista);
+
+	List<Pesaje> findByAlmacen(Almacen almacen);
 
 }

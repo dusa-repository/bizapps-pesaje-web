@@ -5,6 +5,7 @@ import interfacedao.maestros.IProductoDAO;
 import java.util.List;
 
 import modelo.maestros.Producto;
+import modelo.maestros.Proveedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,15 @@ public class SProducto {
 	public Producto buscar(String value) {
 
 		return productoDAO.findOne(value);
+	}
+
+	public List<Producto> buscarPorProveedor(Proveedor proveedor) {
+		// TODO Auto-generated method stub
+		return productoDAO.findByProveedor(proveedor);
+	}
+
+	public List<Producto> buscarPorProveedor(List<Proveedor> eliminarLista) {
+		return productoDAO.findByProveedorIn(eliminarLista);
 	}
 
 }

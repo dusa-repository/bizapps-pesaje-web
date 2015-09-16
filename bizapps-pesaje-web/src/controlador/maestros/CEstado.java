@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import modelo.maestros.Ciudad;
 import modelo.maestros.Estado;
 import modelo.maestros.Pais;
 
@@ -120,6 +121,76 @@ public class CEstado extends CGenerico {
 			@Override
 			public void eliminar() {
 
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Estado> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Ciudad> ciudades = servicioCiudad
+								.buscarPorEstado(eliminarLista);
+						if (ciudades.isEmpty()) {
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioEstado
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioEstado
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (id != 0 && txtNombreEstado.getText().compareTo("") != 0) {
+						final Estado estado = servicioEstado
+								.buscar(id);
+						List<Ciudad> ciudades = servicioCiudad
+								.buscarPorEstado(estado);			
+						if (ciudades.isEmpty())
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioEstado.eliminar(estado);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioEstado
+																	.buscarTodos(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
+		
 			}
 
 			@Override

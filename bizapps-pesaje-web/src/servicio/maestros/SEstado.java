@@ -47,4 +47,13 @@ public class SEstado {
 	public List<Estado> filtroPais(String valor) {
 		return estadoDAO.findByPaisNombreStartingWithAllIgnoreCase(valor);
 	}
+
+	public List<Estado> buscarPorPais(List<Pais> eliminarLista) {
+		// TODO Auto-generated method stub
+		return estadoDAO.findByPaisIn(eliminarLista);
+	}
+
+	public void eliminarVarios(List<Estado> eliminarLista) {
+		estadoDAO.delete(eliminarLista);
+	}
 }

@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import modelo.maestros.Ciudad;
+import modelo.maestros.Cliente;
+import modelo.maestros.Conductor;
 import modelo.maestros.Estado;
+import modelo.maestros.Proveedor;
 
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
@@ -122,6 +125,87 @@ public class CCiudad extends CGenerico {
 			@Override
 			public void eliminar() {
 
+				if (gpxDatos.isOpen()) {
+					/* Elimina Varios Registros */
+					if (validarSeleccion()) {
+						final List<Ciudad> eliminarLista = catalogo
+								.obtenerSeleccionados();
+						List<Proveedor> proveedores = servicioProveedor
+								.buscarPorCiudad(eliminarLista);
+						List<Cliente> clientes = servicioCliente
+								.buscarPorCiudad(eliminarLista);
+						List<Conductor> conductores = servicioConductor
+								.buscarPorCiudad(eliminarLista);
+						if (clientes.isEmpty()
+								 && conductores.isEmpty()
+								 && proveedores.isEmpty()){
+						Messagebox
+								.show("¿Desea Eliminar los "
+										+ eliminarLista.size() + " Registros?",
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioCiudad
+															.eliminarVarios(eliminarLista);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													catalogo.actualizarLista(
+															servicioCiudad
+																	.buscarTodas(),
+															true);
+												}
+											}
+										});
+						}
+						else
+						msj.mensajeError(Mensaje.noEliminar);
+					}
+				} else {
+					/* Elimina un solo registro */
+					if (id != 0) {
+						final Ciudad ciudad = servicioCiudad
+								.buscar(id);
+						List<Proveedor> proveedores = servicioProveedor
+								.buscarPorCiudad(ciudad);
+						List<Cliente> clientes = servicioCliente
+								.buscarPorCiudad(ciudad);
+						List<Conductor> conductores = servicioConductor
+								.buscarPorCiudad(ciudad);
+						if (clientes.isEmpty()
+								 && conductores.isEmpty()
+								 && proveedores.isEmpty())
+						{
+						Messagebox
+								.show(Mensaje.deseaEliminar,
+										"Alerta",
+										Messagebox.OK | Messagebox.CANCEL,
+										Messagebox.QUESTION,
+										new org.zkoss.zk.ui.event.EventListener<Event>() {
+											public void onEvent(Event evt)
+													throws InterruptedException {
+												if (evt.getName()
+														.equals("onOK")) {
+													servicioCiudad.eliminar(ciudad);
+													msj.mensajeInformacion(Mensaje.eliminado);
+													limpiar();
+													catalogo.actualizarLista(
+															servicioCiudad
+																	.buscarTodas(),
+															true);
+												}
+											}
+										});
+						}
+						else
+							msj.mensajeError(Mensaje.noEliminar);
+					} else
+						msj.mensajeAlerta(Mensaje.noSeleccionoRegistro);
+				
+				}
 			}
 
 			@Override

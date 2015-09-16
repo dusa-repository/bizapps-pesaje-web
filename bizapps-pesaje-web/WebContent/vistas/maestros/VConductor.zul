@@ -81,6 +81,19 @@
 							</cell>
 							<hbox />
 						</row>
+								<row>
+							<label class="etiqueta" value="Transporte:" />
+							<cell colspan="2">
+								<combobox tooltiptext="Seleccione un Transporte"
+									placeholder="Seleccione un Transporte" id="cmbTransporte" readonly="true"
+									width="200px">
+									<template name="model">
+										<comboitem label="${each.descripcion}" context="${each.idTransporte}" />
+									</template>
+								</combobox>
+							</cell>
+							<hbox />
+						</row>
 						<row>
 							<hbox>
 								<label class="etiqueta" value="Numero Contacto:" />

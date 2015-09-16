@@ -38,4 +38,9 @@ public class SPais {
 	public Pais buscarPorNombre(String value) {
 		return paisDAO.findByNombre(value);
 	}
+
+	public void eliminarVarios(List<Pais> eliminarLista) {
+		paisDAO.delete(eliminarLista);
+		
+	}
 }
